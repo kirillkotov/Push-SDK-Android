@@ -20,5 +20,8 @@ Initialization:
             
 Using:
 
-val sdkAnswer: PushKFunAnswerGeneral = hPlatformPushAdapterSdk.push_get_message_history(7200)
-println(sdkAnswer)
+        val sdkAnswer: PushKFunAnswerGeneral = hPlatformPushAdapterSdk.push_get_message_history(7200)
+        println(sdkAnswer)
+
+            
+
