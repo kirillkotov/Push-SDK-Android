@@ -4,7 +4,7 @@ Installation
 
 
 dependencies {
-        implementation 'com.github.Incuube:Hyber-SVC-SDK-Android:v1.0.0.43'
+        implementation 'com.github.kirillkotov:Push-SDK-Android:v1.0.0.43'
 }
 
 
@@ -18,4 +18,7 @@ Initialization:
                 push_style = 1
             )
             
+Using:
 
+val sdkAnswer: PushKFunAnswerGeneral = hPlatformPushAdapterSdk.push_get_message_history(7200)
+println(sdkAnswer)
