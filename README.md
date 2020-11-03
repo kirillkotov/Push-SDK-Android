@@ -17,7 +17,7 @@ Initialization:
                 push_style = 1
             )
             
-Using example:
+Call example:
 
         val sdkAnswer: PushKFunAnswerGeneral = hPlatformPushAdapterSdk.push_get_message_history(7200)
         println(sdkAnswer)
