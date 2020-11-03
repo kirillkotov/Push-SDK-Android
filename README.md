@@ -2,10 +2,9 @@
 
 Installation
 
-
-dependencies {
-        implementation 'com.github.kirillkotov:Push-SDK-Android:v1.0.0.43'
-}
+        dependencies {
+            implementation 'com.github.kirillkotov:Push-SDK-Android:v1.0.0.43'
+        }
 
 
 Initialization:
