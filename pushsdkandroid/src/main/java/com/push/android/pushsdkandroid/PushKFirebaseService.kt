@@ -38,14 +38,27 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 @SuppressLint("Registered")
-internal class PushKFirebaseService : FirebaseMessagingService() {
+internal class PushKFirebaseService : FirebaseMessagingService(), LifecycleObserver {
 
     private var api: PushKApi = PushKApi()
     private var parsing: PushParsing = PushParsing()
     private var getDevInform: GetInfo = GetInfo()
 
+    private var isAppInForeground = false
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    fun onForegroundStart() {
+        isAppInForeground = true
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    fun onForegroundStop() {
+        isAppInForeground = false
+    }
+
     fun appInForeground(context: Context): Boolean {
         PushKLoggerSdk.debug("ProcessLifecycleOwner.get().lifecycle.currentState.name ${ProcessLifecycleOwner.get().lifecycle.currentState.name}")
+        PushKLoggerSdk.debug("isAppInForeground ${isAppInForeground}")
 
         val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         val runningAppProcesses = activityManager.runningAppProcesses ?: return false
