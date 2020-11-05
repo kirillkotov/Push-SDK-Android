@@ -74,6 +74,10 @@ internal class PushKFirebaseService : FirebaseMessagingService(), LifecycleObser
         isAppInForeground = true
     }
 
+    fun isAppInForeground() : Boolean {
+        return ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(android.arch.lifecycle.Lifecycle.State.RESUMED)
+    }
+
 //    fun appInForeground(context: Context): Boolean {
 //        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
 //        PushKLoggerSdk.debug("ProcessLifecycleOwner.get().lifecycle.currentState.name ${ProcessLifecycleOwner.get().lifecycle.currentState.name}")
@@ -205,7 +209,7 @@ internal class PushKFirebaseService : FirebaseMessagingService(), LifecycleObser
 
             //check if app is in foreground or background
             //if(appInForeground(applicationContext)) {
-            if(isAppInForeground) {
+            if(isAppInForeground()) {
                 //nothing for now
                 PushKLoggerSdk.debug("App is in foreground")
             }
