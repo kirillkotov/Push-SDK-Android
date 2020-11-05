@@ -9,9 +9,6 @@ import android.app.ActivityManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleObserver
-import android.arch.lifecycle.OnLifecycleEvent
 import android.arch.lifecycle.ProcessLifecycleOwner
 import android.content.Context
 import android.content.Intent
@@ -38,56 +35,15 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 @SuppressLint("Registered")
-internal class PushKFirebaseService : FirebaseMessagingService(), LifecycleObserver {
+internal class PushKFirebaseService : FirebaseMessagingService() {
 
     private var api: PushKApi = PushKApi()
     private var parsing: PushParsing = PushParsing()
     private var getDevInform: GetInfo = GetInfo()
 
-    private var isAppInForeground = false
-
-//    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-//    fun onForegroundStart() {
-//        isAppInForeground = true
-//    }
-//
-//    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-//    fun onForegroundStop() {
-//        isAppInForeground = false
-//    }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    fun onAppBackgrounded() {
-        PushKLoggerSdk.debug("Awww App in background")
-        isAppInForeground = false
-    }
-
-//    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-//    fun onAppStarted() {
-//        PushKLoggerSdk.debug("Yeeey App is started")
-//        isAppInForeground = true
-//    }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    fun onAppResumed() {
-        PushKLoggerSdk.debug("Yeeey App is resumed")
-        isAppInForeground = true
-    }
-
     fun isAppInForeground() : Boolean {
         return ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(android.arch.lifecycle.Lifecycle.State.RESUMED)
     }
-
-//    fun appInForeground(context: Context): Boolean {
-//        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
-//        PushKLoggerSdk.debug("ProcessLifecycleOwner.get().lifecycle.currentState.name ${ProcessLifecycleOwner.get().lifecycle.currentState.name}")
-//        PushKLoggerSdk.debug("ProcessLifecycleOwner.get().lifecycle.currentState.name ${ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(android.arch.lifecycle.Lifecycle.State.RESUMED)}")
-//        PushKLoggerSdk.debug("isAppInForeground ${isAppInForeground}")
-//
-//        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-//        val runningAppProcesses = activityManager.runningAppProcesses ?: return false
-//        return runningAppProcesses.any { it.processName == processPackageName && it.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND }
-//    }
 
     private var processPackageName = "com.example.hybersdktest"
 
@@ -259,7 +215,9 @@ internal class PushKFirebaseService : FirebaseMessagingService(), LifecycleObser
         //val notificationIntent = packageManager.getLaunchIntentForPackage("com.example.hybersdktest")
 //        notificationIntent.action = "com.hyber.android.hybersdkandroid.Push"
         //val notificationIntent = Intent()
-        val notificationIntent = packageManager.getLaunchIntentForPackage(processPackageName)
+        //val notificationIntent = packageManager.getLaunchIntentForPackage(processPackageName)
+        val notificationIntent = packageManager.getLaunchIntentForPackage(applicationInfo.packageName)
+        PushKLoggerSdk.debug("applicationInfo.packageName ${applicationInfo.packageName}")
         //notificationIntent!!.action = "com.hyber.android.hybersdkandroid.Push2"
         notificationIntent!!.putExtra("data", data.toString())
         val pendingIntent = PendingIntent.getActivity(
