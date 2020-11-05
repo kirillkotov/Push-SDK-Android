@@ -9,6 +9,9 @@ import android.app.ActivityManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleObserver
+import android.arch.lifecycle.OnLifecycleEvent
 import android.arch.lifecycle.ProcessLifecycleOwner
 import android.content.Context
 import android.content.Intent
@@ -17,9 +20,6 @@ import android.graphics.BitmapFactory
 import android.media.RingtoneManager
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
@@ -46,13 +46,25 @@ internal class PushKFirebaseService : FirebaseMessagingService(), LifecycleObser
 
     private var isAppInForeground = false
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    fun onForegroundStart() {
+//    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+//    fun onForegroundStart() {
+//        isAppInForeground = true
+//    }
+//
+//    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+//    fun onForegroundStop() {
+//        isAppInForeground = false
+//    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    fun onAppBackgrounded() {
+        PushKLoggerSdk.debug("Awww App in background")
         isAppInForeground = true
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    fun onForegroundStop() {
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    fun onAppForegrounded() {
+        PushKLoggerSdk.debug("Yeeey App in foreground")
         isAppInForeground = false
     }
 
