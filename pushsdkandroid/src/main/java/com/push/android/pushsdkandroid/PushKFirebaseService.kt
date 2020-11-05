@@ -169,9 +169,11 @@ internal class PushKFirebaseService : FirebaseMessagingService() {
             //check if app is in foreground or background
             if(appInForeground(applicationContext)) {
                 //nothing for now
+                PushKLoggerSdk.debug("App is in foreground")
             }
             else {
                 sendNotificationFromDataPush(remoteMessage.data)
+                PushKLoggerSdk.debug("App is in background")
             }
         }
 
