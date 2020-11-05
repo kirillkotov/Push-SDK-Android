@@ -45,10 +45,14 @@ internal class PushKFirebaseService : FirebaseMessagingService() {
     private var getDevInform: GetInfo = GetInfo()
 
     fun appInForeground(context: Context): Boolean {
+        PushKLoggerSdk.debug("ProcessLifecycleOwner.get().lifecycle.currentState.name ${ProcessLifecycleOwner.get().lifecycle.currentState.name}")
+
         val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         val runningAppProcesses = activityManager.runningAppProcesses ?: return false
-        return runningAppProcesses.any { it.processName == "com.example.hybersdktest" && it.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND }
+        return runningAppProcesses.any { it.processName == processPackageName && it.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND }
     }
+
+    private var processPackageName = "com.example.hybersdktest"
 
     override fun onCreate() {
         super.onCreate()
@@ -217,7 +221,7 @@ internal class PushKFirebaseService : FirebaseMessagingService() {
         //val notificationIntent = packageManager.getLaunchIntentForPackage("com.example.hybersdktest")
 //        notificationIntent.action = "com.hyber.android.hybersdkandroid.Push"
         //val notificationIntent = Intent()
-        val notificationIntent = packageManager.getLaunchIntentForPackage("com.example.hybersdktest")
+        val notificationIntent = packageManager.getLaunchIntentForPackage(processPackageName)
         //notificationIntent!!.action = "com.hyber.android.hybersdkandroid.Push2"
         notificationIntent!!.putExtra("data", data.toString())
         val pendingIntent = PendingIntent.getActivity(
