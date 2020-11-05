@@ -5,6 +5,7 @@ Service for Firebase Push notification messaging
 package com.push.android.pushsdkandroid
 
 import android.annotation.SuppressLint
+import android.app.ActivityManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -37,28 +38,20 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 @SuppressLint("Registered")
-internal class PushKFirebaseService : FirebaseMessagingService(), LifecycleObserver,
-    android.arch.lifecycle.LifecycleObserver {
+internal class PushKFirebaseService : FirebaseMessagingService() {
 
     private var api: PushKApi = PushKApi()
     private var parsing: PushParsing = PushParsing()
     private var getDevInform: GetInfo = GetInfo()
 
-    private var isAppInForeground = false
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    fun onForegroundStart() {
-        isAppInForeground = true
-    }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    fun onForegroundStop() {
-        isAppInForeground = false
+    fun appInForeground(context: Context): Boolean {
+        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val runningAppProcesses = activityManager.runningAppProcesses ?: return false
+        return runningAppProcesses.any { it.processName == "com.example.hybersdktest" && it.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND }
     }
 
     override fun onCreate() {
         super.onCreate()
-        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
         PushKLoggerSdk.debug("PushFirebaseService.onCreate : MyService onCreate")
     }
 
@@ -174,7 +167,7 @@ internal class PushKFirebaseService : FirebaseMessagingService(), LifecycleObser
             PushKLoggerSdk.debug("Message data payload: " + remoteMessage.data.toString())
 
             //check if app is in foreground or background
-            if(isAppInForeground) {
+            if(appInForeground(applicationContext)) {
                 //nothing for now
             }
             else {
