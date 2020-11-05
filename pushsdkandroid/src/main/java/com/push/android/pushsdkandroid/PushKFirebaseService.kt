@@ -59,17 +59,25 @@ internal class PushKFirebaseService : FirebaseMessagingService(), LifecycleObser
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     fun onAppBackgrounded() {
         PushKLoggerSdk.debug("Awww App in background")
-        isAppInForeground = true
-    }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    fun onAppForegrounded() {
-        PushKLoggerSdk.debug("Yeeey App in foreground")
         isAppInForeground = false
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    fun onAppStarted() {
+        PushKLoggerSdk.debug("Yeeey App is started")
+        isAppInForeground = true
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+    fun onAppResumed() {
+        PushKLoggerSdk.debug("Yeeey App is resumed")
+        isAppInForeground = true
+    }
+
     fun appInForeground(context: Context): Boolean {
+        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
         PushKLoggerSdk.debug("ProcessLifecycleOwner.get().lifecycle.currentState.name ${ProcessLifecycleOwner.get().lifecycle.currentState.name}")
+        PushKLoggerSdk.debug("ProcessLifecycleOwner.get().lifecycle.currentState.name ${ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(android.arch.lifecycle.Lifecycle.State.RESUMED)}")
         PushKLoggerSdk.debug("isAppInForeground ${isAppInForeground}")
 
         val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
