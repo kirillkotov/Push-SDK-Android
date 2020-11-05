@@ -8,6 +8,7 @@ import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.arch.lifecycle.ProcessLifecycleOwner
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -36,7 +37,8 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 @SuppressLint("Registered")
-internal class PushKFirebaseService : FirebaseMessagingService(), LifecycleObserver {
+internal class PushKFirebaseService : FirebaseMessagingService(), LifecycleObserver,
+    android.arch.lifecycle.LifecycleObserver {
 
     private var api: PushKApi = PushKApi()
     private var parsing: PushParsing = PushParsing()
@@ -56,6 +58,7 @@ internal class PushKFirebaseService : FirebaseMessagingService(), LifecycleObser
 
     override fun onCreate() {
         super.onCreate()
+        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
         PushKLoggerSdk.debug("PushFirebaseService.onCreate : MyService onCreate")
     }
 
