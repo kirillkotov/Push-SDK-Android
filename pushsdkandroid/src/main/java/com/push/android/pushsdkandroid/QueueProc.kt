@@ -103,7 +103,7 @@ internal class QueueProc {
 
         val threadNetF2 = Thread(Runnable {
 
-            val pushUrlMessQueue: String = PushSdkParameters.branch_current_active.fun_pushsdk_url_mess_queue
+            val pushUrlMessQueue: String = PushSdkParameters.branchCurrentActivePath!!.fun_pushsdk_url_mess_queue
 
             try {
                 PushKLoggerSdk.debug("Result: Start step1, Function: push_device_mess_queue, Class: QueueProc, X_Push_Session_Id: $X_Push_Session_Id, X_Push_Auth_Token: $X_Push_Auth_Token")

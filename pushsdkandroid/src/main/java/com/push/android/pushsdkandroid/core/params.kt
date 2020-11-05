@@ -33,7 +33,8 @@ open class PushKPublicParams {
             } catch (e: Exception) {
                 e.printStackTrace()
                 ansBitmap = null
-            }})
+            }
+        })
         threadNetBitmap.start()
         threadNetBitmap.join()
         return ansBitmap
@@ -55,16 +56,16 @@ open class PushKPublicParams {
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
         if (imageBitmap != null) {
-        return NotificationCompat.Builder(context, "push.push.k.sdk")
-            .setContentText(notificationTextMess)
-            .setAutoCancel(true)
-            //.setSmallIcon(R.drawable.googleg_standard_color_18)
-            .setPriority(PushKInternal.notificationPriorityOld(PushSdkParameters.push_notification_display_priority))
-            .setSound(defaultSoundUri)
-            //.setVibrate(longArrayOf(1000))
-            .setContentIntent(pendingIntent)
-            .setLargeIcon(imageBitmap)}
-        else {
+            return NotificationCompat.Builder(context, "push.push.k.sdk")
+                .setContentText(notificationTextMess)
+                .setAutoCancel(true)
+                //.setSmallIcon(R.drawable.googleg_standard_color_18)
+                .setPriority(PushKInternal.notificationPriorityOld(PushSdkParameters.push_notification_display_priority))
+                .setSound(defaultSoundUri)
+                //.setVibrate(longArrayOf(1000))
+                .setContentIntent(pendingIntent)
+                .setLargeIcon(imageBitmap)
+        } else {
             return NotificationCompat.Builder(context, "push.push.k.sdk")
                 .setContentText(notificationTextMess)
                 .setAutoCancel(true)
@@ -104,25 +105,16 @@ open class PushKPublicParams {
 //URLs DATA for Push platform for different branches
 object PushSdkParametersPublic {
     val branchMasterValue: UrlsPlatformList = UrlsPlatformList(
-        fun_pushsdk_url_device_update = "https://push.hyber.im/api/2.3/device/update",
-        fun_pushsdk_url_registration = "https://push.hyber.im/api/2.3/device/registration",
-        fun_pushsdk_url_revoke = "https://push.hyber.im/api/2.3/device/revoke",
-        fun_pushsdk_url_get_device_all = "https://push.hyber.im/api/2.3/device/all",
-        fun_pushsdk_url_message_callback = "https://push.hyber.im/api/2.3/message/callback",
-        fun_pushsdk_url_message_dr = "https://push.hyber.im/api/2.3/message/dr",
-        fun_pushsdk_url_mess_queue = "https://push.hyber.im/api/2.3/message/queue",
-        pushsdk_url_message_history = "https://push.hyber.im/api/2.3/message/history?startDate="
+        fun_pushsdk_url_device_update = "device/update",
+        fun_pushsdk_url_registration = "device/registration",
+        fun_pushsdk_url_revoke = "device/revoke",
+        fun_pushsdk_url_get_device_all = "device/all",
+        fun_pushsdk_url_message_callback = "message/callback",
+        fun_pushsdk_url_message_dr = "message/dr",
+        fun_pushsdk_url_mess_queue = "message/queue",
+        pushsdk_url_message_history = "message/history?startDate="
     )
-    val branchTestValue: UrlsPlatformList = UrlsPlatformList(
-        fun_pushsdk_url_device_update = "https://test-push.hyber.im/api/2.3/device/update",
-        fun_pushsdk_url_registration = "https://test-push.hyber.im/api/2.3/device/registration",
-        fun_pushsdk_url_revoke = "https://test-push.hyber.im/api/2.3/device/revoke",
-        fun_pushsdk_url_get_device_all = "https://test-push.hyber.im/api/2.3/device/all",
-        fun_pushsdk_url_message_callback = "https://test-push.hyber.im/api/2.3/message/callback",
-        fun_pushsdk_url_message_dr = "https://test-push.hyber.im/api/2.3/message/dr",
-        fun_pushsdk_url_mess_queue = "https://test-push.hyber.im/api/2.3/message/queue",
-        pushsdk_url_message_history = "https://test-push.hyber.im/api/2.3/message/history?startDate="
-    )
+
     const val TAG_LOGGING = "PushPushSDK"
     const val pushsdk_log_level_error = "error"
     const val pushsdk_log_level_debug = "debug"
@@ -131,7 +123,8 @@ object PushSdkParametersPublic {
 
 object PushSdkParameters {
     private var infoLocalDeviceHardware: GetInfo = GetInfo()
-    var sdkVersion: String = "1.0.0.42"
+
+    var sdkVersion: String = "1.0.0.44"
     var push_k_osType: String = "android"
     var push_k_deviceName: String = infoLocalDeviceHardware.getDeviceName().toString()
 
@@ -140,8 +133,8 @@ object PushSdkParameters {
             if (value > 0) field = value
         }
     //platform url branches. It can be rewrite by Push SDK initiation
-    var branch_current_active: UrlsPlatformList = PushSdkParametersPublic.branchMasterValue
-
+    var platformBranchLoaded: UrlsPlatformList = PushSdkParametersPublic.branchMasterValue
+    var branchCurrentActivePath: UrlsPlatformList? = null
 }
 
 interface PushKAp

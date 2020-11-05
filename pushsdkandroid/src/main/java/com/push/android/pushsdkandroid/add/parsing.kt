@@ -1,5 +1,7 @@
 package com.push.android.pushsdkandroid.add
 
+import com.push.android.pushsdkandroid.core.PushSdkParameters
+import com.push.android.pushsdkandroid.core.UrlsPlatformList
 import com.push.android.pushsdkandroid.logger.PushKLoggerSdk
 
 internal class PushParsing {
@@ -39,5 +41,36 @@ internal class PushParsing {
         }
         PushKLoggerSdk.debug("Result: Function: parseMessageId, Class: PushParsing, output: $matchResults")
         return matchResults
+    }
+
+    fun pathTransformation(baseUrl: String, pathUpl: UrlsPlatformList): UrlsPlatformList  {
+        val lastSym: String = baseUrl.last().toString()
+        var baseUrlUpdated = baseUrl
+        if (baseUrlUpdated.contains("{version}")) {
+            baseUrlUpdated = baseUrlUpdated.replace("{version}", PushSdkParameters.sdkVersion)
+        }
+        if (lastSym == "/") {
+            return UrlsPlatformList(
+                fun_pushsdk_url_device_update = baseUrlUpdated + pathUpl.fun_pushsdk_url_device_update,
+                fun_pushsdk_url_registration = baseUrlUpdated + pathUpl.fun_pushsdk_url_registration,
+                fun_pushsdk_url_revoke = baseUrlUpdated + pathUpl.fun_pushsdk_url_revoke,
+                fun_pushsdk_url_get_device_all = baseUrlUpdated + pathUpl.fun_pushsdk_url_get_device_all,
+                fun_pushsdk_url_message_callback = baseUrlUpdated + pathUpl.fun_pushsdk_url_message_callback,
+                fun_pushsdk_url_message_dr = baseUrlUpdated + pathUpl.fun_pushsdk_url_message_dr,
+                fun_pushsdk_url_mess_queue = baseUrlUpdated + pathUpl.fun_pushsdk_url_mess_queue,
+                pushsdk_url_message_history = baseUrlUpdated + pathUpl.pushsdk_url_message_history
+            )
+        } else {
+            return UrlsPlatformList(
+                fun_pushsdk_url_device_update = baseUrlUpdated + "/" + pathUpl.fun_pushsdk_url_device_update,
+                fun_pushsdk_url_registration = baseUrlUpdated + "/" + pathUpl.fun_pushsdk_url_registration,
+                fun_pushsdk_url_revoke = baseUrlUpdated + "/" + pathUpl.fun_pushsdk_url_revoke,
+                fun_pushsdk_url_get_device_all = baseUrlUpdated + "/" + pathUpl.fun_pushsdk_url_get_device_all,
+                fun_pushsdk_url_message_callback = baseUrlUpdated + "/" + pathUpl.fun_pushsdk_url_message_callback,
+                fun_pushsdk_url_message_dr = baseUrlUpdated + "/" + pathUpl.fun_pushsdk_url_message_dr,
+                fun_pushsdk_url_mess_queue = baseUrlUpdated + "/" + pathUpl.fun_pushsdk_url_mess_queue,
+                pushsdk_url_message_history = baseUrlUpdated + "/" + pathUpl.pushsdk_url_message_history
+            )
+        }
     }
 }

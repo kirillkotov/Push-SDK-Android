@@ -61,9 +61,9 @@ class PushSDK(
     context: Context,
     platform_branch: UrlsPlatformList = PushSdkParametersPublic.branchMasterValue,
     log_level: String = "error",
-    push_style: Int = 0
+    push_style: Int = 0,
+    basePushURL: String
 ) {
-
     //any classes initialization
     private var context: Context by Delegates.notNull()
     private var initHObject: Initialization = Initialization(context)
@@ -74,6 +74,7 @@ class PushSDK(
     private var parsing: PushParsing = PushParsing()
     private var pushInternalParamsObject: PushSdkParameters = PushSdkParameters
     private var pushDeviceType: String = ""
+    private var parsingPushClass: PushParsing = PushParsing()
 
     //main class initialization
     init {
@@ -81,7 +82,14 @@ class PushSDK(
         PushKPushMess.log_level_active = log_level
         PushKPushMess.push_message_style = push_style
         pushDeviceType = localDeviceInfo.getPhoneType(context)
-        PushSdkParameters.branch_current_active = platform_branch
+        if (basePushURL != "") {
+            PushSdkParameters.branchCurrentActivePath = parsingPushClass.pathTransformation(
+                baseUrl = basePushURL,
+                pathUpl = platform_branch
+            )
+        } else {
+            throw IllegalArgumentException("incorrect basePushURL parameter")
+        }
         try {
             val localDataLoaded = initHObject.hSdkGetParametersFromLocal()
             if (localDataLoaded.registrationStatus) {

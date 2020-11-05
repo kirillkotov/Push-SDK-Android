@@ -66,7 +66,8 @@ internal class PushKApi {
 
                 val currentTimestamp = System.currentTimeMillis()
                 val postData: ByteArray = message.toByteArray(Charset.forName("UTF-8"))
-                val mURL = URL(PushSdkParameters.branch_current_active.fun_pushsdk_url_registration)
+                val mURL =
+                    URL(PushSdkParameters.branchCurrentActivePath!!.fun_pushsdk_url_registration)
                 val connectorWebPlatform = mURL.openConnection() as HttpsURLConnection
                 connectorWebPlatform.doOutput = true
                 connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
@@ -164,7 +165,7 @@ internal class PushKApi {
                 val currentTimestamp2 = System.currentTimeMillis() // We want timestamp in seconds
                 val authToken = hash("$X_Push_Auth_Token:$currentTimestamp2")
                 val postData2: ByteArray = message2.toByteArray(Charset.forName("UTF-8"))
-                val mURL2 = URL(PushSdkParameters.branch_current_active.fun_pushsdk_url_revoke)
+                val mURL2 = URL(PushSdkParameters.branchCurrentActivePath!!.fun_pushsdk_url_revoke)
 
                 val connectorWebPlatform = mURL2.openConnection() as HttpsURLConnection
                 connectorWebPlatform.doOutput = true
@@ -230,7 +231,8 @@ internal class PushKApi {
             try {
 
                 //this timestamp for URL.
-                val currentTimestamp1 = (System.currentTimeMillis() / 1000L) - period_in_seconds // We want timestamp in seconds
+                val currentTimestamp1 =
+                    (System.currentTimeMillis() / 1000L) - period_in_seconds // We want timestamp in seconds
 
                 PushKLoggerSdk.debug("Result: val currentTimestamp1, Function: hGetMessageHistory, Class: PushKApi, currentTimestamp1: $currentTimestamp1")
 
@@ -246,7 +248,8 @@ internal class PushKApi {
 
                 PushKLoggerSdk.debug("\nSent 'GET' request to push_get_device_all with : X_Push_Session_Id : $X_Push_Session_Id; X_Push_Auth_Token : $X_Push_Auth_Token; period_in_seconds : $period_in_seconds")
 
-                val mURL2 = URL(PushSdkParameters.branch_current_active.pushsdk_url_message_history + currentTimestamp1.toString())
+                val mURL2 =
+                    URL(PushSdkParameters.branchCurrentActivePath!!.pushsdk_url_message_history + currentTimestamp1.toString())
 
                 with(mURL2.openConnection() as HttpsURLConnection) {
                     requestMethod = "GET"  // optional default is GET
@@ -307,7 +310,7 @@ internal class PushKApi {
 
 
                     val mURL2 =
-                        URL(PushSdkParameters.branch_current_active.fun_pushsdk_url_get_device_all)
+                        URL(PushSdkParameters.branchCurrentActivePath!!.fun_pushsdk_url_get_device_all)
 
 
                     with(mURL2.openConnection() as HttpsURLConnection) {
@@ -379,7 +382,8 @@ internal class PushKApi {
 
                 val postData: ByteArray = message.toByteArray(Charset.forName("UTF-8"))
 
-                val mURL = URL(PushSdkParameters.branch_current_active.fun_pushsdk_url_device_update)
+                val mURL =
+                    URL(PushSdkParameters.branchCurrentActivePath!!.fun_pushsdk_url_device_update)
 
                 val connectorWebPlatform = mURL.openConnection() as HttpsURLConnection
                 connectorWebPlatform.doOutput = true
@@ -460,7 +464,7 @@ internal class PushKApi {
                 val postData2: ByteArray = message2.toByteArray(Charset.forName("UTF-8"))
 
                 val mURL2 =
-                    URL(PushSdkParameters.branch_current_active.fun_pushsdk_url_message_callback)
+                    URL(PushSdkParameters.branchCurrentActivePath!!.fun_pushsdk_url_message_callback)
 
                 val connectorWebPlatform = mURL2.openConnection() as HttpsURLConnection
                 connectorWebPlatform.doOutput = true
@@ -542,7 +546,7 @@ internal class PushKApi {
                     val postData2: ByteArray = message2.toByteArray(Charset.forName("UTF-8"))
 
                     val mURL2 =
-                        URL(PushSdkParameters.branch_current_active.fun_pushsdk_url_message_dr)
+                        URL(PushSdkParameters.branchCurrentActivePath!!.fun_pushsdk_url_message_dr)
 
                     val connectorWebPlatform = mURL2.openConnection() as HttpsURLConnection
                     connectorWebPlatform.doOutput = true

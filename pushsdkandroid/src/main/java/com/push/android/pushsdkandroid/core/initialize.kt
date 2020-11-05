@@ -7,11 +7,6 @@ import com.push.android.pushsdkandroid.logger.PushKLoggerSdk
 import java.util.*
 
 
-
-
-
-
-
 //function for initialization different parameters
 internal class Initialization(val context: Context) {
     private val sharedPreference: SharedPreference = SharedPreference(context)
@@ -52,7 +47,8 @@ internal class Initialization(val context: Context) {
         hSdkUpdateFirebaseAuto()
 
         //1
-        val firebaseRegistrationToken: String = sharedPreference.getValueString("firebase_registration_token")!!.toString()
+        val firebaseRegistrationToken: String =
+            sharedPreference.getValueString("firebase_registration_token")!!.toString()
         PushKLoggerSdk.debug("Initialization.hSdkGetParametersFromLocal firebaseRegistrationToken: $firebaseRegistrationToken")
 
         if (firebaseRegistrationToken != "") {
