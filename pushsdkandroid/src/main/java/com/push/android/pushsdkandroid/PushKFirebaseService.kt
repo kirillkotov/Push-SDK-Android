@@ -5,25 +5,54 @@ Service for Firebase Push notification messaging
 package com.push.android.pushsdkandroid
 
 import android.annotation.SuppressLint
+import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.media.RingtoneManager
+import android.os.Build
+import androidx.core.app.NotificationCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.push.android.pushsdkandroid.add.GetInfo
+import com.push.android.pushsdkandroid.add.PushKInternal
 import com.push.android.pushsdkandroid.add.PushParsing
 import com.push.android.pushsdkandroid.add.RewriteParams
 import com.push.android.pushsdkandroid.core.PushKApi
 import com.push.android.pushsdkandroid.core.PushSdkParameters
 import com.push.android.pushsdkandroid.core.PushKPublicParams
 import com.push.android.pushsdkandroid.logger.PushKLoggerSdk
+import kotlinx.io.IOException
+import kotlinx.io.InputStream
+import java.net.HttpURLConnection
+import java.net.URL
 
 @SuppressLint("Registered")
-internal class PushKFirebaseService : FirebaseMessagingService() {
+internal class PushKFirebaseService : FirebaseMessagingService(), LifecycleObserver {
 
     private var api: PushKApi = PushKApi()
     private var parsing: PushParsing = PushParsing()
     private var getDevInform: GetInfo = GetInfo()
+
+    private var isAppInForeground = false
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    fun onForegroundStart() {
+        isAppInForeground = true
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    fun onForegroundStop() {
+        isAppInForeground = false
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -140,55 +169,135 @@ internal class PushKFirebaseService : FirebaseMessagingService() {
                 PushKPushMess.message = ""
             }
             PushKLoggerSdk.debug("Message data payload: " + remoteMessage.data.toString())
+
+            //check if app is in foreground or background
+            if(isAppInForeground) {
+                //nothing for now
+            }
+            else {
+                sendNotificationFromDataPush(remoteMessage.data)
+            }
         }
 
         // Check if message contains a notification payload.
-        if (remoteMessage.notification != null) {
-            PushKLoggerSdk.debug("Message Notification Body: " + remoteMessage.notification!!.body!!)
+//        if (remoteMessage.notification != null) {
+//            PushKLoggerSdk.debug("Message Notification Body: " + remoteMessage.notification!!.body!!)
+//
+//            try {
+//                when (PushKPushMess.push_message_style) {
+//                    0 -> sendNotification(remoteMessage)
+//                    1 -> {
+//                        sendNotificationImageType1(remoteMessage, parsing.parseImageUrl(remoteMessage.data.toString()))
+//                    }
+//                    else -> {
+//                        sendNotification(remoteMessage)
+//                    }
+//                }
+//            } catch (ee: Exception) {
+//                PushKLoggerSdk.debug("Notification payload sendNotification: Unknown Fail")
+//            }
+//        }
 
-            try {
-                when (PushKPushMess.push_message_style) {
-                    0 -> sendNotification(remoteMessage)
-                    1 -> {
-                        sendNotificationImageType1(remoteMessage, parsing.parseImageUrl(remoteMessage.data.toString()))
-                    }
-                    else -> {
-                        sendNotification(remoteMessage)
-                    }
-                }
-            } catch (ee: Exception) {
-                PushKLoggerSdk.debug("Notification payload sendNotification: Unknown Fail")
-            }
-        }
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
     }
 
-    private fun sendNotification(remoteMessage: RemoteMessage) {
-        val notificationObject = PushKPublicParams()
+    private fun sendNotificationFromDataPush(data: Map<String, String>) {
+        val dataJson = Gson().fromJson(data.toString(), JsonObject::class.java)
+        val message = dataJson.getAsJsonObject("message")
+        val title = message.getAsJsonPrimitive("title").asString
+        val body = message.getAsJsonPrimitive("body").asString
+        val image = message.getAsJsonObject("image")
+        var imageURL = ""
+        try {
+            imageURL = image.getAsJsonPrimitive("url").asString
+        }
+        catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        //val notificationIntent = packageManager.getLaunchIntentForPackage("com.example.hybersdktest")
+//        notificationIntent.action = "com.hyber.android.hybersdkandroid.Push"
+        //val notificationIntent = Intent()
+        val notificationIntent = packageManager.getLaunchIntentForPackage("com.example.hybersdktest")
+        //notificationIntent!!.action = "com.hyber.android.hybersdkandroid.Push2"
+        notificationIntent!!.putExtra("data", data.toString())
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            notificationIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        val CHANNEL_ID = "channel_name"
+        val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+
+
+        val builder = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
+            .setContentTitle(title)
+            .setContentText(body)
+            .setAutoCancel(true)
+            .setSmallIcon(R.drawable.googleg_standard_color_18)
+            .setPriority(PushKInternal.notificationPriorityOld(PushSdkParameters.push_notification_display_priority))
+            .setSound(defaultSoundUri)
+            //.setLargeIcon(getBitmapFromURL("https://cdn.jpegmini.com/user/images/slider_puffin_before_mobile.jpg"))
+            //.setVibrate(longArrayOf(1000))
+            .setContentIntent(pendingIntent)
+
+        getBitmapFromURL(imageURL)?.let {
+            builder.setStyle(NotificationCompat.BigPictureStyle().bigPicture(it))
+        }
+
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(
-            137923, // ID of notification
-            notificationObject.notificationBuilder(
-                applicationContext,
-                remoteMessage.notification!!.body.toString()
-            ).build()
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name: CharSequence = "Channel Name" // The user-visible name of the channel.
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val mChannel = NotificationChannel(CHANNEL_ID, name, importance)
+            notificationManager.createNotificationChannel(mChannel)
+        }
+        notificationManager.notify(137923, builder.build())
     }
 
-    private fun sendNotificationImageType1(remoteMessage: RemoteMessage, imageUrl: String) {
-        val notificationObject = PushKPublicParams()
-        val notificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(
-            137923, // ID of notification
-            notificationObject.notificationBuilder(
-                applicationContext,
-                remoteMessage.notification!!.body.toString(),
-                imageUrl
-            ).build()
-        )
+    fun getBitmapFromURL(strURL: String?): Bitmap? {
+        return try {
+            val url = URL(strURL)
+            val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
+            connection.doInput = true
+            connection.connect()
+            val input: InputStream = connection.getInputStream()
+            BitmapFactory.decodeStream(input)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            null
+        }
     }
+
+//    private fun sendNotification(remoteMessage: RemoteMessage) {
+//        val notificationObject = PushKPublicParams()
+//        val notificationManager =
+//            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+//        notificationManager.notify(
+//            137923, // ID of notification
+//            notificationObject.notificationBuilder(
+//                applicationContext,
+//                remoteMessage.notification!!.body.toString()
+//            ).build()
+//        )
+//    }
+//
+//    private fun sendNotificationImageType1(remoteMessage: RemoteMessage, imageUrl: String) {
+//        val notificationObject = PushKPublicParams()
+//        val notificationManager =
+//            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+//        notificationManager.notify(
+//            137923, // ID of notification
+//            notificationObject.notificationBuilder(
+//                applicationContext,
+//                remoteMessage.notification!!.body.toString(),
+//                imageUrl
+//            ).build()
+//        )
+//    }
 }
 
