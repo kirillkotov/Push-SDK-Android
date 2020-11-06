@@ -1,6 +1,7 @@
 # Push-SDK-Android
 
 Подключение SDK к проекту
+
         dependencies {
             implementation 'com.github.kirillkotov:Push-SDK-Android:1.0.0.45'
         }
@@ -17,6 +18,7 @@ Initialization:
                 push_style = 1,
                 basePushURL = "https://example.com/push/{version}/"
             )
+            
 Call example:
 
         val sdkAnswer: PushKFunAnswerGeneral = hPlatformPushAdapterSdk.push_get_message_history(7200)
