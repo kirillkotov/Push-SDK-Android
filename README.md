@@ -76,6 +76,7 @@ if you need specific path for procedure you can override it by platform_branch p
 Приём сообщений
 Поддерживается приём сообщений в нужную часть кода приложения с помощью Broadcast Receiver.
 Пример регистрации и использования:
+
         val mPlugInReceiver = object : BroadcastReceiver() {
                 override fun onReceive(context: Context, intent: Intent) {
                     if (PushKPushMess.message != null) {
@@ -97,6 +98,7 @@ if you need specific path for procedure you can override it by platform_branch p
               unregisterReceiver(mPlugInReceiver)
            }
 
+
 ############################################
 
 Работа приложения в фоне
@@ -116,8 +118,10 @@ if you need specific path for procedure you can override it by platform_branch p
 
 Формат ответа процедур
 Определены специальные типы данных для ответов процедур. Эти типы доступны для импорта из SDK:
-import com.push.android.pushsdkandroid.core.PushKFunAnswerRegister
-import com.push.android.pushsdkandroid.core.PushKFunAnswerGeneral
+
+        import com.push.android.pushsdkandroid.core.PushKFunAnswerRegister
+        import com.push.android.pushsdkandroid.core.PushKFunAnswerGeneral
+
 Тип данных общего ответа для всех процедур:
 
         public data class PushKFunAnswerGeneral(
