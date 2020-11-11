@@ -124,7 +124,7 @@ object PushSdkParametersPublic {
 object PushSdkParameters {
     private var infoLocalDeviceHardware: GetInfo = GetInfo()
 
-    var sdkVersion: String = "1.0.0.45"
+    var sdkVersion: String = "1.0.0.47"
     var push_k_osType: String = "android"
     var push_k_deviceName: String = infoLocalDeviceHardware.getDeviceName().toString()
 

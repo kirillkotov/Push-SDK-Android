@@ -18,7 +18,7 @@ Initialization:
                 push_style = 1,
                 basePushURL = "https://example.com/push/{version}/"
             )
-            
+
 Call example:
 
         val sdkAnswer: PushKFunAnswerGeneral = hPlatformPushAdapterSdk.push_get_message_history(7200)
