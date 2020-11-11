@@ -15,7 +15,6 @@ import kotlin.properties.Delegates
 object PushKPushMess {
     var message: String? = null   //global variable for push messages
     var log_level_active: String = "error" //global variable sdk log level
-    var push_message_style: Int = 1 //style type of push notification
     //push_message_style types
     //0 - only text in push notification
     //1 - text and large image in notification
@@ -61,7 +60,6 @@ class PushSDK(
     context: Context,
     platform_branch: UrlsPlatformList = PushSdkParametersPublic.branchMasterValue,
     log_level: String = "error",
-    push_style: Int = 0,
     basePushURL: String
 ) {
     //any classes initialization
@@ -80,7 +78,6 @@ class PushSDK(
     init {
         this.context = context
         PushKPushMess.log_level_active = log_level
-        PushKPushMess.push_message_style = push_style
         pushDeviceType = localDeviceInfo.getPhoneType(context)
         if (basePushURL != "") {
             PushSdkParameters.branchCurrentActivePath = parsingPushClass.pathTransformation(
