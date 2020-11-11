@@ -32,7 +32,7 @@ internal class PushParsing {
         return res
     }
 
-
+/*
     fun parseImageUrl(input_json: String): String {
         PushKLoggerSdk.debug("Result: Function: parseImageUrl, Class: PushParsing, input_json: $input_json")
         var matchResults = input_json.substringAfter(""""image":{""").substringAfter(""""url":"""").substringBefore(""""""")
@@ -42,6 +42,7 @@ internal class PushParsing {
         PushKLoggerSdk.debug("Result: Function: parseMessageId, Class: PushParsing, output: $matchResults")
         return matchResults
     }
+ */
 
     fun pathTransformation(baseUrl: String, pathUpl: UrlsPlatformList): UrlsPlatformList  {
         val lastSym: String = baseUrl.last().toString()
