@@ -40,7 +40,6 @@ obj/
 /pushsdkandroid/build/generated/source/buildConfig/debug/com/push/android/pushsdkandroid/BuildConfig.java
 .cxx
 /captures
-*.iml
 /local.properties
 /.idea/caches
 /.idea/libraries

@@ -479,6 +479,8 @@ open class PushKFirebaseService(
      * When the app instance receives this callback, it should perform a full sync with your app server.
      * If you haven't sent a message to the app on that device within the last 4 weeks, FCM won't call onDeletedMessages()
      */
+
+    @Suppress("RedundantOverride")
     override fun onDeletedMessages() {
         super.onDeletedMessages()
         //TODO sync something in here

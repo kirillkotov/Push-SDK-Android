@@ -3,7 +3,7 @@
 Подключение SDK к проекту
 
         dependencies {
-            implementation 'com.github.kirillkotov:Push-SDK-Android:1.0.0.45'
+            implementation 'com.github.kirillkotov:Push-SDK-Android:1.0.0.47'
         }
 
 
@@ -15,7 +15,6 @@ Initialization:
             PushSDK(
                 context = this,
                 log_level = "debug",
-                push_style = 1,
                 basePushURL = "https://example.com/push/{version}/"
             )
 
@@ -46,7 +45,6 @@ if you need specific path for procedure you can override it by platform_branch p
                     context = this,
                     platform_branch = branchSomeValue,
                     log_level = "debug",
-                    push_style = 1,
                     basePushURL = "https://example.com/push/{version}/"
                 )
 
@@ -62,7 +60,6 @@ if you need specific path for procedure you can override it by platform_branch p
             context: Context,
             platform_branch: UrlsPlatformList = PushSdkParametersPublic.branchMasterValue, // необязательный параметр. Передаются данные по URL методов на которые необходимо провиженить данные.
             log_level: String = "error",  // необязательный параметр. Уровень логирования событий SDK. (debug или error)
-            push_style = 1,  // стиль отображения Push сообщения
             basePushURL = "https://example.com/push/{version}/" // URL сервера сообщений
         )
 
@@ -99,21 +96,6 @@ if you need specific path for procedure you can override it by platform_branch p
               super.onStop()
               unregisterReceiver(mPlugInReceiver)
            }
-
-
-############################################
-
-Работа приложения в фоне
-Для того чтобы приложение висело в фоне и принимало сообщения даже когда пользователь его закроет, необходимо в методе OnCreate главной формы запустить сервис, добавив следующий код:
-
-        var intentService: Intent = Intent()
-        if (Build.VERSION.SDK_INT<=25) {
-                    intentService = Intent(this, PushKMessaging::class.java)
-                    startService(intentService);
-                }
-
-Если push сообщение было отправлено пользователю, а приложение в это время находилось в состоянии «killed», реализована возможность проверки очереди недоставленных сообщений. В случае, если обнаружены сообщения, на которые не отправлен отчёт о доставке, эти сообщения принимаются и отправляются отчёты о доставке.
-Для реализации данного функционала предлагается выполнение процедуры push_check_queue в методе onResume().
 
 
 ############################################
