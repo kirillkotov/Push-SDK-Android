@@ -1,129 +1,60 @@
-# Push-SDK-Android
+# Push SDK Android
 
-Подключение SDK к проекту
+## Using the SDK
 
-        dependencies {
-            implementation 'com.github.kirillkotov:Push-SDK-Android:1.0.0.47'
+Get started by visiting:
+
+* [Setting up your project to work with the SDK](https://github.com/kirillkotov/Push-SDK-Android/wiki/Setting-up-your-project-to-work-with-the-SDK)
+
+* [SDK method reference page](https://github.com/kirillkotov/Push-SDK-Android/wiki/SDK-methods)
+
+* [Receiving push messages and showing notifications](https://github.com/kirillkotov/Push-SDK-Android/wiki/Receiving-push-messages-and-showing-notifications)
+
+## Short dependency info
+
+### Push SDK
+
+Make sure you have declared maven repository in your project (top-level) `build.gradle`
+```
+allprojects {
+    repositories {
+        ...
+        maven {
+            url 'https://jitpack.io'
         }
+    }
+}
+```
+Add dependency to your module (app-level) `build.gradle`
+```
+dependencies {
+    ...
+    implementation 'com.github.kirillkotov:Push-SDK-Android:1.0.0.47'
+}
+```
 
+### Firebase cloud messaging
 
-############################################
+Recommended dependency versions to use within your app (or use whatever would be compatible with what is used within the SDK):
+- Project (top-level) `build.gradle`:
+```
+buildscript {
+    dependencies {
+        ...
+        classpath 'com.google.gms:google-services:4.3.4'
+    }
+}
+```
+- Module (app-level) `build.gradle`:
+```
+plugins {
+    ...
+    id 'com.google.gms.google-services'
+}
 
-Initialization:
-
-        val hPlatformPushAdapterSdk =
-            PushSDK(
-                context = this,
-                log_level = "debug",
-                basePushURL = "https://example.com/push/{version}/"
-            )
-
-Call example:
-
-        val sdkAnswer: PushKFunAnswerGeneral = hPlatformPushAdapterSdk.push_get_message_history(7200)
-        println(sdkAnswer)
-
-############################################
-
-if you need specific path for procedure you can override it by platform_branch parameter
-
-Пример:
-
-            val branchSomeValue: UrlsPlatformList = UrlsPlatformList(
-                fun_pushsdk_url_device_update = "device/update/test",
-                fun_pushsdk_url_registration = "device/test/registration",
-                fun_pushsdk_url_revoke = "device/revoke",
-                fun_pushsdk_url_get_device_all = "device/all",
-                fun_pushsdk_url_message_callback = "message/callback",
-                fun_pushsdk_url_message_dr = "message/dr",
-                fun_pushsdk_url_mess_queue = "message/queue",
-                pushsdk_url_message_history = "message/history?startDate="
-            )
-
-            val hPlatformPushAdapterSdk =
-                PushSDK(
-                    context = this,
-                    platform_branch = branchSomeValue,
-                    log_level = "debug",
-                    basePushURL = "https://example.com/push/{version}/"
-                )
-
-############################################
-
-Для использования процедур SDK импортируем класс (все процедуры доступны из этого единого класса):
-
-        import com.push.android.pushsdkandroid.PushSDK
-
-Для использования, необходимо создать экземпляр этого класса, проинициализировать его и передать ему входные параметры (один обязательный и 2 необязательных).
-
-        PushSDK(
-            context: Context,
-            platform_branch: UrlsPlatformList = PushSdkParametersPublic.branchMasterValue, // необязательный параметр. Передаются данные по URL методов на которые необходимо провиженить данные.
-            log_level: String = "error",  // необязательный параметр. Уровень логирования событий SDK. (debug или error)
-            basePushURL = "https://example.com/push/{version}/" // URL сервера сообщений
-        )
-
-Пример использования:
-
-        val pushsdk: PushSDK = PushSDK (context = this, basePushURL = "https://example.com/push/{version}/")
-        pushsdk.push_register_new("test", "1", "79193257892", "password")
-        pushsdk.rewrite_msisdn("375291234567")
-        pushsdk.push_clear_all_device()
-
-############################################
-
-Приём сообщений
-Поддерживается приём сообщений в нужную часть кода приложения с помощью Broadcast Receiver.
-Пример регистрации и использования:
-
-        val mPlugInReceiver = object : BroadcastReceiver() {
-                override fun onReceive(context: Context, intent: Intent) {
-                    if (PushKPushMess.message != null) {
-                        val edtName: EditText = findViewById(R.id.editText2)
-                        val mess: String = edtName.text.toString()
-                        edtName.setText(mess + "\n" + PushKPushMess.message)
-                    }
-                }
-            }
-        override fun onStart() {
-              super.onStart()
-              val filter = IntentFilter()
-              filter.addAction("com.push.android.pushsdkandroid.Push")
-              //val receiver: MyReceiver = MyReceiver()
-              registerReceiver(mPlugInReceiver, filter)
-          }
-          override fun onStop() {
-              super.onStop()
-              unregisterReceiver(mPlugInReceiver)
-           }
-
-
-############################################
-
-Формат ответа процедур
-Определены специальные типы данных для ответов процедур. Эти типы доступны для импорта из SDK:
-
-        import com.push.android.pushsdkandroid.core.PushKFunAnswerRegister
-        import com.push.android.pushsdkandroid.core.PushKFunAnswerGeneral
-
-Тип данных общего ответа для всех процедур:
-
-        public data class PushKFunAnswerGeneral(
-           val code: Int,
-           val result: String,
-           val description: String,
-           val body: String
-        )
-
-Тип данных для ответа процедуры регистрации:
-
-        public data class PushKFunAnswerRegister(
-          val code: Int,
-          val result: String,
-          val description: String,
-          val deviceId: String,
-          val token: String,
-          val userId: String,
-          val userPhone: String,
-          val createdAt: String
-        )
+dependencies {
+    ...
+    implementation 'com.google.firebase:firebase-messaging:21.0.0'
+}
+```
+- Make sure you add proper `google-services.json` file to the root of your app module
