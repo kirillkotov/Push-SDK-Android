@@ -87,20 +87,14 @@ dokkaHtml.configure {
     }
 }
 
-//task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
-//    outputFormat = 'javadoc'
-//    outputDirectory = "$buildDir/javadoc"
-//}
-
 task dokkaJavadocJar(type: Jar, dependsOn: dokkaJavadoc) {
-    //classifier = 'javadoc'
     archiveClassifier.set('javadoc')
     from tasks.dokkaJavadoc.outputDirectory
 }
 
 task dokkaHtmlJar(type: Jar, dependsOn: dokkaHtml) {
-    //classifier = 'javadoc'
-    archiveClassifier.set('html-doc')
+    //archiveClassifier.set('html-doc')
+    archiveClassifier.set('kdoc')
     from tasks.dokkaHtml.outputDirectory
 }
 
@@ -108,56 +102,3 @@ artifacts {
     archives dokkaJavadocJar
     archives dokkaHtmlJar
 }
-
-//task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
-//    outputFormat = 'javadoc'
-//    outputDirectory = "$buildDir/javadoc"
-//}
-//
-//task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
-//    classifier = 'javadoc'
-//    from "$buildDir/javadoc"
-//}
-
-//task javadoc(type: Javadoc) {
-//    failOnError false
-//    source = android.sourceSets.main.java.sourceFiles
-//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-//    classpath += configurations.compile
-//}
-//
-//// build a jar with javadoc
-//task javadocJar(type: Jar, dependsOn: javadoc) {
-//    //classifier = 'javadoc'
-//    getArchiveClassifier().set('javadoc')
-//    from javadoc.destinationDir
-//}
-//
-//artifacts {
-//    archives javadocJar
-//}
-
-//task sourcesJar(type: Jar) {
-//    classifier = 'sources'
-//    from android.sourceSets.main.java.sourceFiles
-//}
-//
-//task javadoc(type: Javadoc) {
-//    source = android.sourceSets.main.java.sourceFiles
-//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-//}
-
-//task javadocJar(type: Jar, dependsOn: javadoc) {
-//    classifier = 'javadoc'
-//    from javadoc.destinationDir
-//}
-//
-//task classesJar(type: Jar) {
-//    from "$buildDir/intermediates/classes/release"
-//}
-//
-//artifacts {
-//    archives classesJar
-//    archives javadocJar
-//    archives sourcesJar
-//}
