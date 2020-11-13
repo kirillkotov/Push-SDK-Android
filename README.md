@@ -10,7 +10,7 @@ Get started by visiting:
 
 * [Receiving push messages and showing notifications](https://github.com/kirillkotov/Push-SDK-Android/wiki/Receiving-push-messages-and-showing-notifications)
 
-### JavaDoc:
+### Documentation:
 https://kirillkotov.github.io/Push-SDK-Android/com/push/android/pushsdkandroid/PushSDK.html
 
 ## Short dependency info
