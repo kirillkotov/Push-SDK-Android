@@ -1,3 +1,12 @@
+/gradle
+/pushsdkandroid
+/build.gradle
+/gradle.properties
+/gradlew
+/gradlew.bat
+/publisher.gradle
+/settings.gradle
+
 #built application files
 *.apk
 *.ap_
