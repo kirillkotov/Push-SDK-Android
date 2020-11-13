@@ -1,0 +1,7 @@
+$dokka.format:gfm-v1
+$dokka.linkExtension:md
+
+com.push.android.pushsdkandroid
+com.push.android.pushsdkandroid.add
+com.push.android.pushsdkandroid.core
+
