@@ -48,5 +48,3 @@ obj/
 /.idea/workspace.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
-/build
-!/build/dokka/*
