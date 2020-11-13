@@ -1,8 +1,0 @@
-$dokka.format:javadoc-v1
-$dokka.linkExtension:html
-$dokka.location:com.push.android.pushsdkandroid/PushKFirebaseService.Companion///PointingToDeclaration/com/push/android/pushsdkandroid/PushKFirebaseService.Companion.html
-$dokka.location:com.push.android.pushsdkandroid/PushKFirebaseService.NotificationStyle///PointingToDeclaration/com/push/android/pushsdkandroid/PushKFirebaseService.NotificationStyle.html
-com.push.android.pushsdkandroid
-com.push.android.pushsdkandroid.add
-com.push.android.pushsdkandroid.core
-
