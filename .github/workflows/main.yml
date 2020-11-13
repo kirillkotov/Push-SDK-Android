@@ -25,12 +25,16 @@ jobs:
       run: chmod +x gradlew
     - name: Build and run tests
       run: ./gradlew build
-    - name: Generate API documentation
-      run: ./gradlew dokkaHtml
+    - name: Generate API documentation dokkaGfm
+      #run: ./gradlew dokkaHtml
+      run: ./gradlew dokkaGfm
+    - name: Generate API documentation dokkaJavadoc
+      run: ./gradlew dokkaJavadoc
     - name: Deploy API documentation to Github Pages
       uses: JamesIves/github-pages-deploy-action@3.7.1
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: docs
         TARGET_FOLDER: docs 
-        FOLDER: pushsdkandroid/build/dokka/html
+        FOLDER: pushsdkandroid/build/dokka
+        CLEAN: true # Automatically remove deleted files from the deploy branch
