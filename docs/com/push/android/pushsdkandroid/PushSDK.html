@@ -110,7 +110,7 @@ var pathtoroot = "../../../../";
 public final class <span class="typeNameLabel"><a href=PushSDK.html>PushSDK</a></span>
 
                     </pre>
-                    <div class="block"></div>
+                    <div class="block"><p>Main class, used for initialization</p></div>
                 </li>
             </ul>
         </div>
@@ -181,7 +181,7 @@ public final class <span class="typeNameLabel"><a href=PushSDK.html>PushSDK</a><
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=PushSDK.html#push_register_new(String,String,String,String)>push_register_new</a>(<a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> X_Push_Client_API_Key, <a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> X_Push_App_Fingerprint, <a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> user_msisdn, <a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> user_password) </code>
                                             </th>
-                                            <td class="colLast"></td>
+                                            <td class="colLast">Register the device</td>
                                         </tr>
                                         
                                         <tr id="i1" class="rowColor">
@@ -189,7 +189,7 @@ public final class <span class="typeNameLabel"><a href=PushSDK.html>PushSDK</a><
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=PushSDK.html#push_register_new(String,String,String,String,String)>push_register_new</a>(<a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> X_Push_Client_API_Key, <a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> X_Push_App_Fingerprint, <a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> user_msisdn, <a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> user_password, <a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> X_FCM_token) </code>
                                             </th>
-                                            <td class="colLast"></td>
+                                            <td class="colLast">Register the device</td>
                                         </tr>
                                         
                                         <tr id="i2" class="altColor">
@@ -197,7 +197,7 @@ public final class <span class="typeNameLabel"><a href=PushSDK.html>PushSDK</a><
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=PushSDK.html#push_clear_current_device()>push_clear_current_device</a>() </code>
                                             </th>
-                                            <td class="colLast"></td>
+                                            <td class="colLast">Unregister the current device from database (if registered)</td>
                                         </tr>
                                         
                                         <tr id="i3" class="rowColor">
@@ -205,7 +205,7 @@ public final class <span class="typeNameLabel"><a href=PushSDK.html>PushSDK</a><
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=PushSDK.html#push_get_message_history(Integer)>push_get_message_history</a>(<a href=https://developer.android.com/reference/kotlin/java/lang/Integer.html>Integer</a> period_in_seconds) </code>
                                             </th>
-                                            <td class="colLast"></td>
+                                            <td class="colLast">Get message history</td>
                                         </tr>
                                         
                                         <tr id="i4" class="altColor">
@@ -213,7 +213,7 @@ public final class <span class="typeNameLabel"><a href=PushSDK.html>PushSDK</a><
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=PushSDK.html#push_get_device_all_from_server()>push_get_device_all_from_server</a>() </code>
                                             </th>
-                                            <td class="colLast"></td>
+                                            <td class="colLast">Get a list of all devices registered with the current phone number</td>
                                         </tr>
                                         
                                         <tr id="i5" class="rowColor">
@@ -221,7 +221,7 @@ public final class <span class="typeNameLabel"><a href=PushSDK.html>PushSDK</a><
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=PushSDK.html#push_update_registration()>push_update_registration</a>() </code>
                                             </th>
-                                            <td class="colLast"></td>
+                                            <td class="colLast">Update registration</td>
                                         </tr>
                                         
                                         <tr id="i6" class="altColor">
@@ -229,7 +229,7 @@ public final class <span class="typeNameLabel"><a href=PushSDK.html>PushSDK</a><
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=PushSDK.html#push_send_message_callback(String,String)>push_send_message_callback</a>(<a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> message_id, <a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> message_text) </code>
                                             </th>
-                                            <td class="colLast"></td>
+                                            <td class="colLast">Send a message to the server and receive a callback</td>
                                         </tr>
                                         
                                         <tr id="i7" class="rowColor">
@@ -237,7 +237,7 @@ public final class <span class="typeNameLabel"><a href=PushSDK.html>PushSDK</a><
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=PushSDK.html#push_message_delivery_report(String)>push_message_delivery_report</a>(<a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> message_id) </code>
                                             </th>
-                                            <td class="colLast"></td>
+                                            <td class="colLast">Send a delivery report for a specific message</td>
                                         </tr>
                                         
                                         <tr id="i8" class="altColor">
@@ -245,7 +245,7 @@ public final class <span class="typeNameLabel"><a href=PushSDK.html>PushSDK</a><
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=PushSDK.html#push_clear_all_device()>push_clear_all_device</a>() </code>
                                             </th>
-                                            <td class="colLast"></td>
+                                            <td class="colLast">Unregister all devices registered with the current phone number from database</td>
                                         </tr>
                                         
                                         <tr id="i9" class="rowColor">
@@ -253,7 +253,7 @@ public final class <span class="typeNameLabel"><a href=PushSDK.html>PushSDK</a><
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=PushSDK.html#rewrite_msisdn(String)>rewrite_msisdn</a>(<a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> newmsisdn) </code>
                                             </th>
-                                            <td class="colLast"></td>
+                                            <td class="colLast">Change phone number</td>
                                         </tr>
                                         
                                         <tr id="i10" class="altColor">
@@ -261,7 +261,7 @@ public final class <span class="typeNameLabel"><a href=PushSDK.html>PushSDK</a><
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=PushSDK.html#rewrite_password(String)>rewrite_password</a>(<a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> newPassword) </code>
                                             </th>
-                                            <td class="colLast"></td>
+                                            <td class="colLast">Change password (temporary)</td>
                                         </tr>
                                         
                                         <tr id="i11" class="rowColor">
@@ -269,7 +269,7 @@ public final class <span class="typeNameLabel"><a href=PushSDK.html>PushSDK</a><
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=PushSDK.html#push_check_queue()>push_check_queue</a>() </code>
                                             </th>
-                                            <td class="colLast"></td>
+                                            <td class="colLast">Checks undelivered message queue and sends delivery report for the messages</td>
                                         </tr>
                                         
                                         </tbody>
@@ -316,6 +316,27 @@ public final class <span class="typeNameLabel"><a href=PushSDK.html>PushSDK</a><
                                         <pre>PushSDK(<a href=https://developer.android.com/reference/kotlin/android/content/Context.html>Context</a> context, <a href=../com/push/android/pushsdkandroid/core/UrlsPlatformList.html>UrlsPlatformList</a> platform_branch, <a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> log_level, <a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> basePushURL)</pre>
                                         <div class="block"></div>
                                         
+                                        <dl>
+                                            <dt><span class="paramLabel">Parameters:</span></dt>
+                                            
+                                            
+                                            <dd><code>context</code> - the context you would like to use</dd>
+                                            
+                                            
+                                            
+                                            <dd><code>platform_branch</code> - (optional) list of api paths</dd>
+                                            
+                                            
+                                            
+                                            <dd><code>log_level</code> - (optional) logging level, "error" or "debug"</dd>
+                                            
+                                            
+                                            
+                                            <dd><code>basePushURL</code> - base URL path to the server API</dd>
+                                            
+                                            
+                                        </dl>
+                                        
                                     </li>
                                 </ul>
                                 
@@ -341,7 +362,28 @@ public final class <span class="typeNameLabel"><a href=PushSDK.html>PushSDK</a><
                                     <li class="blockList">
                                         <h4>push_register_new</h4>
                                         <pre class="methodSignature"> final <a href=../com/push/android/pushsdkandroid/core/PushKFunAnswerRegister.html>PushKFunAnswerRegister</a> <a href=PushSDK.html#push_register_new(String,String,String,String)>push_register_new</a>(<a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> X_Push_Client_API_Key, <a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> X_Push_App_Fingerprint, <a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> user_msisdn, <a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> user_password)</pre>
-                                        <div class="block"></div>
+                                        <div class="block"><p>Register the device</p></div>
+                                        
+                                        <dl>
+                                            <dt><span class="paramLabel">Parameters:</span></dt>
+                                            
+                                            
+                                            <dd><code>X_Push_Client_API_Key</code> - API key that you would be provided with</dd>
+                                            
+                                            
+                                            
+                                            <dd><code>X_Push_App_Fingerprint</code> - APP fingerprint that you would be provided with</dd>
+                                            
+                                            
+                                            
+                                            <dd><code>user_msisdn</code> - Device phone number</dd>
+                                            
+                                            
+                                            
+                                            <dd><code>user_password</code> - password, associated with device phone number</dd>
+                                            
+                                            
+                                        </dl>
                                         
                                         <!-- TODO missing return annotation -->
                                     </li>
@@ -356,7 +398,32 @@ public final class <span class="typeNameLabel"><a href=PushSDK.html>PushSDK</a><
                                     <li class="blockList">
                                         <h4>push_register_new</h4>
                                         <pre class="methodSignature"> final <a href=../com/push/android/pushsdkandroid/core/PushKFunAnswerRegister.html>PushKFunAnswerRegister</a> <a href=PushSDK.html#push_register_new(String,String,String,String,String)>push_register_new</a>(<a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> X_Push_Client_API_Key, <a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> X_Push_App_Fingerprint, <a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> user_msisdn, <a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> user_password, <a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> X_FCM_token)</pre>
-                                        <div class="block"></div>
+                                        <div class="block"><p>Register the device</p></div>
+                                        
+                                        <dl>
+                                            <dt><span class="paramLabel">Parameters:</span></dt>
+                                            
+                                            
+                                            <dd><code>X_Push_Client_API_Key</code> - API key that you would be provided with</dd>
+                                            
+                                            
+                                            
+                                            <dd><code>X_Push_App_Fingerprint</code> - APP fingerprint that you would be provided with</dd>
+                                            
+                                            
+                                            
+                                            <dd><code>user_msisdn</code> - Device phone number</dd>
+                                            
+                                            
+                                            
+                                            <dd><code>user_password</code> - password, associated with device phone number</dd>
+                                            
+                                            
+                                            
+                                            <dd><code>X_FCM_token</code> - your firebase cloud messaging token</dd>
+                                            
+                                            
+                                        </dl>
                                         
                                         <!-- TODO missing return annotation -->
                                     </li>
@@ -371,7 +438,7 @@ public final class <span class="typeNameLabel"><a href=PushSDK.html>PushSDK</a><
                                     <li class="blockList">
                                         <h4>push_clear_current_device</h4>
                                         <pre class="methodSignature"> final <a href=../com/push/android/pushsdkandroid/core/PushKFunAnswerGeneral.html>PushKFunAnswerGeneral</a> <a href=PushSDK.html#push_clear_current_device()>push_clear_current_device</a>()</pre>
-                                        <div class="block"></div>
+                                        <div class="block"><p>Unregister the current device from database (if registered)</p></div>
                                         
                                         <!-- TODO missing return annotation -->
                                     </li>
@@ -386,7 +453,16 @@ public final class <span class="typeNameLabel"><a href=PushSDK.html>PushSDK</a><
                                     <li class="blockList">
                                         <h4>push_get_message_history</h4>
                                         <pre class="methodSignature"> final <a href=../com/push/android/pushsdkandroid/core/PushKFunAnswerGeneral.html>PushKFunAnswerGeneral</a> <a href=PushSDK.html#push_get_message_history(Integer)>push_get_message_history</a>(<a href=https://developer.android.com/reference/kotlin/java/lang/Integer.html>Integer</a> period_in_seconds)</pre>
-                                        <div class="block"></div>
+                                        <div class="block"><p>Get message history</p></div>
+                                        
+                                        <dl>
+                                            <dt><span class="paramLabel">Parameters:</span></dt>
+                                            
+                                            
+                                            <dd><code>period_in_seconds</code> - amount of time to get message history for</dd>
+                                            
+                                            
+                                        </dl>
                                         
                                         <!-- TODO missing return annotation -->
                                     </li>
@@ -401,7 +477,7 @@ public final class <span class="typeNameLabel"><a href=PushSDK.html>PushSDK</a><
                                     <li class="blockList">
                                         <h4>push_get_device_all_from_server</h4>
                                         <pre class="methodSignature"> final <a href=../com/push/android/pushsdkandroid/core/PushKFunAnswerGeneral.html>PushKFunAnswerGeneral</a> <a href=PushSDK.html#push_get_device_all_from_server()>push_get_device_all_from_server</a>()</pre>
-                                        <div class="block"></div>
+                                        <div class="block"><p>Get a list of all devices registered with the current phone number</p></div>
                                         
                                         <!-- TODO missing return annotation -->
                                     </li>
@@ -416,7 +492,7 @@ public final class <span class="typeNameLabel"><a href=PushSDK.html>PushSDK</a><
                                     <li class="blockList">
                                         <h4>push_update_registration</h4>
                                         <pre class="methodSignature"> final <a href=../com/push/android/pushsdkandroid/core/PushKFunAnswerGeneral.html>PushKFunAnswerGeneral</a> <a href=PushSDK.html#push_update_registration()>push_update_registration</a>()</pre>
-                                        <div class="block"></div>
+                                        <div class="block"><p>Update registration</p></div>
                                         
                                         <!-- TODO missing return annotation -->
                                     </li>
@@ -431,7 +507,20 @@ public final class <span class="typeNameLabel"><a href=PushSDK.html>PushSDK</a><
                                     <li class="blockList">
                                         <h4>push_send_message_callback</h4>
                                         <pre class="methodSignature"> final <a href=../com/push/android/pushsdkandroid/core/PushKFunAnswerGeneral.html>PushKFunAnswerGeneral</a> <a href=PushSDK.html#push_send_message_callback(String,String)>push_send_message_callback</a>(<a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> message_id, <a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> message_text)</pre>
-                                        <div class="block"></div>
+                                        <div class="block"><p>Send a message to the server and receive a callback</p></div>
+                                        
+                                        <dl>
+                                            <dt><span class="paramLabel">Parameters:</span></dt>
+                                            
+                                            
+                                            <dd><code>message_id</code> - id of the message</dd>
+                                            
+                                            
+                                            
+                                            <dd><code>message_text</code> - text of the message</dd>
+                                            
+                                            
+                                        </dl>
                                         
                                         <!-- TODO missing return annotation -->
                                     </li>
@@ -446,7 +535,16 @@ public final class <span class="typeNameLabel"><a href=PushSDK.html>PushSDK</a><
                                     <li class="blockList">
                                         <h4>push_message_delivery_report</h4>
                                         <pre class="methodSignature"> final <a href=../com/push/android/pushsdkandroid/core/PushKFunAnswerGeneral.html>PushKFunAnswerGeneral</a> <a href=PushSDK.html#push_message_delivery_report(String)>push_message_delivery_report</a>(<a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> message_id)</pre>
-                                        <div class="block"></div>
+                                        <div class="block"><p>Send a delivery report for a specific message</p></div>
+                                        
+                                        <dl>
+                                            <dt><span class="paramLabel">Parameters:</span></dt>
+                                            
+                                            
+                                            <dd><code>message_id</code> - message id to get the delivery report for</dd>
+                                            
+                                            
+                                        </dl>
                                         
                                         <!-- TODO missing return annotation -->
                                     </li>
@@ -461,7 +559,7 @@ public final class <span class="typeNameLabel"><a href=PushSDK.html>PushSDK</a><
                                     <li class="blockList">
                                         <h4>push_clear_all_device</h4>
                                         <pre class="methodSignature"> final <a href=../com/push/android/pushsdkandroid/core/PushKFunAnswerGeneral.html>PushKFunAnswerGeneral</a> <a href=PushSDK.html#push_clear_all_device()>push_clear_all_device</a>()</pre>
-                                        <div class="block"></div>
+                                        <div class="block"><p>Unregister all devices registered with the current phone number from database</p></div>
                                         
                                         <!-- TODO missing return annotation -->
                                     </li>
@@ -476,7 +574,16 @@ public final class <span class="typeNameLabel"><a href=PushSDK.html>PushSDK</a><
                                     <li class="blockList">
                                         <h4>rewrite_msisdn</h4>
                                         <pre class="methodSignature"> final <a href=../com/push/android/pushsdkandroid/core/PushKFunAnswerGeneral.html>PushKFunAnswerGeneral</a> <a href=PushSDK.html#rewrite_msisdn(String)>rewrite_msisdn</a>(<a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> newmsisdn)</pre>
-                                        <div class="block"></div>
+                                        <div class="block"><p>Change phone number</p></div>
+                                        
+                                        <dl>
+                                            <dt><span class="paramLabel">Parameters:</span></dt>
+                                            
+                                            
+                                            <dd><code>newmsisdn</code> - new phone number</dd>
+                                            
+                                            
+                                        </dl>
                                         
                                         <!-- TODO missing return annotation -->
                                     </li>
@@ -491,7 +598,16 @@ public final class <span class="typeNameLabel"><a href=PushSDK.html>PushSDK</a><
                                     <li class="blockList">
                                         <h4>rewrite_password</h4>
                                         <pre class="methodSignature"> final <a href=../com/push/android/pushsdkandroid/core/PushKFunAnswerGeneral.html>PushKFunAnswerGeneral</a> <a href=PushSDK.html#rewrite_password(String)>rewrite_password</a>(<a href=https://developer.android.com/reference/kotlin/java/lang/String.html>String</a> newPassword)</pre>
-                                        <div class="block"></div>
+                                        <div class="block"><p>Change password (temporary)</p></div>
+                                        
+                                        <dl>
+                                            <dt><span class="paramLabel">Parameters:</span></dt>
+                                            
+                                            
+                                            <dd><code>newPassword</code> - new password</dd>
+                                            
+                                            
+                                        </dl>
                                         
                                         <!-- TODO missing return annotation -->
                                     </li>
@@ -506,7 +622,7 @@ public final class <span class="typeNameLabel"><a href=PushSDK.html>PushSDK</a><
                                     <li class="blockList">
                                         <h4>push_check_queue</h4>
                                         <pre class="methodSignature"> final <a href=../com/push/android/pushsdkandroid/core/PushKFunAnswerGeneral.html>PushKFunAnswerGeneral</a> <a href=PushSDK.html#push_check_queue()>push_check_queue</a>()</pre>
-                                        <div class="block"></div>
+                                        <div class="block"><p>Checks undelivered message queue and sends delivery report for the messages</p></div>
                                         
                                         <!-- TODO missing return annotation -->
                                     </li>
