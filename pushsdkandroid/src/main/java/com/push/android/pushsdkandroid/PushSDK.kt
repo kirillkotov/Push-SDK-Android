@@ -11,7 +11,6 @@ import com.push.android.pushsdkandroid.core.*
 import com.push.android.pushsdkandroid.logger.PushKLoggerSdk
 import kotlin.properties.Delegates
 
-@Suppress("SpellCheckingInspection")
 object PushKPushMess {
     var message: String? = null   //global variable for push messages
     var log_level_active: String = "error" //global variable sdk log level
@@ -22,9 +21,8 @@ object PushKPushMess {
 
 internal lateinit var PushKDatabase: PushOperativeData
 
-@Suppress("SpellCheckingInspection", "unused", "FunctionName")
+@Suppress("unused")
 class PushSDKQueue {
-
     fun push_check_queue(context: Context): PushKFunAnswerGeneral {
         val answerNotKnown = PushKFunAnswerGeneral(710, "Failed", "Unknown error", "unknown")
         try {
@@ -55,7 +53,7 @@ class PushSDKQueue {
     }
 }
 
-@Suppress("SpellCheckingInspection", "unused", "FunctionName", "MemberVisibilityCanBePrivate")
+@Suppress("unused")
 class PushSDK(
     context: Context,
     platform_branch: UrlsPlatformList = PushSdkParametersPublic.branchMasterValue,
