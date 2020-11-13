@@ -1,0 +1,34 @@
+---
+title: PushKFunAnswerGeneral -
+---
+//[pushsdkandroid](../../index.md)/[com.push.android.pushsdkandroid.core](../index.md)/[PushKFunAnswerGeneral](index.md)
+
+
+
+# PushKFunAnswerGeneral  
+ [androidJvm] data class [PushKFunAnswerGeneral](index.md)(**code**: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), **result**: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), **description**: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), **body**: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html))   
+
+
+## Functions  
+  
+|  Name|  Summary| 
+|---|---|
+| <a name="com.push.android.pushsdkandroid.core/PushKFunAnswerGeneral/component1/#/PointingToDeclaration/"></a>[component1](component1.md)| <a name="com.push.android.pushsdkandroid.core/PushKFunAnswerGeneral/component1/#/PointingToDeclaration/"></a>[androidJvm]  <br>Content  <br>operator fun [component1](component1.md)(): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)  <br><br><br>
+| <a name="com.push.android.pushsdkandroid.core/PushKFunAnswerGeneral/component2/#/PointingToDeclaration/"></a>[component2](component2.md)| <a name="com.push.android.pushsdkandroid.core/PushKFunAnswerGeneral/component2/#/PointingToDeclaration/"></a>[androidJvm]  <br>Content  <br>operator fun [component2](component2.md)(): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)  <br><br><br>
+| <a name="com.push.android.pushsdkandroid.core/PushKFunAnswerGeneral/component3/#/PointingToDeclaration/"></a>[component3](component3.md)| <a name="com.push.android.pushsdkandroid.core/PushKFunAnswerGeneral/component3/#/PointingToDeclaration/"></a>[androidJvm]  <br>Content  <br>operator fun [component3](component3.md)(): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)  <br><br><br>
+| <a name="com.push.android.pushsdkandroid.core/PushKFunAnswerGeneral/component4/#/PointingToDeclaration/"></a>[component4](component4.md)| <a name="com.push.android.pushsdkandroid.core/PushKFunAnswerGeneral/component4/#/PointingToDeclaration/"></a>[androidJvm]  <br>Content  <br>operator fun [component4](component4.md)(): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)  <br><br><br>
+| <a name="com.push.android.pushsdkandroid.core/PushKFunAnswerGeneral/copy/#kotlin.Int#kotlin.String#kotlin.String#kotlin.String/PointingToDeclaration/"></a>[copy](copy.md)| <a name="com.push.android.pushsdkandroid.core/PushKFunAnswerGeneral/copy/#kotlin.Int#kotlin.String#kotlin.String#kotlin.String/PointingToDeclaration/"></a>[androidJvm]  <br>Content  <br>fun [copy](copy.md)(code: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), result: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), description: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), body: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [PushKFunAnswerGeneral](index.md)  <br><br><br>
+| <a name="kotlin/Any/equals/#kotlin.Any?/PointingToDeclaration/"></a>[equals](../-push-operative-data/index.md#%5Bkotlin%2FAny%2Fequals%2F%23kotlin.Any%3F%2FPointingToDeclaration%2F%5D%2FFunctions%2F-491063224)| <a name="kotlin/Any/equals/#kotlin.Any?/PointingToDeclaration/"></a>[androidJvm]  <br>Content  <br>open operator override fun [equals](../-push-operative-data/index.md#%5Bkotlin%2FAny%2Fequals%2F%23kotlin.Any%3F%2FPointingToDeclaration%2F%5D%2FFunctions%2F-491063224)(other: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)  <br><br><br>
+| <a name="kotlin/Any/hashCode/#/PointingToDeclaration/"></a>[hashCode](../-push-operative-data/index.md#%5Bkotlin%2FAny%2FhashCode%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-491063224)| <a name="kotlin/Any/hashCode/#/PointingToDeclaration/"></a>[androidJvm]  <br>Content  <br>open override fun [hashCode](../-push-operative-data/index.md#%5Bkotlin%2FAny%2FhashCode%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-491063224)(): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)  <br><br><br>
+| <a name="kotlin/Any/toString/#/PointingToDeclaration/"></a>[toString](../-push-operative-data/index.md#%5Bkotlin%2FAny%2FtoString%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-491063224)| <a name="kotlin/Any/toString/#/PointingToDeclaration/"></a>[androidJvm]  <br>Content  <br>open override fun [toString](../-push-operative-data/index.md#%5Bkotlin%2FAny%2FtoString%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F-491063224)(): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)  <br><br><br>
+
+
+## Properties  
+  
+|  Name|  Summary| 
+|---|---|
+| <a name="com.push.android.pushsdkandroid.core/PushKFunAnswerGeneral/body/#/PointingToDeclaration/"></a>[body](body.md)| <a name="com.push.android.pushsdkandroid.core/PushKFunAnswerGeneral/body/#/PointingToDeclaration/"></a> [androidJvm] val [body](body.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)   <br>
+| <a name="com.push.android.pushsdkandroid.core/PushKFunAnswerGeneral/code/#/PointingToDeclaration/"></a>[code](code.md)| <a name="com.push.android.pushsdkandroid.core/PushKFunAnswerGeneral/code/#/PointingToDeclaration/"></a> [androidJvm] val [code](code.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)   <br>
+| <a name="com.push.android.pushsdkandroid.core/PushKFunAnswerGeneral/description/#/PointingToDeclaration/"></a>[description](description.md)| <a name="com.push.android.pushsdkandroid.core/PushKFunAnswerGeneral/description/#/PointingToDeclaration/"></a> [androidJvm] val [description](description.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)   <br>
+| <a name="com.push.android.pushsdkandroid.core/PushKFunAnswerGeneral/result/#/PointingToDeclaration/"></a>[result](result.md)| <a name="com.push.android.pushsdkandroid.core/PushKFunAnswerGeneral/result/#/PointingToDeclaration/"></a> [androidJvm] val [result](result.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)   <br>
+

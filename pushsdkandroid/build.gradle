@@ -32,20 +32,33 @@ android {
 
 }
 
-tasks.dokkaGfm.configure {
-    dokkaSourceSets {
-        //outputDirectory.set(buildDir("ayy"))
-        configureEach {
-            noAndroidSdkLink.set(false)
-
-            skipDeprecated.set(false)
-            skipEmptyPackages.set(true)
-            reportUndocumented.set(true)
-            includeNonPublic.set(false)
-        }
-
-    }
-}
+//tasks.dokkaGfm.configure {
+//    dokkaSourceSets {
+//        //outputDirectory.set(buildDir("ayy"))
+//        configureEach {
+//            noAndroidSdkLink.set(false)
+//            skipDeprecated.set(false)
+//            skipEmptyPackages.set(true)
+//            reportUndocumented.set(true)
+//            includeNonPublic.set(true)
+//        }
+//
+//    }
+//}
+//
+//tasks.dokkaHtml.configure {
+//    dokkaSourceSets {
+//        //outputDirectory.set(buildDir("ayy"))
+//        configureEach {
+//            noAndroidSdkLink.set(false)
+//            skipDeprecated.set(false)
+//            skipEmptyPackages.set(true)
+//            reportUndocumented.set(true)
+//            includeNonPublic.set(false)
+//        }
+//
+//    }
+//}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
