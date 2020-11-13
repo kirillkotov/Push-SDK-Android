@@ -32,6 +32,32 @@ android {
 
 }
 
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.lifecycle:lifecycle-process:2.2.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    implementation 'android.arch.work:work-runtime:1.0.1'
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.9.1"
+
+    //noinspection GradleDependency
+    implementation 'com.google.firebase:firebase-core:17.5.0'
+    //noinspection GradleDependency
+    implementation 'com.google.firebase:firebase-iid:20.2.4'
+    //noinspection GradleDependency
+    implementation 'com.google.firebase:firebase-messaging:20.2.4'
+
+    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+
+    implementation 'io.github.microutils:kotlin-logging:1.8.3'
+}
+
 dokkaJavadoc.configure {
     dokkaSourceSets {
         //outputDirectory.set(buildDir("ayy"))
@@ -61,6 +87,38 @@ dokkaHtml.configure {
     }
 }
 
+//task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
+//    outputFormat = 'javadoc'
+//    outputDirectory = "$buildDir/javadoc"
+//}
+
+task dokkaJavadocJar(type: Jar, dependsOn: dokkaJavadoc) {
+    //classifier = 'javadoc'
+    archiveClassifier.set('javadoc')
+    from tasks.dokkaJavadoc.outputDirectory
+}
+
+task dokkaHtmlJar(type: Jar, dependsOn: dokkaHtml) {
+    //classifier = 'javadoc'
+    archiveClassifier.set('html-doc')
+    from tasks.dokkaHtml.outputDirectory
+}
+
+artifacts {
+    archives dokkaJavadocJar
+    archives dokkaHtmlJar
+}
+
+//task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
+//    outputFormat = 'javadoc'
+//    outputDirectory = "$buildDir/javadoc"
+//}
+//
+//task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
+//    classifier = 'javadoc'
+//    from "$buildDir/javadoc"
+//}
+
 //task javadoc(type: Javadoc) {
 //    failOnError false
 //    source = android.sourceSets.main.java.sourceFiles
@@ -79,53 +137,27 @@ dokkaHtml.configure {
 //    archives javadocJar
 //}
 
-dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.core:core-ktx:1.3.2'
-    implementation 'androidx.lifecycle:lifecycle-process:2.2.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+//task sourcesJar(type: Jar) {
+//    classifier = 'sources'
+//    from android.sourceSets.main.java.sourceFiles
+//}
+//
+//task javadoc(type: Javadoc) {
+//    source = android.sourceSets.main.java.sourceFiles
+//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//}
 
-    implementation 'android.arch.work:work-runtime:1.0.1'
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.9.1"
-
-    //noinspection GradleDependency
-    implementation 'com.google.firebase:firebase-core:17.5.0'
-    //noinspection GradleDependency
-    implementation 'com.google.firebase:firebase-iid:20.2.4'
-    //noinspection GradleDependency
-    implementation 'com.google.firebase:firebase-messaging:20.2.4'
-
-    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
-
-    implementation 'io.github.microutils:kotlin-logging:1.8.3'
-}
-
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from android.sourceSets.main.java.sourceFiles
-}
-
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.sourceFiles
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-task classesJar(type: Jar) {
-    from "$buildDir/intermediates/classes/release"
-}
-
-artifacts {
-    archives classesJar
-    archives javadocJar
-    archives sourcesJar
-}
+//task javadocJar(type: Jar, dependsOn: javadoc) {
+//    classifier = 'javadoc'
+//    from javadoc.destinationDir
+//}
+//
+//task classesJar(type: Jar) {
+//    from "$buildDir/intermediates/classes/release"
+//}
+//
+//artifacts {
+//    archives classesJar
+//    archives javadocJar
+//    archives sourcesJar
+//}
