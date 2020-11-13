@@ -144,6 +144,8 @@ class PushSDK(
      * @param X_Push_App_Fingerprint APP fingerprint that you would be provided with
      * @param user_msisdn Device phone number
      * @param user_password password, associated with device phone number
+     *
+     * @return PushKFunAnswerRegister
      */
     fun push_register_new(
         X_Push_Client_API_Key: String,
@@ -230,6 +232,8 @@ class PushSDK(
      * @param user_msisdn Device phone number
      * @param user_password password, associated with device phone number
      * @param X_FCM_token your firebase cloud messaging token
+     *
+     * @return PushKFunAnswerRegister
      */
     fun push_register_new(
         X_Push_Client_API_Key: String,    // APP API key on push platform
@@ -313,6 +317,8 @@ class PushSDK(
 
     /**
      * Unregister the current device from database (if registered)
+     *
+     * @return PushKFunAnswerGeneral
      */
     fun push_clear_current_device(): PushKFunAnswerGeneral {
         try {
@@ -363,6 +369,8 @@ class PushSDK(
     /**
      * Get message history
      * @param period_in_seconds amount of time to get message history for
+     *
+     * @return PushKFunAnswerGeneral
      */
     fun push_get_message_history(period_in_seconds: Int): PushKFunAnswerGeneral {
         try {
@@ -398,6 +406,8 @@ class PushSDK(
 
     /**
      * Get a list of all devices registered with the current phone number
+     *
+     * @return PushKFunAnswerGeneral
      */
     fun push_get_device_all_from_server(): PushKFunAnswerGeneral {
         try {
@@ -432,6 +442,8 @@ class PushSDK(
 
     /**
      * Update registration
+     *
+     * @return PushKFunAnswerGeneral
      */
     fun push_update_registration(): PushKFunAnswerGeneral {
         try {
@@ -466,6 +478,8 @@ class PushSDK(
      * Send a message to the server and receive a callback
      * @param message_id id of the message
      * @param message_text text of the message
+     *
+     * @return PushKFunAnswerGeneral
      */
     fun push_send_message_callback(
         message_id: String,
@@ -499,6 +513,8 @@ class PushSDK(
     /**
      * Send a delivery report for a specific message
      * @param message_id message id to get the delivery report for
+     *
+     * @return PushKFunAnswerGeneral
      */
     fun push_message_delivery_report(message_id: String): PushKFunAnswerGeneral {
         try {
@@ -536,6 +552,8 @@ class PushSDK(
 
     /**
      * Unregister all devices registered with the current phone number from database
+     *
+     * @return PushKFunAnswerGeneral
      */
     fun push_clear_all_device(): PushKFunAnswerGeneral {
         try {
@@ -587,6 +605,8 @@ class PushSDK(
     /**
      * Change phone number
      * @param newmsisdn new phone number
+     *
+     * @return PushKFunAnswerGeneral
      */
     fun rewrite_msisdn(newmsisdn: String): PushKFunAnswerGeneral {
         PushKLoggerSdk.debug("rewrite_msisdn start: $newmsisdn")
@@ -605,6 +625,8 @@ class PushSDK(
     /**
      * Change password (temporary)
      * @param newPassword new password
+     *
+     * @return PushKFunAnswerGeneral
      */
     fun rewrite_password(newPassword: String): PushKFunAnswerGeneral {
 
@@ -621,6 +643,8 @@ class PushSDK(
 
     /**
      * Checks undelivered message queue and sends delivery report for the messages
+     *
+     * @return PushKFunAnswerGeneral
      */
     fun push_check_queue(): PushKFunAnswerGeneral {
         try {

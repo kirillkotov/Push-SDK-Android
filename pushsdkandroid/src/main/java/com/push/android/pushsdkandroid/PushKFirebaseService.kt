@@ -313,7 +313,7 @@ open class PushKFirebaseService(
     }
 
     /**
-     * Called when notification will be displayed this method displays a notification.
+     * Called when notification will be displayed, this method displays a notification.
      * Displaying a notification is not guaranteed if the application's notification
      * limit has been reached. The method will not be called if onReceiveDataPush wasn't called before
      *
