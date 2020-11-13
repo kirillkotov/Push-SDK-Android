@@ -1,15 +1,8 @@
 $dokka.format:javadoc-v1
 $dokka.linkExtension:html
-$dokka.location:com.push.android.pushsdkandroid.add/Answer.DeviceClassNe///PointingToDeclaration/com/push/android/pushsdkandroid/add/Answer.DeviceClassNe.html
-$dokka.location:com.push.android.pushsdkandroid.add/Answer.ParentRegistration///PointingToDeclaration/com/push/android/pushsdkandroid/add/Answer.ParentRegistration.html
-$dokka.location:com.push.android.pushsdkandroid.add/Answer.ProfileClassNe///PointingToDeclaration/com/push/android/pushsdkandroid/add/Answer.ProfileClassNe.html
-$dokka.location:com.push.android.pushsdkandroid.add/Answer.RegAnswerSuccess///PointingToDeclaration/com/push/android/pushsdkandroid/add/Answer.RegAnswerSuccess.html
-$dokka.location:com.push.android.pushsdkandroid.add/Answer.SessionClassNe///PointingToDeclaration/com/push/android/pushsdkandroid/add/Answer.SessionClassNe.html
 $dokka.location:com.push.android.pushsdkandroid/PushKFirebaseService.Companion///PointingToDeclaration/com/push/android/pushsdkandroid/PushKFirebaseService.Companion.html
 $dokka.location:com.push.android.pushsdkandroid/PushKFirebaseService.NotificationStyle///PointingToDeclaration/com/push/android/pushsdkandroid/PushKFirebaseService.NotificationStyle.html
 com.push.android.pushsdkandroid
 com.push.android.pushsdkandroid.add
 com.push.android.pushsdkandroid.core
-com.push.android.pushsdkandroid.logger
-com.push.android.pushsdkandroid.models
 

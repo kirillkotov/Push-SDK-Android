@@ -40,7 +40,7 @@ tasks.dokkaJavadoc.configure {
             skipDeprecated.set(false)
             skipEmptyPackages.set(true)
             reportUndocumented.set(true)
-            includeNonPublic.set(true)
+            includeNonPublic.set(false)
         }
     }
 }
