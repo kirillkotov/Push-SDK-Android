@@ -27,7 +27,9 @@ Thumbs.db
 .idea
 #.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
 .gradle
+
 build/
+
 .navigation
 captures/
 output.json 
@@ -48,3 +50,4 @@ obj/
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
 /build
+/docs/

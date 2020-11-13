@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlinx-serialization'
 apply from: "publisher.gradle"
 apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'org.jetbrains.dokka'
 
 group='com.github.kirillkotov'
 
@@ -29,6 +30,19 @@ android {
         }
     }
 
+}
+
+tasks.dokkaJavadoc.configure {
+    dokkaSourceSets {
+        //outputDirectory.set(buildDir("ayy"))
+        configureEach {
+            noAndroidSdkLink.set(false)
+            skipDeprecated.set(false)
+            skipEmptyPackages.set(true)
+            reportUndocumented.set(true)
+            includeNonPublic.set(false)
+        }
+    }
 }
 
 dependencies {
