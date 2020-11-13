@@ -93,8 +93,8 @@ task dokkaJavadocJar(type: Jar, dependsOn: dokkaJavadoc) {
 }
 
 task dokkaHtmlJar(type: Jar, dependsOn: dokkaHtml) {
-    archiveClassifier.set('html-doc')
-    //archiveClassifier.set('kdoc')
+    //archiveClassifier.set('html-doc')
+    archiveClassifier.set('kdoc')
     from tasks.dokkaHtml.outputDirectory
 }
 
