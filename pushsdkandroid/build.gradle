@@ -32,7 +32,7 @@ android {
 
 }
 
-tasks.dokkaJavadoc.configure {
+dokkaJavadoc.configure {
     dokkaSourceSets {
         //outputDirectory.set(buildDir("ayy"))
         configureEach {
@@ -43,6 +43,39 @@ tasks.dokkaJavadoc.configure {
             includeNonPublic.set(false)
         }
     }
+}
+
+dokkaHtml.configure {
+    dokkaSourceSets {
+        named("main") {
+            noAndroidSdkLink.set(false)
+        }
+        //outputDirectory.set(buildDir("ayy"))
+        configureEach {
+            noAndroidSdkLink.set(false)
+            skipDeprecated.set(false)
+            skipEmptyPackages.set(true)
+            reportUndocumented.set(true)
+            includeNonPublic.set(false)
+        }
+    }
+}
+
+task javadoc(type: Javadoc) {
+    failOnError false
+    source = android.sourceSets.main.java.sourceFiles
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    classpath += configurations.compile
+}
+
+// build a jar with javadoc
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
 }
 
 dependencies {
