@@ -32,19 +32,6 @@ android {
 
 }
 
-tasks.dokkaJavadoc.configure {
-    dokkaSourceSets {
-        //outputDirectory.set(buildDir("ayy"))
-        configureEach {
-            noAndroidSdkLink.set(false)
-            skipDeprecated.set(false)
-            skipEmptyPackages.set(true)
-            reportUndocumented.set(true)
-            includeNonPublic.set(false)
-        }
-    }
-}
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -69,4 +56,65 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
 
     implementation 'io.github.microutils:kotlin-logging:1.8.3'
+}
+
+dokkaJavadoc.configure {
+    dokkaSourceSets {
+        //outputDirectory.set(buildDir("ayy"))
+        configureEach {
+            noAndroidSdkLink.set(false)
+            skipDeprecated.set(false)
+            skipEmptyPackages.set(true)
+            reportUndocumented.set(true)
+            includeNonPublic.set(false)
+        }
+    }
+}
+
+//dokkaHtml.configure {
+//    dokkaSourceSets {
+//        named("main") {
+//            noAndroidSdkLink.set(false)
+//        }
+//        //outputDirectory.set(buildDir("ayy"))
+//        configureEach {
+//            noAndroidSdkLink.set(false)
+//            skipDeprecated.set(false)
+//            skipEmptyPackages.set(true)
+//            reportUndocumented.set(true)
+//            includeNonPublic.set(false)
+//        }
+//    }
+//}
+//
+//dokkaGfm.configure {
+//    dokkaSourceSets {
+//        named("main") {
+//            noAndroidSdkLink.set(false)
+//        }
+//        //outputDirectory.set(buildDir("ayy"))
+//        configureEach {
+//            noAndroidSdkLink.set(false)
+//            skipDeprecated.set(false)
+//            skipEmptyPackages.set(true)
+//            reportUndocumented.set(true)
+//            includeNonPublic.set(false)
+//        }
+//    }
+//}
+
+task dokkaJavadocJar(type: Jar, dependsOn: dokkaJavadoc) {
+    archiveClassifier.set('javadoc')
+    from tasks.dokkaJavadoc.outputDirectory
+}
+
+//task dokkaHtmlJar(type: Jar, dependsOn: dokkaHtml) {
+//    //archiveClassifier.set('html-doc')
+//    archiveClassifier.set('kdoc')
+//    from tasks.dokkaHtml.outputDirectory
+//}
+
+artifacts {
+    archives dokkaJavadocJar
+//    archives dokkaHtmlJar
 }

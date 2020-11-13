@@ -7,11 +7,12 @@ import com.push.android.pushsdkandroid.add.Answer
 import com.push.android.pushsdkandroid.add.GetInfo
 import com.push.android.pushsdkandroid.add.PushParsing
 import com.push.android.pushsdkandroid.add.RewriteParams
+import com.push.android.pushsdkandroid.core.PushKFunAnswerGeneral
+import com.push.android.pushsdkandroid.core.PushKFunAnswerRegister
 import com.push.android.pushsdkandroid.core.*
 import com.push.android.pushsdkandroid.logger.PushKLoggerSdk
 import kotlin.properties.Delegates
 
-@Suppress("SpellCheckingInspection")
 object PushKPushMess {
     var message: String? = null   //global variable for push messages
     var log_level_active: String = "error" //global variable sdk log level
@@ -22,9 +23,8 @@ object PushKPushMess {
 
 internal lateinit var PushKDatabase: PushOperativeData
 
-@Suppress("SpellCheckingInspection", "unused", "FunctionName")
+@Suppress("unused")
 class PushSDKQueue {
-
     fun push_check_queue(context: Context): PushKFunAnswerGeneral {
         val answerNotKnown = PushKFunAnswerGeneral(710, "Failed", "Unknown error", "unknown")
         try {
@@ -55,7 +55,14 @@ class PushSDKQueue {
     }
 }
 
-@Suppress("SpellCheckingInspection", "unused", "FunctionName", "MemberVisibilityCanBePrivate")
+/**
+ * Main class, used for initialization
+ * @param context the context you would like to use
+ * @param platform_branch (optional) list of api paths
+ * @param log_level (optional) logging level, "error" or "debug"
+ * @param basePushURL base URL path to the server API
+ */
+@Suppress("unused")
 class PushSDK(
     context: Context,
     platform_branch: UrlsPlatformList = PushSdkParametersPublic.branchMasterValue,
@@ -131,7 +138,15 @@ class PushSDK(
     //}
 
 
-    //1
+    /**
+     * Register the device
+     * @param X_Push_Client_API_Key API key that you would be provided with
+     * @param X_Push_App_Fingerprint APP fingerprint that you would be provided with
+     * @param user_msisdn Device phone number
+     * @param user_password password, associated with device phone number
+     *
+     * @return PushKFunAnswerRegister
+     */
     fun push_register_new(
         X_Push_Client_API_Key: String,
         X_Push_App_Fingerprint: String,
@@ -210,10 +225,16 @@ class PushSDK(
         }
     }
 
-
-    //1-1
-    //registration procedure with direct FCM token input
-    //push_register_new2(
+    /**
+     * Register the device
+     * @param X_Push_Client_API_Key API key that you would be provided with
+     * @param X_Push_App_Fingerprint APP fingerprint that you would be provided with
+     * @param user_msisdn Device phone number
+     * @param user_password password, associated with device phone number
+     * @param X_FCM_token your firebase cloud messaging token
+     *
+     * @return PushKFunAnswerRegister
+     */
     fun push_register_new(
         X_Push_Client_API_Key: String,    // APP API key on push platform
         X_Push_App_Fingerprint: String,   // App Fingerprint key
@@ -294,7 +315,11 @@ class PushSDK(
         }
     }
 
-    //2
+    /**
+     * Unregister the current device from database (if registered)
+     *
+     * @return PushKFunAnswerGeneral
+     */
     fun push_clear_current_device(): PushKFunAnswerGeneral {
         try {
             PushKLoggerSdk.debug("push_clear_current_device start")
@@ -341,8 +366,12 @@ class PushSDK(
         }
     }
 
-    //return all message history till time
-    //3
+    /**
+     * Get message history
+     * @param period_in_seconds amount of time to get message history for
+     *
+     * @return PushKFunAnswerGeneral
+     */
     fun push_get_message_history(period_in_seconds: Int): PushKFunAnswerGeneral {
         try {
             PushKLoggerSdk.debug("push_get_message_history period_in_seconds: $period_in_seconds")
@@ -375,7 +404,11 @@ class PushSDK(
         }
     }
 
-    //4
+    /**
+     * Get a list of all devices registered with the current phone number
+     *
+     * @return PushKFunAnswerGeneral
+     */
     fun push_get_device_all_from_server(): PushKFunAnswerGeneral {
         try {
             PushKLoggerSdk.debug("Start push_get_device_all_from_server request: firebase_registration_token: ${PushKDatabase.firebase_registration_token}, push_registration_token: ${PushKDatabase.push_k_registration_token}")
@@ -407,7 +440,11 @@ class PushSDK(
         }
     }
 
-    //5
+    /**
+     * Update registration
+     *
+     * @return PushKFunAnswerGeneral
+     */
     fun push_update_registration(): PushKFunAnswerGeneral {
         try {
             PushKLoggerSdk.debug("push_update_registration started")
@@ -437,7 +474,13 @@ class PushSDK(
         }
     }
 
-    //6
+    /**
+     * Send a message to the server and receive a callback
+     * @param message_id id of the message
+     * @param message_text text of the message
+     *
+     * @return PushKFunAnswerGeneral
+     */
     fun push_send_message_callback(
         message_id: String,
         message_text: String
@@ -467,7 +510,12 @@ class PushSDK(
         }
     }
 
-    //7
+    /**
+     * Send a delivery report for a specific message
+     * @param message_id message id to get the delivery report for
+     *
+     * @return PushKFunAnswerGeneral
+     */
     fun push_message_delivery_report(message_id: String): PushKFunAnswerGeneral {
         try {
             PushKLoggerSdk.debug("push_message_delivery_report message_id: $message_id")
@@ -502,7 +550,11 @@ class PushSDK(
     }
 
 
-    //8 delete all devices
+    /**
+     * Unregister all devices registered with the current phone number from database
+     *
+     * @return PushKFunAnswerGeneral
+     */
     fun push_clear_all_device(): PushKFunAnswerGeneral {
         try {
             updateToken()
@@ -550,7 +602,12 @@ class PushSDK(
         }
     }
 
-    //9temp
+    /**
+     * Change phone number
+     * @param newmsisdn new phone number
+     *
+     * @return PushKFunAnswerGeneral
+     */
     fun rewrite_msisdn(newmsisdn: String): PushKFunAnswerGeneral {
         PushKLoggerSdk.debug("rewrite_msisdn start: $newmsisdn")
         return try {
@@ -565,7 +622,12 @@ class PushSDK(
         }
     }
 
-    //10temp
+    /**
+     * Change password (temporary)
+     * @param newPassword new password
+     *
+     * @return PushKFunAnswerGeneral
+     */
     fun rewrite_password(newPassword: String): PushKFunAnswerGeneral {
 
         PushKLoggerSdk.debug("rewrite_password start: $newPassword")
@@ -579,7 +641,11 @@ class PushSDK(
     }
 
 
-    //11push
+    /**
+     * Checks undelivered message queue and sends delivery report for the messages
+     *
+     * @return PushKFunAnswerGeneral
+     */
     fun push_check_queue(): PushKFunAnswerGeneral {
         try {
             updateToken()
@@ -609,6 +675,9 @@ class PushSDK(
         }
     }
 
+    /**
+     * Update FCM token
+     */
     private fun updateToken() {
         PushKLoggerSdk.debug("PushSDK.updateToken started2")
         FirebaseInstanceId.getInstance().instanceId
