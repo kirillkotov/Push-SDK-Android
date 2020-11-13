@@ -7,6 +7,8 @@ import com.push.android.pushsdkandroid.add.Answer
 import com.push.android.pushsdkandroid.add.GetInfo
 import com.push.android.pushsdkandroid.add.PushParsing
 import com.push.android.pushsdkandroid.add.RewriteParams
+import com.push.android.pushsdkandroid.core.PushKFunAnswerGeneral
+import com.push.android.pushsdkandroid.core.PushKFunAnswerRegister
 import com.push.android.pushsdkandroid.core.*
 import com.push.android.pushsdkandroid.logger.PushKLoggerSdk
 import kotlin.properties.Delegates

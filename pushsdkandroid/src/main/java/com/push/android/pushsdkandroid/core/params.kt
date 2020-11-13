@@ -17,9 +17,9 @@ import java.net.URL
 
 open class PushKPublicParams {
 
-    /*
-*To get a Bitmap image from the URL received
-* */
+    /**
+     * Get Bitmap image from a URL
+     */
     private fun getBitmapFromUrl(imageUrl: String): Bitmap? {
         var ansBitmap: Bitmap? = null
         val threadNetBitmap = Thread(Runnable {

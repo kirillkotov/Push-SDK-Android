@@ -33,6 +33,8 @@ import kotlin.random.Random
 /**
  * A "FirebaseMessagingService based" service for handling push messages
  *
+ * @constructor A "FirebaseMessagingService based" service for handling push messages
+ *
  * @param PARAM_NOTIFICATIONS_SUMMARY_TITLE_AND_TEXT
  * Summary notification title and text <title, text>, used for displaying a "summary notification",
  * which serves as a root notification for other notifications
@@ -237,9 +239,8 @@ open class PushKFirebaseService(
     }
 
     /**
-     * Whether system has space to show at least 1 more notification
-     * Assume there is no space by default
-     *
+     * Whether system has space to show at least 1 more notification.
+     * Assume there is no space by default.
      * Will always return true for api levels < 23
      *
      * @param cancelOldest - cancel oldest notification to free up space
@@ -290,10 +291,9 @@ open class PushKFirebaseService(
     }
 
     /**
-     * Called when the service receives a FCM push containing data
-     *
-     * Override it without the "super" call, if you want to implement
-     * your own notifications or disable them
+     * Called when the service receives a FCM push containing data.
+     * Override it without the "super" call, if you want to implement your own notifications
+     * or disable them
      *
      * @param appIsInForeground whether the application is currently in foreground or background
      * @param remoteMessage received remote message object
@@ -313,13 +313,9 @@ open class PushKFirebaseService(
     }
 
     /**
-     * Called when notification will be displayed
-     * this method displays a notification
-     *
+     * Called when notification will be displayed this method displays a notification.
      * Displaying a notification is not guaranteed if the application's notification
-     * limit has been reached.
-     *
-     * The method will not be called if onReceiveDataPush wasn't called before
+     * limit has been reached. The method will not be called if onReceiveDataPush wasn't called before
      *
      * @param appIsInForeground whether the application is currently in foreground or background
      * @param remoteMessage received remote message object
@@ -330,8 +326,7 @@ open class PushKFirebaseService(
     }
 
     /**
-     * Called when notification will not be displayed, so you can try displaying it manually
-     *
+     * Called when notification will not be displayed, so you can try displaying it manually.
      * The method will not be called if onReceiveDataPush wasn't called before
      *
      * @param areNotificationsEnabled whether notifications are enabled for the app
