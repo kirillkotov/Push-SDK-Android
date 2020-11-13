@@ -11,7 +11,7 @@ Get started by visiting:
 * [Receiving push messages and showing notifications](https://github.com/kirillkotov/Push-SDK-Android/wiki/Receiving-push-messages-and-showing-notifications)
 
 ### Documentation:
-https://javadoc.jitpack.io/com/github/kirillkotov/Push-SDK-Android/v1.0.0.47-test4/javadoc/index.html
+https://javadoc.jitpack.io/com/github/kirillkotov/Push-SDK-Android/v1.0.0.47-test4/javadoc/com/push/android/pushsdkandroid/package-summary.html
 
 ## Short dependency info
 
