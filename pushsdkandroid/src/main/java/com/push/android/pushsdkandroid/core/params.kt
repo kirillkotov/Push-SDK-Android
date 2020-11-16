@@ -14,7 +14,7 @@ import com.push.android.pushsdkandroid.add.PushKInternal
 import java.net.HttpURLConnection
 import java.net.URL
 
-
+@Deprecated("Deprecated at 16.11.2020, will be removed")
 open class PushKPublicParams {
 
     /**
