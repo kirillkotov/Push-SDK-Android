@@ -148,7 +148,19 @@ internal data class PushKDataApi(
     val time: Int
 )
 
+/**
+ * General request response answer structure
+ */
+data class PushKFunAnswerGeneral(
+    val code: Int,
+    val result: String,
+    val description: String,
+    val body: String
+)
 
+/**
+ * Answer structure received from registration request response
+ */
 data class PushKFunAnswerRegister(
     val code: Int = 0,
     val result: String = "",
@@ -164,14 +176,6 @@ internal data class PushKDataApi2(
     val code: Int,
     val body: PushKFunAnswerRegister,
     val time: Int
-)
-
-
-data class PushKFunAnswerGeneral(
-    val code: Int,
-    val result: String,
-    val description: String,
-    val body: String
 )
 
 data class UrlsPlatformList(

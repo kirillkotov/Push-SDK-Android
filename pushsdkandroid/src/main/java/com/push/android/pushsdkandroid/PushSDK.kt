@@ -7,8 +7,6 @@ import com.push.android.pushsdkandroid.add.Answer
 import com.push.android.pushsdkandroid.add.GetInfo
 import com.push.android.pushsdkandroid.add.PushParsing
 import com.push.android.pushsdkandroid.add.RewriteParams
-import com.push.android.pushsdkandroid.core.PushKFunAnswerGeneral
-import com.push.android.pushsdkandroid.core.PushKFunAnswerRegister
 import com.push.android.pushsdkandroid.core.*
 import com.push.android.pushsdkandroid.logger.PushKLoggerSdk
 import kotlin.properties.Delegates
@@ -235,7 +233,7 @@ class PushSDK(
     }
 
     /**
-     * Register the device
+     * Register the device, with FCM token
      * @param X_Push_Client_API_Key API key that you would be provided with
      * @param X_Push_App_Fingerprint APP fingerprint that you would be provided with
      * @param user_msisdn Device phone number
@@ -326,8 +324,6 @@ class PushSDK(
 
     /**
      * Unregister the current device from database (if registered)
-     *
-     * @return PushKFunAnswerGeneral
      */
     fun push_clear_current_device(): PushKFunAnswerGeneral {
         try {

@@ -77,7 +77,7 @@ dokkaJavadoc.configure {
 dokkaHtml.configure {
     dokkaSourceSets {
         named("main") {
-            noAndroidSdkLink.set(true)
+            noAndroidSdkLink.set(false)
         }
         //outputDirectory.set(buildDir("ayy"))
         configureEach {
@@ -93,7 +93,7 @@ dokkaHtml.configure {
 dokkaGfm.configure {
     dokkaSourceSets {
         named("main") {
-            noAndroidSdkLink.set(true)
+            noAndroidSdkLink.set(false)
         }
         //outputDirectory.set(buildDir("ayy"))
         configureEach {
