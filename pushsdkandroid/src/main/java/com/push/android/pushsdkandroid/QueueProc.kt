@@ -19,9 +19,14 @@ import java.security.MessageDigest
 import javax.net.ssl.HttpsURLConnection
 import javax.net.ssl.SSLSocketFactory
 
+/**
+ * Queue handling
+ */
 internal class QueueProc {
 
-    //function for create special token for another procedures
+    /**
+     * Creates special token for use in requests
+     */
     private fun hash(sss: String): String {
         return try {
             val bytes = sss.toByteArray()
@@ -36,6 +41,9 @@ internal class QueueProc {
         }
     }
 
+    /**
+     * Process the push queue
+     */
     private fun processPushQueue(
         queue: String,
         X_Push_Session_Id: String,
@@ -94,6 +102,9 @@ internal class QueueProc {
     }
 
 
+    /**
+     * Obtain the push message queue
+     */
     internal fun pushDeviceMessQueue(
         X_Push_Session_Id: String,
         X_Push_Auth_Token: String,

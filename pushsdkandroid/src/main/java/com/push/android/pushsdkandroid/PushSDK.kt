@@ -34,6 +34,9 @@ internal lateinit var PushKDatabase: PushOperativeData
  */
 @Suppress("unused")
 class PushSDKQueue {
+    /**
+     * check queue (possibly duplicate)
+     */
     fun push_check_queue(context: Context): PushKFunAnswerGeneral {
         val answerNotKnown = PushKFunAnswerGeneral(710, "Failed", "Unknown error", "unknown")
         try {

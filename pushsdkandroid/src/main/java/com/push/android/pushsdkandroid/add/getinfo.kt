@@ -6,6 +6,9 @@ import android.content.Context
 import android.content.res.Configuration
 import com.push.android.pushsdkandroid.logger.PushKLoggerSdk
 
+/**
+ * Utils for getting info
+ */
 class GetInfo {
 
     /** Returns the consumer friendly device name  */
@@ -21,6 +24,9 @@ class GetInfo {
         }
     }
 
+    /**
+     * Get android version
+     */
     fun getAndroidVersion(): String {
         return try {
             Build.VERSION.RELEASE
@@ -29,7 +35,9 @@ class GetInfo {
         }
     }
 
-    //get device type (phone or tablet)
+    /**
+     * get device type (phone or tablet)
+     */
     fun getPhoneType(context: Context): String {
         return try {
             val flagIsTab: Boolean =
@@ -46,6 +54,9 @@ class GetInfo {
         }
     }
 
+    /**
+     * Capitalize string (why?!?!)
+     */
     private fun capitalize(str: String): String? {
         if (TextUtils.isEmpty(str)) {
             return str
