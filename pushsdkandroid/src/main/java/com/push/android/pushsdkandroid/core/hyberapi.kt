@@ -13,7 +13,9 @@ import java.security.MessageDigest
 import javax.net.ssl.HttpsURLConnection
 import javax.net.ssl.SSLSocketFactory
 
-//class for communication with push rest server (REST API)
+/**
+ * class for communication with push rest server (REST API)
+ */
 internal class PushKApi {
 
     //class init for creation answers
@@ -23,7 +25,9 @@ internal class PushKApi {
     //parameters for procedures
     private val osVersion: String = osVersionClass.getAndroidVersion()
 
-    //function for create special token for another procedures
+    /**
+     * Creates special token for use in requests
+     */
     private fun hash(sss: String): String {
         return try {
             val bytes = sss.toByteArray()
@@ -38,7 +42,9 @@ internal class PushKApi {
         }
     }
 
-    //POST procedure for new registration
+    /**
+     * Registration POST request
+     */
     fun hDeviceRegister(
         xPlatformClientAPIKey: String,
         X_Push_Session_Id: String,
@@ -143,7 +149,9 @@ internal class PushKApi {
         return PushKDataApi2(functionNetAnswer.code, functionNetAnswer, 0)
     }
 
-    //POST
+    /**
+     * POST request to revoke registration
+     */
     fun hDeviceRevoke(
         dev_list: String,
         X_Push_Session_Id: String,
@@ -217,7 +225,9 @@ internal class PushKApi {
         return PushKDataApi(functionNetAnswer2.toInt(), "{}", 0)
     }
 
-    //GET
+    /**
+     * GET request to get message history
+     */
     fun hGetMessageHistory(
         X_Push_Session_Id: String,
         X_Push_Auth_Token: String,
@@ -287,7 +297,9 @@ internal class PushKApi {
     }
 
 
-    //GET
+    /**
+     * GET request to get all registered devices
+     */
     fun hGetDeviceAll(X_Push_Session_Id: String, X_Push_Auth_Token: String): PushKDataApi {
 
         try {
@@ -354,7 +366,9 @@ internal class PushKApi {
 
     }
 
-    //POST
+    /**
+     * POST request to update device registration
+     */
     fun hDeviceUpdate(
         X_Push_Auth_Token: String,
         X_Push_Session_Id: String,
@@ -440,7 +454,9 @@ internal class PushKApi {
 
     }
 
-    //POST
+    /**
+     * Message callpack - POST request
+     */
     fun hMessageCallback(
         message_id: String,
         push_answer: String,
@@ -519,7 +535,9 @@ internal class PushKApi {
 
     }
 
-    //POST
+    /**
+     * POST request - report message delivery
+     */
     fun hMessageDr(
         message_id: String,
         X_Push_Session_Id: String,

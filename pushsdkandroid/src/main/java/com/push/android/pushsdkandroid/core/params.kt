@@ -261,6 +261,14 @@ internal data class PushKDataApi2(
 
 /**
  * "List" of platform URLs
+ * @param fun_pushsdk_url_device_update
+ * @param fun_pushsdk_url_registration
+ * @param fun_pushsdk_url_revoke
+ * @param fun_pushsdk_url_get_device_all
+ * @param fun_pushsdk_url_message_callback
+ * @param fun_pushsdk_url_message_dr
+ * @param fun_pushsdk_url_mess_queue
+ * @param pushsdk_url_message_history
  */
 data class UrlsPlatformList(
     val fun_pushsdk_url_device_update: String,
@@ -273,10 +281,16 @@ data class UrlsPlatformList(
     val pushsdk_url_message_history: String
 )
 
+/**
+ * Data model that is used for storing "operative" values
+ */
 data class PushOperativeData(
-    //is procedure for register new device completed or not
-    // (true - devise exist on server. )
-    // false - it s new device and we need to complete push_register_new()
+
+    /**
+     * is request to register new device completed or not:
+     * (true - devise exists on server)
+     * false - it is a new device and we need to complete push_register_new()
+     */
     var registrationStatus: Boolean = false,
 
     var push_k_user_Password: String = "",
