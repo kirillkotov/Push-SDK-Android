@@ -327,6 +327,7 @@ open class PushKFirebaseService(
             //send notification
             val areNotificationsEnabled = NotificationManagerCompat.from(applicationContext).areNotificationsEnabled()
             if (areNotificationsEnabled && hasSpaceForNotification(true)) {
+                sendNotification(remoteMessage.data)
                 onDisplayNotification(appIsInForeground, remoteMessage)
             } else {
                 //notify the user there is no space for notifications,
@@ -337,7 +338,7 @@ open class PushKFirebaseService(
     }
 
     /**
-     * Called when notification will be displayed, this method displays a notification;
+     * Called when notification will be displayed;
      * Displaying a notification is not guaranteed if the application's notification limit has been reached;
      * The method will not be called if onReceiveDataPush wasn't called before
      *
@@ -346,7 +347,7 @@ open class PushKFirebaseService(
      * @see sendNotification the default method for showing notifications
      */
     open fun onDisplayNotification(appIsInForeground: Boolean, remoteMessage: RemoteMessage) {
-        sendNotification(remoteMessage.data)
+        //does nothing
     }
 
     /**
