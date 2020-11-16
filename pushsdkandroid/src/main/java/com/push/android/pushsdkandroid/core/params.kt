@@ -137,7 +137,9 @@ object PushSdkParameters {
     var branchCurrentActivePath: UrlsPlatformList? = null
 }
 
+@Deprecated("Deprecated at 16.11.2020, will be removed")
 interface PushKAp
+@Deprecated("Deprecated at 16.11.2020, will be removed")
 enum class PushKApC : PushKAp {
     BODY
 }
