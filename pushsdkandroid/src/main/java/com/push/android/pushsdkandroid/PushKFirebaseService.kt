@@ -188,17 +188,6 @@ open class PushKFirebaseService(
                 )
             }
 
-            //build an intent for notification (click to open the app)
-            val pendingIntent = PendingIntent.getActivity(
-                this@PushKFirebaseService,
-                0,
-                packageManager.getLaunchIntentForPackage(applicationInfo.packageName)!!.apply {
-                    action = DEFAULT_NOTIFICATION_ACTION
-                    putExtra("data", data.toString())
-                },
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-
             //construct the notification object
             val notification =
                 NotificationCompat.Builder(applicationContext, DEFAULT_NOTIFICATION_CHANNEL_ID)
@@ -210,7 +199,20 @@ open class PushKFirebaseService(
                         setContentText(message.body)
                         setSmallIcon(PARAM_NOTIFICATIONS_ICON_RESOURCE_ID)
                         setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                        setContentIntent(pendingIntent)
+                        //actually should never be null, but just in case
+                        packageManager.getLaunchIntentForPackage(applicationInfo.packageName)?.let {
+                            //build an intent for notification (click to open the app)
+                            val pendingIntent = PendingIntent.getActivity(
+                                this@PushKFirebaseService,
+                                0,
+                                it.apply {
+                                    action = DEFAULT_NOTIFICATION_ACTION
+                                    putExtra("data", data.toString())
+                                },
+                                PendingIntent.FLAG_UPDATE_CURRENT
+                            )
+                            setContentIntent(pendingIntent)
+                        }
                         when (PARAM_NOTIFICATIONS_STYLE) {
                             NotificationStyle.DEFAULT_PLAIN_TEXT -> {
                                 //do nothing
@@ -442,7 +444,7 @@ open class PushKFirebaseService(
         super.onMessageReceived(remoteMessage)
 
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
-        PushKLoggerSdk.debug("From: " + remoteMessage.from!!)
+        PushKLoggerSdk.debug("From: " + remoteMessage.from)
 
         // Check if message contains a data payload.
         if (remoteMessage.data.isNotEmpty()) {
