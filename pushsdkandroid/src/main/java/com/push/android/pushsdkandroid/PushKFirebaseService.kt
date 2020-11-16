@@ -265,13 +265,12 @@ open class PushKFirebaseService(
     }
 
     /**
-     * Whether system has space to show at least 1 more notification.
-     * Assume there is no space by default.
-     * Will always return true for api levels < 23
+     * Whether system has space to show at least 1 more notification;
+     * Assume there is no space by default; Will always return true for api levels < 23
      *
      * @param cancelOldest - cancel oldest notification to free up space
      */
-    open fun hasSpaceForNotification(cancelOldest: Boolean) : Boolean {
+    private fun hasSpaceForNotification(cancelOldest: Boolean) : Boolean {
         var hasSpaceForNotification = false
 
         //check notification limit, and cancel first active notification if possible
@@ -317,9 +316,8 @@ open class PushKFirebaseService(
     }
 
     /**
-     * Called when the service receives a FCM push containing data.
-     * Override it without the "super" call, if you want to implement your own notifications
-     * or disable them
+     * Called when the service receives a FCM push containing data; Override it
+     * without the "super" call, if you want to implement your own notifications or disable them
      *
      * @param appIsInForeground whether the application is currently in foreground or background
      * @param remoteMessage received remote message object
@@ -339,9 +337,9 @@ open class PushKFirebaseService(
     }
 
     /**
-     * Called when notification will be displayed, this method displays a notification.
-     * Displaying a notification is not guaranteed if the application's notification
-     * limit has been reached. The method will not be called if onReceiveDataPush wasn't called before
+     * Called when notification will be displayed, this method displays a notification;
+     * Displaying a notification is not guaranteed if the application's notification limit has been reached;
+     * The method will not be called if onReceiveDataPush wasn't called before
      *
      * @param appIsInForeground whether the application is currently in foreground or background
      * @param remoteMessage received remote message object
@@ -352,7 +350,7 @@ open class PushKFirebaseService(
     }
 
     /**
-     * Called when notification will not be displayed, so you can try displaying it manually.
+     * Called when notification will not be displayed, so you can try displaying it manually;
      * The method will not be called if onReceiveDataPush wasn't called before
      *
      * @param areNotificationsEnabled whether notifications are enabled for the app
@@ -493,6 +491,9 @@ open class PushKFirebaseService(
     }
 
     /**
+     * Called when firebase deletes some messages (they will never be delivered);
+     * When the app instance receives this callback, it should perform a full sync with your app server
+     *
      * In some situations, FCM may not deliver a message.
      * This occurs when there are too many messages (>100) pending for your app on a particular
      * device at the time it connects or if the device hasn't connected to FCM in more than one month.
