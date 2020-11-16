@@ -37,7 +37,7 @@ import kotlin.random.Random
  *
  * @param PARAM_NOTIFICATIONS_SUMMARY_TITLE_AND_TEXT Summary notification title and text <title, text>,
  * used for displaying a "summary notification", which serves as a root notification for other notifications
- * notifications will not be bundled(grouped) if null. Ignored if api level is below android 7
+ * notifications will not be bundled(grouped) if null; Ignored if api level is below android 7
  *
  * @param PARAM_NOTIFICATIONS_ICON_RESOURCE_ID Notification small icon
  *
@@ -56,6 +56,19 @@ open class PushKFirebaseService(
     private var parsing: PushParsing = PushParsing()
     private var getDevInform: GetInfo = GetInfo()
 
+    /**
+     * Constants used within the service
+     *
+     * @property MAX_NOTIFICATIONS max notifications that can be shown by the system at a time     *
+     * @property DEFAULT_NOTIFICATION_CHANNEL_ID channel id of notifications
+     * @property DEFAULT_NOTIFICATION_GROUP_ID group id of notifications
+     * @property DEFAULT_NOTIFICATION_ACTION Intent action when user clicks a notification
+     * @property DEFAULT_BROADCAST_ACTION Action for intent that is broadcasted when a push is received
+     * @property NOTIFICATION_TAG tag for regular notification
+     * @property DEFAULT_SUMMARY_NOTIFICATION_ID constant summary notification id
+     * @property SUMMARY_NOTIFICATION_TAG tag for summary notification
+     * @property NOTIFICATION_CHANNEL_NAME The user visible name of the channel
+     */
     companion object {
         const val MAX_NOTIFICATIONS = 25
 
@@ -65,11 +78,6 @@ open class PushKFirebaseService(
 
         const val DEFAULT_BROADCAST_ACTION = "com.push.android.pushsdkandroid.Push"
 
-        /**
-         * The user visible name of the channel
-         * @see (https://developer.android.com/training/notify-user/channels)
-         * @see NotificationChannel constructor
-         */
         const val NOTIFICATION_CHANNEL_NAME = "PushSDK channel"
 
         const val NOTIFICATION_TAG = "pushsdk_b_n"
