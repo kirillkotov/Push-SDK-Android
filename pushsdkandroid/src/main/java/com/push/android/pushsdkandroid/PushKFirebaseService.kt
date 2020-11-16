@@ -443,25 +443,11 @@ open class PushKFirebaseService(
         PushKLoggerSdk.debug("PushFirebaseService.onMessageReceived : started")
         super.onMessageReceived(remoteMessage)
 
-        // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
-        PushKLoggerSdk.debug("From: " + remoteMessage.from)
+        PushKLoggerSdk.debugFirebaseRemoteMessage(remoteMessage)
 
         // Check if message contains a data payload.
         if (remoteMessage.data.isNotEmpty()) {
             try {
-                PushKLoggerSdk.debug("Message from remote: $remoteMessage")
-                PushKLoggerSdk.debug("Message from remote data: ${remoteMessage.data}")
-                PushKLoggerSdk.debug("Message from remote messageId: ${remoteMessage.messageId}")
-                PushKLoggerSdk.debug("Message from remote messageType: ${remoteMessage.messageType}")
-                PushKLoggerSdk.debug("Message from remote priority: ${remoteMessage.priority}")
-                PushKLoggerSdk.debug("Message from remote rawData: ${remoteMessage.rawData}")
-                PushKLoggerSdk.debug("Message from remote ttl: ${remoteMessage.ttl}")
-                PushKLoggerSdk.debug("Message from remote to: ${remoteMessage.to}")
-                PushKLoggerSdk.debug("Message from remote sentTime: ${remoteMessage.sentTime}")
-                PushKLoggerSdk.debug("Message from remote collapseKey: ${remoteMessage.collapseKey}")
-                PushKLoggerSdk.debug("Message from remote originalPriority: ${remoteMessage.originalPriority}")
-                PushKLoggerSdk.debug("Message from remote senderId: ${remoteMessage.senderId}")
-                PushKLoggerSdk.debug("Message from remote data to string: ${remoteMessage.data}")
                 if (PushKDatabase.firebase_registration_token != "" && PushKDatabase.push_k_registration_token != "") {
                     val pushAnswer = api.hMessageDr(
                         parsing.parseMessageId(remoteMessage.data.toString()),
@@ -474,7 +460,7 @@ open class PushKFirebaseService(
                     PushKLoggerSdk.debug("delivery report failed: messid ${remoteMessage.messageId.toString()}, token: ${PushKDatabase.firebase_registration_token}, push_k_registration_token: ${PushKDatabase.push_k_registration_token}")
                 }
             } catch (e: Exception) {
-                PushKLoggerSdk.debug("onMessageReceived: failed")
+                PushKLoggerSdk.debug("onMessageReceived: failed: ${Log.getStackTraceString(e)}")
             }
 
             try {
@@ -483,10 +469,11 @@ open class PushKFirebaseService(
                     action = DEFAULT_BROADCAST_ACTION
                     sendBroadcast(this)
                 }
+                PushKLoggerSdk.debug("datapush broadcast success")
             } catch (e: Exception) {
                 PushKPushMess.message = ""
+                PushKLoggerSdk.debug("datapush broadcast error: ${Log.getStackTraceString(e)}")
             }
-            PushKLoggerSdk.debug("Message data payload: " + remoteMessage.data.toString())
 
             //data push received, make a callback
             onReceiveDataPush(isAppInForeground(), remoteMessage)
