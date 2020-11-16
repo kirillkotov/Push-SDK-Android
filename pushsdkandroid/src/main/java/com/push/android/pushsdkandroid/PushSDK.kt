@@ -13,12 +13,20 @@ import com.push.android.pushsdkandroid.core.*
 import com.push.android.pushsdkandroid.logger.PushKLoggerSdk
 import kotlin.properties.Delegates
 
+/**
+ * An object used for storing and exchanging data, will surely need to be redone, as it is no good;
+ * Will be deprecated in later versions
+ */
 object PushKPushMess {
+    /**
+     * Latest message received
+     */
     var message: String? = null   //global variable for push messages
+
+    /**
+     * SDK logging level; Can be "error" or "debug"
+     */
     var log_level_active: String = "error" //global variable sdk log level
-    //push_message_style types
-    //0 - only text in push notification
-    //1 - text and large image in notification
 }
 
 internal lateinit var PushKDatabase: PushOperativeData

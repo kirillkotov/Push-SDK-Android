@@ -57,7 +57,7 @@ open class PushKFirebaseService(
     private var getDevInform: GetInfo = GetInfo()
 
     /**
-     * Constants used within the service
+     * Constants used within the PushKFirebaseService
      */
     companion object {
         /**
@@ -107,7 +107,7 @@ open class PushKFirebaseService(
     }
 
     /**
-     * Notification styles enumeration
+     * Notification styles enumeration, used for displaying notifications
      * @see sendNotification
      */
     enum class NotificationStyle {
