@@ -31,6 +31,9 @@ object PushKPushMess {
 
 internal lateinit var PushKDatabase: PushOperativeData
 
+/**
+ * This class is under question
+ */
 @Suppress("unused")
 class PushSDKQueue {
     fun push_check_queue(context: Context): PushKFunAnswerGeneral {
@@ -152,8 +155,6 @@ class PushSDK(
      * @param X_Push_App_Fingerprint APP fingerprint that you would be provided with
      * @param user_msisdn Device phone number
      * @param user_password password, associated with device phone number
-     *
-     * @return PushKFunAnswerRegister
      */
     fun push_register_new(
         X_Push_Client_API_Key: String,
