@@ -366,6 +366,23 @@ open class PushKFirebaseService(
     }
 
     /**
+     * Sends dataPush broadcast, so it could be caught somewhere else
+     */
+    private fun sendDataPushBroadcast(remoteMessage: RemoteMessage) {
+        try {
+            PushKPushMess.message = remoteMessage.data.toString().replace("\\/", "/")
+            Intent().apply {
+                action = DEFAULT_BROADCAST_ACTION
+                sendBroadcast(this)
+            }
+            PushKLoggerSdk.debug("datapush broadcast success")
+        } catch (e: Exception) {
+            PushKPushMess.message = ""
+            PushKLoggerSdk.debug("datapush broadcast error: ${Log.getStackTraceString(e)}")
+        }
+    }
+
+    /**
      * Called when the service is created
      */
     override fun onCreate() {
@@ -463,17 +480,7 @@ open class PushKFirebaseService(
                 PushKLoggerSdk.debug("onMessageReceived: failed: ${Log.getStackTraceString(e)}")
             }
 
-            try {
-                PushKPushMess.message = remoteMessage.data.toString().replace("\\/", "/")
-                Intent().apply {
-                    action = DEFAULT_BROADCAST_ACTION
-                    sendBroadcast(this)
-                }
-                PushKLoggerSdk.debug("datapush broadcast success")
-            } catch (e: Exception) {
-                PushKPushMess.message = ""
-                PushKLoggerSdk.debug("datapush broadcast error: ${Log.getStackTraceString(e)}")
-            }
+            sendDataPushBroadcast(remoteMessage)
 
             //data push received, make a callback
             onReceiveDataPush(isAppInForeground(), remoteMessage)
