@@ -35,18 +35,15 @@ import kotlin.random.Random
  *
  * @constructor A "FirebaseMessagingService based" service for handling push messages
  *
- * @param PARAM_NOTIFICATIONS_SUMMARY_TITLE_AND_TEXT
- * Summary notification title and text <title, text>, used for displaying a "summary notification",
- * which serves as a root notification for other notifications
- * notifications will not be bundled(grouped) if null
- * @see (https://developer.android.com/training/notify-user/group)
- * @see (https://stackoverflow.com/a/41114135)
- * ignored if api level is below android 7
+ * @param PARAM_NOTIFICATIONS_SUMMARY_TITLE_AND_TEXT Summary notification title and text <title, text>,
+ * used for displaying a "summary notification", which serves as a root notification for other notifications
+ * notifications will not be bundled(grouped) if null. Ignored if api level is below android 7
  *
  * @param PARAM_NOTIFICATIONS_ICON_RESOURCE_ID Notification small icon
  *
  * @param PARAM_NOTIFICATIONS_STYLE Notification style
- * @see NotificationStyle
+ *
+ * @see NotificationStyle, (https://developer.android.com/training/notify-user/group), (https://stackoverflow.com/a/41114135)
  *
  */
 open class PushKFirebaseService(
