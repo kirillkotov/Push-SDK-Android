@@ -58,30 +58,51 @@ open class PushKFirebaseService(
 
     /**
      * Constants used within the service
-     *
-     * @property MAX_NOTIFICATIONS max notifications that can be shown by the system at a time     *
-     * @property DEFAULT_NOTIFICATION_CHANNEL_ID channel id of notifications
-     * @property DEFAULT_NOTIFICATION_GROUP_ID group id of notifications
-     * @property DEFAULT_NOTIFICATION_ACTION Intent action when user clicks a notification
-     * @property DEFAULT_BROADCAST_ACTION Action for intent that is broadcasted when a push is received
-     * @property NOTIFICATION_TAG tag for regular notification
-     * @property DEFAULT_SUMMARY_NOTIFICATION_ID constant summary notification id
-     * @property SUMMARY_NOTIFICATION_TAG tag for summary notification
-     * @property NOTIFICATION_CHANNEL_NAME The user visible name of the channel
      */
     companion object {
+        /**
+         * max notifications that can be shown by the system at a time
+         */
         const val MAX_NOTIFICATIONS = 25
 
+        /**
+         * Channel id of notifications
+         */
         const val DEFAULT_NOTIFICATION_CHANNEL_ID = "pushsdk.notification.channel"
+
+        /**
+         * group id of notifications
+         */
         const val DEFAULT_NOTIFICATION_GROUP_ID = "pushsdk.notification.group"
+
+        /**
+         * Intent action when user clicks a notification
+         */
         const val DEFAULT_NOTIFICATION_ACTION = "pushsdk.intent.action.notification"
 
+        /**
+         * Action for intent that is broadcasted when a push is received
+         */
         const val DEFAULT_BROADCAST_ACTION = "com.push.android.pushsdkandroid.Push"
 
+        /**
+         * The "user-visible" name of the channel
+         */
         const val NOTIFICATION_CHANNEL_NAME = "PushSDK channel"
 
+        /**
+         * tag for regular notification
+         */
         const val NOTIFICATION_TAG = "pushsdk_b_n"
+
+        /**
+         * constant summary notification id
+         */
         const val DEFAULT_SUMMARY_NOTIFICATION_ID = 0
+
+        /**
+         * tag for summary notification
+         */
         const val SUMMARY_NOTIFICATION_TAG = "pushsdk_s_b_n"
     }
 
