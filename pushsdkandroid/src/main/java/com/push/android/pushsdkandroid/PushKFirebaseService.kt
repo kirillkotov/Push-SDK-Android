@@ -31,7 +31,9 @@ import java.util.*
 import kotlin.random.Random
 
 /**
- * A "FirebaseMessagingService based" service for handling push messages
+ * A "FirebaseMessagingService based" service for handling push messages;
+ * Extend it and override available callbacks at will;
+ * Also don't forget to add your service to AndroidManifest.xml
  *
  * @constructor A "FirebaseMessagingService based" service for handling push messages
  *
