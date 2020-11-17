@@ -28,8 +28,8 @@ internal class SharedPreference(val context: Context) {
         editor.apply()
     }
 
-    fun getValueString(KEY_NAME: String): String? {
-        return sharedPref.getString(KEY_NAME, "")
+    fun getValueString(KEY_NAME: String): String {
+        return sharedPref.getString(KEY_NAME, "") ?: ""
     }
 
     fun getValueInt(KEY_NAME: String): Int {

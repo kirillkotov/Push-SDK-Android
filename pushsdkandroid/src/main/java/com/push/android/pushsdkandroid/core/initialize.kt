@@ -48,7 +48,7 @@ internal class Initialization(val context: Context) {
 
         //1
         val firebaseRegistrationToken: String =
-            sharedPreference.getValueString("firebase_registration_token")!!.toString()
+            sharedPreference.getValueString("firebase_registration_token")
         PushKLoggerSdk.debug("Initialization.hSdkGetParametersFromLocal firebaseRegistrationToken: $firebaseRegistrationToken")
 
         if (firebaseRegistrationToken != "") {
@@ -58,36 +58,36 @@ internal class Initialization(val context: Context) {
         if (registrationStatus) {
 
             //2
-            val pushUuid: String = sharedPreference.getValueString("push_k_uuid")!!.toString()
+            val pushUuid: String = sharedPreference.getValueString("push_k_uuid")
             PushKDatabase.push_k_uuid = pushUuid
 
             //3
-            val devId: String = sharedPreference.getValueString("deviceId")!!.toString()
+            val devId: String = sharedPreference.getValueString("deviceId")
             PushKDatabase.deviceId = devId
 
             //4
             val pushUserMsisdn: String =
-                sharedPreference.getValueString("push_k_user_msisdn")!!.toString()
+                sharedPreference.getValueString("push_k_user_msisdn")
             PushKDatabase.push_k_user_msisdn = pushUserMsisdn
 
             //5
             val pushUserPassword: String =
-                sharedPreference.getValueString("push_k_user_Password")!!.toString()
+                sharedPreference.getValueString("push_k_user_Password")
             PushKDatabase.push_k_user_Password = pushUserPassword
 
             //6
             val pushRegistrationToken: String =
-                sharedPreference.getValueString("push_k_registration_token")!!.toString()
+                sharedPreference.getValueString("push_k_registration_token")
             PushKDatabase.push_k_registration_token = pushRegistrationToken
 
             //7
             val pushUserId: String =
-                sharedPreference.getValueString("push_k_user_id")!!.toString()
+                sharedPreference.getValueString("push_k_user_id")
             PushKDatabase.push_k_user_id = pushUserId
 
             //8
             val pushRegistrationCreatedAt: String =
-                sharedPreference.getValueString("push_k_registration_createdAt")!!.toString()
+                sharedPreference.getValueString("push_k_registration_createdAt")
             PushKDatabase.push_k_registration_createdAt = pushRegistrationCreatedAt
         }
         PushKLoggerSdk.debug("Initialization.paramsLoader finished: push_k_uuid=${PushKDatabase.push_k_uuid}, devId=${PushKDatabase.deviceId}, push_k_user_msisdn=${PushKDatabase.push_k_user_msisdn}, push_k_user_Password=${PushKDatabase.push_k_user_Password}, push_k_registration_token=${PushKDatabase.push_k_registration_token}, push_k_user_id=${PushKDatabase.push_k_user_id}, push_k_registration_createdAt=${PushKDatabase.push_k_registration_createdAt}")
