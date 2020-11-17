@@ -18,7 +18,7 @@ import java.net.URL
  * Push SDK public params
  */
 @Deprecated("Deprecated at 16.11.2020, will be removed")
-open class PushKPublicParams {
+internal open class PushKPublicParams {
 
     /**
      * Get Bitmap image from a URL
@@ -183,7 +183,7 @@ object PushSdkParameters {
     var platformBranchLoaded: UrlsPlatformList = PushSdkParametersPublic.branchMasterValue
 
     /**
-     * Cureent branch "list"
+     * Current branch "list"
      */
     var branchCurrentActivePath: UrlsPlatformList? = null
 }
@@ -192,13 +192,13 @@ object PushSdkParameters {
  * Seems to be useless
  */
 @Deprecated("Deprecated at 16.11.2020, will be removed")
-interface PushKAp
+internal interface PushKAp
 
 /**
  * Seems to be useless
  */
 @Deprecated("Deprecated at 16.11.2020, will be removed")
-enum class PushKApC : PushKAp {
+internal enum class PushKApC : PushKAp {
     /**
      * No reason to exist
      */
@@ -284,7 +284,7 @@ data class UrlsPlatformList(
 /**
  * Data model that is used for storing "operative" values
  */
-data class PushOperativeData(
+internal data class PushOperativeData(
 
     /**
      * is request to register new device completed or not:

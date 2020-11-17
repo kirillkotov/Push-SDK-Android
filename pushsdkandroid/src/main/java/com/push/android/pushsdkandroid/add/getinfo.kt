@@ -9,7 +9,7 @@ import com.push.android.pushsdkandroid.logger.PushKLoggerSdk
 /**
  * Utils for getting info
  */
-class GetInfo {
+internal class GetInfo {
 
     /** Returns the consumer friendly device name  */
     fun getDeviceName(): String? {
