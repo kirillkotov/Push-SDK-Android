@@ -9,6 +9,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
+import com.push.android.pushsdkandroid.BuildConfig
 import com.push.android.pushsdkandroid.add.GetInfo
 import com.push.android.pushsdkandroid.add.PushKInternal
 import java.net.HttpURLConnection
@@ -158,7 +159,7 @@ internal object PushSdkParameters {
     /**
      * SDK version
      */
-    var sdkVersion: String = "1.0.0.47"
+    var sdkVersion: String = BuildConfig.VERSION_NAME
 
     /**
      * os type

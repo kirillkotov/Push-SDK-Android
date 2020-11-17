@@ -33,7 +33,7 @@ internal lateinit var PushKDatabase: PushOperativeData
  * This class is under question
  */
 @Suppress("unused")
-class PushSDKQueue {
+internal class PushSDKQueue {
     /**
      * check queue (possibly duplicate)
      */
