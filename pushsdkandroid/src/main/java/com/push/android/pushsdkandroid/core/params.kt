@@ -114,7 +114,8 @@ internal open class PushKPublicParams {
 }
 
 /**
- * URLs DATA for Push platform for different branches
+ * Push SDK "public" params.
+ * fixme will need a better way of doing that
  */
 object PushSdkParametersPublic {
     /**
