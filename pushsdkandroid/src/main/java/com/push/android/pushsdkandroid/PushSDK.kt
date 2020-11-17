@@ -69,6 +69,7 @@ class PushSDKQueue {
 
 /**
  * Main class, used for initialization
+ * @see PushKFunAnswerGeneral
  * @param context the context you would like to use
  * @param platform_branch (optional) list of api paths
  * @param log_level (optional) logging level, "error" or "debug"

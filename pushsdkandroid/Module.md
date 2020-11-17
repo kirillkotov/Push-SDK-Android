@@ -1,6 +1,6 @@
 # Module pushsdkandroid
 
-PushSDK library one and only module
+PushSDK one and only module
 
 # Package com.push.android.pushsdkandroid
 
