@@ -12,4 +12,4 @@ Utilities; Not useful for the end-user.
 
 # Package com.push.android.pushsdkandroid.core
 
-Core; Not useful for the end-user.
+The "core" sdk package. Contains some core classes.
