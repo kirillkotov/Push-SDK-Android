@@ -151,7 +151,7 @@ object PushSdkParametersPublic {
 /**
  * Push SDK params
  */
-object PushSdkParameters {
+internal object PushSdkParameters {
     private var infoLocalDeviceHardware: GetInfo = GetInfo()
 
     /**
@@ -170,9 +170,14 @@ object PushSdkParameters {
     var push_k_deviceName: String = infoLocalDeviceHardware.getDeviceName().toString()
 
     /**
-     * push notification priority?!?!?!
+     * push notification priority (no use, will be removed)
      */
+    @Deprecated("do not use, will be removed")
     var push_notification_display_priority: Int = 2
+        /**
+         * push notification priority (no use, will be removed)
+         */
+        @Deprecated("do not use, will be removed")
         set(value) {
             if (value > 0) field = value
         }
