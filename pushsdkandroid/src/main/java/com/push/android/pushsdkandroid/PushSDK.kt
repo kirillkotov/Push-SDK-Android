@@ -79,7 +79,6 @@ internal class PushSDKQueue {
 @Suppress("unused")
 class PushSDK(
     context: Context,
-    platform_branch: UrlsPlatformList = PushSdkParametersPublic.branchMasterValue,
     log_level: String = "error",
     basePushURL: String
 ) {
@@ -100,14 +99,6 @@ class PushSDK(
         this.context = context
         PushKPushMess.log_level_active = log_level
         pushDeviceType = localDeviceInfo.getPhoneType(context)
-        if (basePushURL != "") {
-            PushSdkParameters.branchCurrentActivePath = parsingPushClass.pathTransformation(
-                baseUrl = basePushURL,
-                pathUpl = platform_branch
-            )
-        } else {
-            throw IllegalArgumentException("incorrect basePushURL parameter")
-        }
         try {
             val localDataLoaded = initHObject.hSdkGetParametersFromLocal()
             if (localDataLoaded.registrationStatus) {

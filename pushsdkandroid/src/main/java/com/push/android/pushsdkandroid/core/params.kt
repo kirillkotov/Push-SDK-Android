@@ -52,20 +52,6 @@ internal open class PushKPublicParams {
  */
 object PushSdkParametersPublic {
     /**
-     * Common branches
-     */
-    val branchMasterValue: UrlsPlatformList = UrlsPlatformList(
-        fun_pushsdk_url_device_update = "device/update",
-        fun_pushsdk_url_registration = "device/registration",
-        fun_pushsdk_url_revoke = "device/revoke",
-        fun_pushsdk_url_get_device_all = "device/all",
-        fun_pushsdk_url_message_callback = "message/callback",
-        fun_pushsdk_url_message_dr = "message/dr",
-        fun_pushsdk_url_mess_queue = "message/queue",
-        pushsdk_url_message_history = "message/history?startDate="
-    )
-
-    /**
      * Logging tag
      */
     const val TAG_LOGGING = "PushPushSDK"
@@ -79,7 +65,6 @@ object PushSdkParametersPublic {
      * log level "debug"
      */
     const val pushsdk_log_level_debug = "debug"
-
 }
 
 /**
@@ -102,33 +87,6 @@ internal object PushSdkParameters {
      * device name
      */
     var push_k_deviceName: String = infoLocalDeviceHardware.getDeviceName().toString()
-
-    /**
-     * platform url branches. It can be overridden by Push SDK initiation
-     */
-    var platformBranchDefault: UrlsPlatformList = PushSdkParametersPublic.branchMasterValue
-
-    /**
-     * Current branch "list"
-     */
-    var branchCurrentActivePath: UrlsPlatformList = platformBranchDefault
-}
-
-/**
- * Seems to be useless
- */
-@Deprecated("Deprecated at 16.11.2020, will be removed")
-internal interface PushKAp
-
-/**
- * Seems to be useless
- */
-@Deprecated("Deprecated at 16.11.2020, will be removed")
-internal enum class PushKApC : PushKAp {
-    /**
-     * No reason to exist
-     */
-    BODY
 }
 
 /**
@@ -183,28 +141,6 @@ internal data class PushKDataApi2(
     val code: Int,
     val body: PushKFunAnswerRegister,
     val time: Int
-)
-
-/**
- * "List" of platform URLs
- * @param fun_pushsdk_url_device_update
- * @param fun_pushsdk_url_registration
- * @param fun_pushsdk_url_revoke
- * @param fun_pushsdk_url_get_device_all
- * @param fun_pushsdk_url_message_callback
- * @param fun_pushsdk_url_message_dr
- * @param fun_pushsdk_url_mess_queue
- * @param pushsdk_url_message_history
- */
-data class UrlsPlatformList(
-    val fun_pushsdk_url_device_update: String,
-    val fun_pushsdk_url_registration: String,
-    val fun_pushsdk_url_revoke: String,
-    val fun_pushsdk_url_get_device_all: String,
-    val fun_pushsdk_url_message_callback: String,
-    val fun_pushsdk_url_message_dr: String,
-    val fun_pushsdk_url_mess_queue: String,
-    val pushsdk_url_message_history: String
 )
 
 /**
