@@ -1,6 +1,7 @@
 package com.push.android.pushsdkandroid.core
 
 import android.content.Context
+import android.util.Log
 import com.push.android.pushsdkandroid.add.RequestAnswerHandler
 import com.push.android.pushsdkandroid.add.GetInfo
 import com.push.android.pushsdkandroid.logger.PushSDKLogger
@@ -485,7 +486,7 @@ internal class APIHandler {
                 }
 
             } catch (e: Exception) {
-                PushSDKLogger.debug("Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${e.stackTrace}")
+                PushSDKLogger.debug("Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${Log.getStackTraceString(e)}")
 
                 functionNetAnswer5 = "Failed"
             }
