@@ -112,7 +112,7 @@ internal class APIHandler {
         context: Context
     ): PushKDataApi2 {
         var functionNetAnswer = PushKFunAnswerRegister()
-        var functionCodeAnswer = 0
+        //var functionCodeAnswer = 0
 
         val threadNetF1 = Thread(Runnable {
             try {
@@ -124,7 +124,7 @@ internal class APIHandler {
 
                 PushSDKLogger.debug("Result: Start step2, Function: push_device_register, Class: PushKApi, message: $message")
 
-                val currentTimestamp = System.currentTimeMillis()
+                //val currentTimestamp = System.currentTimeMillis()
                 val postData: ByteArray = message.toByteArray(Charset.forName("UTF-8"))
                 val mURL = URL(API_URL_DEVICE_REGISTRATION)
                 val connectorWebPlatform = mURL.openConnection() as HttpsURLConnection
@@ -154,7 +154,7 @@ internal class APIHandler {
 
                     PushSDKLogger.debug("Result: Finished step3, Function: push_device_register, Class: PushKApi, Response Code : $responseCode")
 
-                    functionCodeAnswer = responseCode
+                    //functionCodeAnswer = responseCode
                     if (responseCode == 200) {
 
                         BufferedReader(InputStreamReader(inputStream)).use {
