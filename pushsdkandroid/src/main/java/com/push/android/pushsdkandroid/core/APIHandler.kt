@@ -44,35 +44,35 @@ internal class APIHandler {
         const val HEADER_AUTH_TOKEN: String = "X-Push-Auth-Token"
         val API_URL_DEVICE_UPDATE: String = "device/update"
             get() {
-                return "$baseURL$API_VERSION/$field"
+                return "$baseURL$API_VERSION$field"
             }
         val API_URL_DEVICE_REGISTRATION: String = "/device/registration"
             get() {
-                return "$baseURL$API_VERSION/$field"
+                return "$baseURL$API_VERSION$field"
             }
         val API_URL_DEVICE_REVOKE: String = "/device/revoke"
             get() {
-                return "$baseURL$API_VERSION/$field"
+                return "$baseURL$API_VERSION$field"
             }
         val API_URL_GET_DEVICE_ALL: String = "/device/all"
             get() {
-                return "$baseURL$API_VERSION/$field"
+                return "$baseURL$API_VERSION$field"
             }
         val API_URL_MESSAGE_CALLBACK: String = "/message/callback"
             get() {
-                return "$baseURL$API_VERSION/$field"
+                return "$baseURL$API_VERSION$field"
             }
         val API_URL_MESSAGE_DELIVERY_REPORT: String = "/message/dr"
             get() {
-                return "$baseURL$API_VERSION/$field"
+                return "$baseURL$API_VERSION$field"
             }
         val API_URL_MESSAGE_QUEUE: String = "/message/queue"
             get() {
-                return "$baseURL$API_VERSION/$field"
+                return "$baseURL$API_VERSION$field"
             }
         val API_URL_MESSAGE_HISTORY: String = "/message/history"
             get() {
-                return "$baseURL$API_VERSION/$field"
+                return "$baseURL$API_VERSION$field"
             }
     }
 
