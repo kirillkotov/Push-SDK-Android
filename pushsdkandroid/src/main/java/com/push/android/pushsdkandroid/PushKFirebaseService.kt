@@ -22,6 +22,7 @@ import com.google.gson.Gson
 import com.push.android.pushsdkandroid.add.GetInfo
 import com.push.android.pushsdkandroid.add.RewriteParams
 import com.push.android.pushsdkandroid.core.APIHandler
+import com.push.android.pushsdkandroid.core.Initialization.Companion.PushKDatabase
 import com.push.android.pushsdkandroid.logger.PushSDKLogger
 import com.push.android.pushsdkandroid.models.PushDataModel
 import java.net.URL

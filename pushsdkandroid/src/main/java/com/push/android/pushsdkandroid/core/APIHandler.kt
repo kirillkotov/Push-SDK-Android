@@ -475,7 +475,7 @@ internal class APIHandler {
     }
 
     /**
-     * Message callpack - POST request
+     * Message callback - POST request
      */
     fun hMessageCallback(
         message_id: String,

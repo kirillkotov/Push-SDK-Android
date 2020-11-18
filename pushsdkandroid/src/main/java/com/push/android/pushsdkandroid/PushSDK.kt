@@ -10,14 +10,12 @@ import com.push.android.pushsdkandroid.add.RequestAnswerHandler
 import com.push.android.pushsdkandroid.add.GetInfo
 import com.push.android.pushsdkandroid.add.RewriteParams
 import com.push.android.pushsdkandroid.core.*
+import com.push.android.pushsdkandroid.core.Initialization.Companion.PushKDatabase
 import com.push.android.pushsdkandroid.logger.PushSDKLogger
 import com.push.android.pushsdkandroid.models.*
 import com.push.android.pushsdkandroid.models.PushKDataApi
 import com.push.android.pushsdkandroid.models.PushKDataApi2
-import com.push.android.pushsdkandroid.models.PushOperativeData
 import kotlin.properties.Delegates
-
-internal lateinit var PushKDatabase: PushOperativeData
 
 /**
  * Main class, used for initialization
@@ -35,6 +33,7 @@ class PushSDK(
      * Constants and public static methods
      */
     companion object {
+
         /**
          * Logging tag
          */

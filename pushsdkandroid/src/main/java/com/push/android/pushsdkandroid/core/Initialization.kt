@@ -2,17 +2,19 @@ package com.push.android.pushsdkandroid.core
 
 import android.content.Context
 import com.google.firebase.iid.FirebaseInstanceId
-import com.push.android.pushsdkandroid.PushKDatabase
 import com.push.android.pushsdkandroid.logger.PushSDKLogger
 import com.push.android.pushsdkandroid.models.PushOperativeData
 import java.util.*
-
-internal lateinit var PushKDatabase: PushOperativeData
 
 /**
  * Initialization of various parameters
  */
 internal class Initialization(val context: Context) {
+
+    companion object {
+       lateinit var PushKDatabase: PushOperativeData
+    }
+
     private val sharedPreferencesHandler: SharedPreferencesHandler = SharedPreferencesHandler(context)
 
     private fun hSdkUpdateFirebaseAuto() {
