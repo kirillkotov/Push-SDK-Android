@@ -12,6 +12,10 @@ import java.util.*
 internal class Initialization(val context: Context) {
 
     companion object {
+        /**
+         * Has been used to store values.
+         * TODO fixme remove this, find a better way
+         */
        lateinit var PushKDatabase: PushOperativeData
     }
 
