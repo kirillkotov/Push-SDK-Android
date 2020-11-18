@@ -36,12 +36,12 @@ internal class APIHandler {
      */
     companion object {
         var baseURL: String = ""
-        const val API_VERSION = "2.3"
-        const val HEADER_CLIENT_API_KEY: String = "X-Hyber-Client-API-Key"
-        const val HEADER_APP_FINGERPRINT: String = "X-Hyber-App-Fingerprint"
-        const val HEADER_SESSION_ID: String = "X-Hyber-Session-Id"
-        const val HEADER_TIMESTAMP: String = "X-Hyber-Timestamp"
-        const val HEADER_AUTH_TOKEN: String = "X-Hyber-Auth-Token"
+        const val API_VERSION = "3.0"
+        const val HEADER_CLIENT_API_KEY: String = "X-Push-Client-API-Key"
+        const val HEADER_APP_FINGERPRINT: String = "X-Push-App-Fingerprint"
+        const val HEADER_SESSION_ID: String = "X-Push-Session-Id"
+        const val HEADER_TIMESTAMP: String = "X-Push-Timestamp"
+        const val HEADER_AUTH_TOKEN: String = "X-Push-Auth-Token"
         val API_URL_DEVICE_UPDATE: String = "device/update"
             get() {
                 return "$baseURL$API_VERSION/$field"
