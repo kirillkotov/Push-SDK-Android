@@ -364,7 +364,7 @@ class PushSDK(
      *
      * @return PushKFunAnswerGeneral
      */
-    fun pushGetMessageHistory(periodInSeconds: Int): PushKFunAnswerGeneral {
+    fun getMessageHistory(periodInSeconds: Int): PushKFunAnswerGeneral {
         try {
             PushSDKLogger.debug("push_get_message_history period_in_seconds: $periodInSeconds")
             updateToken()
