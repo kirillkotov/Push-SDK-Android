@@ -187,12 +187,12 @@ internal object PushSdkParameters {
     /**
      * platform url branches. It can be overridden by Push SDK initiation
      */
-    var platformBranchLoaded: UrlsPlatformList = PushSdkParametersPublic.branchMasterValue
+    var platformBranchDefault: UrlsPlatformList = PushSdkParametersPublic.branchMasterValue
 
     /**
      * Current branch "list"
      */
-    var branchCurrentActivePath: UrlsPlatformList? = null
+    var branchCurrentActivePath: UrlsPlatformList = platformBranchDefault
 }
 
 /**
