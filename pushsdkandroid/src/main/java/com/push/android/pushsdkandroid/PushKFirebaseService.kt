@@ -373,6 +373,7 @@ open class PushKFirebaseService(
             PushKPushMess.message = remoteMessage.data.toString().replace("\\/", "/")
             Intent().apply {
                 action = DEFAULT_BROADCAST_ACTION
+                putExtra("data", remoteMessage.data.toString())
                 sendBroadcast(this)
             }
             PushSDKLogger.debug("datapush broadcast success")

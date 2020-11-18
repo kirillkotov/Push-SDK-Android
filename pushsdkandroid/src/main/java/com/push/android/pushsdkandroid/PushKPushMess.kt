@@ -5,6 +5,7 @@ package com.push.android.pushsdkandroid
  * Will be deprecated in later versions.
  * TODO fixme remove this, find a better way
  */
+@Deprecated("Will be removed in future versions")
 object PushKPushMess {
     /**
      * Latest message received
