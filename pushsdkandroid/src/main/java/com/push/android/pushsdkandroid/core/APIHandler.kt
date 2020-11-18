@@ -72,7 +72,7 @@ internal class APIHandler {
             get() {
                 return "$baseURL$field"
             }
-        val API_URL_MESSAGE_HISTORY: String = "/message/history?startDate="
+        val API_URL_MESSAGE_HISTORY: String = "/message/history"
             get() {
                 return "$baseURL$field"
             }
@@ -310,7 +310,7 @@ internal class APIHandler {
 
                 PushSDKLogger.debug("\nSent 'GET' request to push_get_device_all with : X_Push_Session_Id : $X_Push_Session_Id; X_Push_Auth_Token : $X_Push_Auth_Token; period_in_seconds : $period_in_seconds")
 
-                val mURL2 = URL("$API_URL_MESSAGE_HISTORY${currentTimestamp1}")
+                val mURL2 = URL("$API_URL_MESSAGE_HISTORY?startDate=${currentTimestamp1}")
 
                 with(mURL2.openConnection() as HttpsURLConnection) {
                     requestMethod = "GET"  // optional default is GET

@@ -21,6 +21,7 @@ import kotlin.properties.Delegates
  * Main class, used for initialization
  * @see PushKFunAnswerGeneral
  * @param context the context you would like to use
+ * @param baseApiUrl base api url, like "https://example.io/api/"
  * @param log_level (optional) logging level, "error" or "debug"
  */
 @Suppress("unused")
