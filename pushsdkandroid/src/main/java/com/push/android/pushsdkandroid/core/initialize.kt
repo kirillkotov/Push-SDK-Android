@@ -4,6 +4,7 @@ import android.content.Context
 import com.google.firebase.iid.FirebaseInstanceId
 import com.push.android.pushsdkandroid.PushKDatabase
 import com.push.android.pushsdkandroid.logger.PushKLoggerSdk
+import com.push.android.pushsdkandroid.models.PushOperativeData
 import java.util.*
 
 

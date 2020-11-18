@@ -3,9 +3,8 @@ package com.push.android.pushsdkandroid
 import android.content.Context
 import android.content.Intent
 import com.push.android.pushsdkandroid.core.PushKApi
-import com.push.android.pushsdkandroid.core.PushKDataApi
-import com.push.android.pushsdkandroid.core.PushSdkParameters
 import com.push.android.pushsdkandroid.logger.PushKLoggerSdk
+import com.push.android.pushsdkandroid.models.PushKDataApi
 import kotlinx.serialization.Optional
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

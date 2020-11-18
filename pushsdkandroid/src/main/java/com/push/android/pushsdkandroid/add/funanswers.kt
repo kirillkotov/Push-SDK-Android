@@ -1,8 +1,8 @@
 package com.push.android.pushsdkandroid.add
 
 import android.content.Context
-import com.push.android.pushsdkandroid.core.PushKFunAnswerGeneral
-import com.push.android.pushsdkandroid.core.PushKFunAnswerRegister
+import com.push.android.pushsdkandroid.models.PushKFunAnswerGeneral
+import com.push.android.pushsdkandroid.models.PushKFunAnswerRegister
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JSON

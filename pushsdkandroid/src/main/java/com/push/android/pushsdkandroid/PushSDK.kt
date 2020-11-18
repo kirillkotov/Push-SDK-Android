@@ -11,6 +11,10 @@ import com.push.android.pushsdkandroid.add.GetInfo
 import com.push.android.pushsdkandroid.add.RewriteParams
 import com.push.android.pushsdkandroid.core.*
 import com.push.android.pushsdkandroid.logger.PushKLoggerSdk
+import com.push.android.pushsdkandroid.models.*
+import com.push.android.pushsdkandroid.models.PushKDataApi
+import com.push.android.pushsdkandroid.models.PushKDataApi2
+import com.push.android.pushsdkandroid.models.PushOperativeData
 import kotlin.properties.Delegates
 
 /**

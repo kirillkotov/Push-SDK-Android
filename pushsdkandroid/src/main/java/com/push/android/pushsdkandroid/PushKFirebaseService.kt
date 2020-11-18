@@ -20,7 +20,6 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
 import com.push.android.pushsdkandroid.add.GetInfo
-import com.push.android.pushsdkandroid.add.PushParsing
 import com.push.android.pushsdkandroid.add.RewriteParams
 import com.push.android.pushsdkandroid.core.PushKApi
 import com.push.android.pushsdkandroid.core.PushSdkParameters
@@ -55,7 +54,6 @@ open class PushKFirebaseService(
 ) : FirebaseMessagingService() {
 
     private var api: PushKApi = PushKApi()
-    private var parsing: PushParsing = PushParsing()
     private var getDevInform: GetInfo = GetInfo()
 
     /**
