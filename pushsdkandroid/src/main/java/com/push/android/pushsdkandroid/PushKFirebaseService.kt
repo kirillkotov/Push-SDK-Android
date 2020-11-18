@@ -135,16 +135,18 @@ open class PushKFirebaseService(
      * @param strURL URL containing an image
      */
     private fun getBitmapFromURL(strURL: String?): Bitmap? {
-        try {
-            URL(strURL).openConnection().run {
-                doInput = true
-                connect()
-                return BitmapFactory.decodeStream(inputStream)
+        strURL?.let {
+            try {
+                URL(strURL).openConnection().run {
+                    doInput = true
+                    connect()
+                    return BitmapFactory.decodeStream(inputStream)
+                }
+            } catch (e: Exception) {
+                PushSDKLogger.debug(Log.getStackTraceString(e))
+                return null
             }
-        } catch (e: Exception) {
-            PushSDKLogger.debug(Log.getStackTraceString(e))
-            return null
-        }
+        } ?: return null
     }
 
     /**
