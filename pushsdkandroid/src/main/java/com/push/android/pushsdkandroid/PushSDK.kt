@@ -78,15 +78,58 @@ internal class PushSDKQueue {
  * Main class, used for initialization
  * @see PushKFunAnswerGeneral
  * @param context the context you would like to use
- * @param platform_branch (optional) list of api paths
  * @param log_level (optional) logging level, "error" or "debug"
- * @param basePushURL base URL path to the server API
  */
 @Suppress("unused")
 class PushSDK(
     context: Context,
-    log_level: String = "error"
+    log_level: String = PUSHSDK_LOG_LEVEL_ERROR
 ) {
+
+    /**
+     * Constants and public static methods
+     */
+    companion object {
+        /**
+         * Logging tag
+         */
+        const val TAG_LOGGING = "PushPushSDK"
+
+        /**
+         * log level "error"
+         */
+        const val PUSHSDK_LOG_LEVEL_ERROR = "error"
+
+        /**
+         * log level "debug"
+         */
+        const val PUSHSDK_LOG_LEVEL_DEBUG = "debug"
+
+        /**
+         * Get SDK version
+         * @return SDK version name
+         */
+        fun getSDKVersion(): String {
+            return BuildConfig.VERSION_NAME
+        }
+
+        /**
+         * Get current OS Type
+         * @return current OS type
+         */
+        fun getOSType(): String {
+            return "android"
+        }
+
+        /**
+         * Get device name
+         * @return current device name
+         */
+        fun getDeviceName(): String {
+            return GetInfo().getDeviceName().toString()
+        }
+    }
+
     //any classes initialization
     private var context: Context by Delegates.notNull()
     private var initHObject: Initialization = Initialization(context)
@@ -94,7 +137,6 @@ class PushSDK(
     private var apiPushData: PushKApi = PushKApi()
     private var answerAny: Answer = Answer()
     private var rewriteParams: RewriteParams = RewriteParams(context)
-    private var pushInternalParamsObject: PushSdkParameters = PushSdkParameters
     private var pushDeviceType: String = ""
 
     //main class initialization
@@ -180,10 +222,10 @@ class PushSDK(
                         X_Push_Client_API_Key,
                         xPushSessionId,
                         X_Push_App_Fingerprint,
-                        PushSdkParameters.push_k_deviceName,
+                        getDeviceName(),
                         pushDeviceType,
-                        PushSdkParameters.push_k_osType,
-                        PushSdkParameters.sdkVersion,
+                        getOSType(),
+                        getSDKVersion(),
                         user_password,
                         user_msisdn,
                         context
@@ -269,10 +311,10 @@ class PushSDK(
                         X_Push_Client_API_Key,
                         X_FCM_token,
                         X_Push_App_Fingerprint,
-                        PushSdkParameters.push_k_deviceName,
+                        getDeviceName(),
                         pushDeviceType,
-                        PushSdkParameters.push_k_osType,
-                        PushSdkParameters.sdkVersion,
+                        getOSType(),
+                        getSDKVersion(),
                         user_password,
                         user_msisdn,
                         context
@@ -457,10 +499,10 @@ class PushSDK(
                 val resss: PushKDataApi = apiPushData.hDeviceUpdate(
                     PushKDatabase.push_k_registration_token,
                     PushKDatabase.firebase_registration_token, //_xPushSessionId
-                    pushInternalParamsObject.push_k_deviceName,
+                    getDeviceName(),
                     pushDeviceType,
-                    pushInternalParamsObject.push_k_osType,
-                    pushInternalParamsObject.sdkVersion,
+                    getOSType(),
+                    getSDKVersion(),
                     PushKDatabase.firebase_registration_token
                 )
                 if (resss.code == 401) {

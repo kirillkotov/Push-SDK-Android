@@ -22,7 +22,6 @@ import com.google.gson.Gson
 import com.push.android.pushsdkandroid.add.GetInfo
 import com.push.android.pushsdkandroid.add.RewriteParams
 import com.push.android.pushsdkandroid.core.PushKApi
-import com.push.android.pushsdkandroid.core.PushSdkParameters
 import com.push.android.pushsdkandroid.logger.PushKLoggerSdk
 import com.push.android.pushsdkandroid.models.PushDataModel
 import java.net.URL
@@ -423,10 +422,10 @@ open class PushKFirebaseService(
                 val answerPlatform = api.hDeviceUpdate(
                     PushKDatabase.push_k_registration_token,
                     PushKDatabase.firebase_registration_token,
-                    PushSdkParameters.push_k_deviceName,
+                    PushSDK.getDeviceName(),
                     localPhoneInfoNewToken,
-                    PushSdkParameters.push_k_osType,
-                    PushSdkParameters.sdkVersion,
+                    PushSDK.getOSType(),
+                    PushSDK.getSDKVersion(),
                     newToken
                 )
                 PushKLoggerSdk.debug("PushFirebaseService.onNewToken : update success $answerPlatform")
