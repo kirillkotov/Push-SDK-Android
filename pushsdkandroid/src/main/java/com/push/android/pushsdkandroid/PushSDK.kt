@@ -79,8 +79,7 @@ internal class PushSDKQueue {
 @Suppress("unused")
 class PushSDK(
     context: Context,
-    log_level: String = "error",
-    basePushURL: String
+    log_level: String = "error"
 ) {
     //any classes initialization
     private var context: Context by Delegates.notNull()
