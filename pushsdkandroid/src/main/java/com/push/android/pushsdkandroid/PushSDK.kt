@@ -566,6 +566,7 @@ class PushSDK(
                 PushKLoggerSdk.debug("push_clear_all_device deviceAllPush: $deviceAllPush")
 
                 val deviceList: String = parsing.parseIdDevicesAll(deviceAllPush.body)
+                PushKLoggerSdk.debug("push_clear_all_device deviceList: $deviceList")
 
                 val pushAnswer: PushKDataApi = apiPushData.hDeviceRevoke(
                     deviceList,
