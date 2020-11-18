@@ -44,74 +44,6 @@ internal open class PushKPublicParams {
         threadNetBitmap.join()
         return ansBitmap
     }
-
-    /**
-     * Notification builder of unknown origin
-     */
-    @Deprecated("will be removed")
-    open fun notificationBuilder(
-        context: Context,
-        notificationTextMess: String,
-        image: String
-    ): NotificationCompat.Builder {
-        val imageBitmap = getBitmapFromUrl(image)
-        val intent = Intent(context, context::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pendingIntent = PendingIntent.getActivity(
-            context, 0 /* Request code */, intent,
-            PendingIntent.FLAG_ONE_SHOT
-        )
-
-        val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-
-        if (imageBitmap != null) {
-            return NotificationCompat.Builder(context, "push.push.k.sdk")
-                .setContentText(notificationTextMess)
-                .setAutoCancel(true)
-                //.setSmallIcon(R.drawable.googleg_standard_color_18)
-                .setPriority(PushKInternal.notificationPriorityOld(PushSdkParameters.push_notification_display_priority))
-                .setSound(defaultSoundUri)
-                //.setVibrate(longArrayOf(1000))
-                .setContentIntent(pendingIntent)
-                .setLargeIcon(imageBitmap)
-        } else {
-            return NotificationCompat.Builder(context, "push.push.k.sdk")
-                .setContentText(notificationTextMess)
-                .setAutoCancel(true)
-                //.setSmallIcon(R.drawable.googleg_standard_color_18)
-                .setPriority(PushKInternal.notificationPriorityOld(PushSdkParameters.push_notification_display_priority))
-                .setSound(defaultSoundUri)
-                //.setVibrate(longArrayOf(1000))
-                .setContentIntent(pendingIntent)
-        }
-    }
-
-    /**
-     * Notification builder of unknown origin
-     */
-    @Deprecated("will be removed")
-    open fun notificationBuilder(
-        context: Context,
-        notificationTextMess: String
-    ): NotificationCompat.Builder {
-        val intent = Intent(context, context::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pendingIntent = PendingIntent.getActivity(
-            context, 0 /* Request code */, intent,
-            PendingIntent.FLAG_ONE_SHOT
-        )
-
-        val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-
-        return NotificationCompat.Builder(context, "push.push.k.sdk")
-            .setContentText(notificationTextMess)
-            .setAutoCancel(true)
-            //.setSmallIcon(R.drawable.googleg_standard_color_18)
-            .setPriority(PushKInternal.notificationPriorityOld(PushSdkParameters.push_notification_display_priority))
-            .setSound(defaultSoundUri)
-            //.setVibrate(longArrayOf(1000))
-            .setContentIntent(pendingIntent)
-    }
 }
 
 /**
@@ -170,19 +102,6 @@ internal object PushSdkParameters {
      * device name
      */
     var push_k_deviceName: String = infoLocalDeviceHardware.getDeviceName().toString()
-
-    /**
-     * push notification priority (no use, will be removed)
-     */
-    @Deprecated("do not use, will be removed")
-    var push_notification_display_priority: Int = 2
-        /**
-         * push notification priority (no use, will be removed)
-         */
-        @Deprecated("do not use, will be removed")
-        set(value) {
-            if (value > 0) field = value
-        }
 
     /**
      * platform url branches. It can be overridden by Push SDK initiation

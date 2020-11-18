@@ -26,7 +26,7 @@ internal class PushKApi {
     private val osVersion: String = osVersionClass.getAndroidVersion()
 
     /**
-     * Headers
+     * Headers and API URLs
      */
     companion object {
         const val HEADER_CLIENT_API_KEY = "X-Hyber-Client-API-Key"
@@ -34,6 +34,15 @@ internal class PushKApi {
         const val HEADER_SESSION_ID = "X-Hyber-Session-Id"
         const val HEADER_TIMESTAMP = "X-Hyber-Timestamp"
         const val HEADER_AUTH_TOKEN = "X-Hyber-Auth-Token"
+
+        const val API_URL_DEVICE_UPDATE = "device/update"
+        const val API_URL_DEVICE_REGISTRATION = "device/registration"
+        const val API_URL_DEVICE_REVOKE = "device/revoke"
+        const val API_URL_GET_DEVICE_ALL = "device/all"
+        const val API_URL_MESSAGE_CALLBACK = "message/callback"
+        const val API_URL_MESSAGE_DELIVERY_REPORT = "message/dr"
+        const val API_URL_MESSAGE_QUEUE = "message/queue"
+        const val API_URL_MESSAGE_HISTORY = "message/history?startDate="
     }
 
     /**
