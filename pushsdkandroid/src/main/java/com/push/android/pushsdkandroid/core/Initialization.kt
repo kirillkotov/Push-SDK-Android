@@ -3,7 +3,7 @@ package com.push.android.pushsdkandroid.core
 import android.content.Context
 import com.google.firebase.iid.FirebaseInstanceId
 import com.push.android.pushsdkandroid.PushKDatabase
-import com.push.android.pushsdkandroid.logger.PushKLoggerSdk
+import com.push.android.pushsdkandroid.logger.PushSDKLogger
 import com.push.android.pushsdkandroid.models.PushOperativeData
 import java.util.*
 
@@ -12,47 +12,47 @@ import java.util.*
  * Initialization of various parameters
  */
 internal class Initialization(val context: Context) {
-    private val sharedPreference: SharedPreference = SharedPreference(context)
+    private val sharedPreferencesHandler: SharedPreferencesHandler = SharedPreferencesHandler(context)
 
     private fun hSdkUpdateFirebaseAuto() {
-        PushKLoggerSdk.debug("Initialization.hSdkUpdateFirebaseAuto start")
+        PushSDKLogger.debug("Initialization.hSdkUpdateFirebaseAuto start")
         FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener { instanceIdResult ->
             val token = instanceIdResult.token
             if (token != "") {
-                sharedPreference.saveString("firebase_registration_token", token)
-                PushKLoggerSdk.debug("Initialization.hSdkUpdateFirebaseAuto.Firebase token: $token")
+                sharedPreferencesHandler.saveString("firebase_registration_token", token)
+                PushSDKLogger.debug("Initialization.hSdkUpdateFirebaseAuto.Firebase token: $token")
             } else {
-                PushKLoggerSdk.debug("Initialization.hSdkUpdateFirebaseAuto.Firebase token empty")
+                PushSDKLogger.debug("Initialization.hSdkUpdateFirebaseAuto.Firebase token empty")
             }
         }
-        PushKLoggerSdk.debug("Initialization.hSdkUpdateFirebaseAuto finished")
+        PushSDKLogger.debug("Initialization.hSdkUpdateFirebaseAuto finished")
 
 
     }
 
     fun hSdkUpdateFirebaseManual(x_token: String): String {
-        sharedPreference.saveString("firebase_registration_token", x_token)
-        PushKLoggerSdk.debug("Initialization.hSdkUpdateFirebaseManual.Firebase token: $x_token")
+        sharedPreferencesHandler.saveString("firebase_registration_token", x_token)
+        PushSDKLogger.debug("Initialization.hSdkUpdateFirebaseManual.Firebase token: $x_token")
         return x_token
     }
 
 
     fun hSdkGetParametersFromLocal(): PushOperativeData {
-        PushKLoggerSdk.debug("Initialization.hSdkGetParametersFromLocal started")
+        PushSDKLogger.debug("Initialization.hSdkGetParametersFromLocal started")
 
         PushKDatabase = PushOperativeData()
 
-        val registrationStatus: Boolean = sharedPreference.getValueBool("registrationstatus", false)
+        val registrationStatus: Boolean = sharedPreferencesHandler.getValueBool("registrationstatus", false)
         PushKDatabase.registrationStatus = registrationStatus
 
-        PushKLoggerSdk.debug("Initialization.hSdkGetParametersFromLocal registrationStatus: $registrationStatus")
+        PushSDKLogger.debug("Initialization.hSdkGetParametersFromLocal registrationStatus: $registrationStatus")
 
         hSdkUpdateFirebaseAuto()
 
         //1
         val firebaseRegistrationToken: String =
-            sharedPreference.getValueString("firebase_registration_token")
-        PushKLoggerSdk.debug("Initialization.hSdkGetParametersFromLocal firebaseRegistrationToken: $firebaseRegistrationToken")
+            sharedPreferencesHandler.getValueString("firebase_registration_token")
+        PushSDKLogger.debug("Initialization.hSdkGetParametersFromLocal firebaseRegistrationToken: $firebaseRegistrationToken")
 
         if (firebaseRegistrationToken != "") {
             PushKDatabase.firebase_registration_token = firebaseRegistrationToken
@@ -61,39 +61,39 @@ internal class Initialization(val context: Context) {
         if (registrationStatus) {
 
             //2
-            val pushUuid: String = sharedPreference.getValueString("push_k_uuid")
+            val pushUuid: String = sharedPreferencesHandler.getValueString("push_k_uuid")
             PushKDatabase.push_k_uuid = pushUuid
 
             //3
-            val devId: String = sharedPreference.getValueString("deviceId")
+            val devId: String = sharedPreferencesHandler.getValueString("deviceId")
             PushKDatabase.deviceId = devId
 
             //4
             val pushUserMsisdn: String =
-                sharedPreference.getValueString("push_k_user_msisdn")
+                sharedPreferencesHandler.getValueString("push_k_user_msisdn")
             PushKDatabase.push_k_user_msisdn = pushUserMsisdn
 
             //5
             val pushUserPassword: String =
-                sharedPreference.getValueString("push_k_user_Password")
+                sharedPreferencesHandler.getValueString("push_k_user_Password")
             PushKDatabase.push_k_user_Password = pushUserPassword
 
             //6
             val pushRegistrationToken: String =
-                sharedPreference.getValueString("push_k_registration_token")
+                sharedPreferencesHandler.getValueString("push_k_registration_token")
             PushKDatabase.push_k_registration_token = pushRegistrationToken
 
             //7
             val pushUserId: String =
-                sharedPreference.getValueString("push_k_user_id")
+                sharedPreferencesHandler.getValueString("push_k_user_id")
             PushKDatabase.push_k_user_id = pushUserId
 
             //8
             val pushRegistrationCreatedAt: String =
-                sharedPreference.getValueString("push_k_registration_createdAt")
+                sharedPreferencesHandler.getValueString("push_k_registration_createdAt")
             PushKDatabase.push_k_registration_createdAt = pushRegistrationCreatedAt
         }
-        PushKLoggerSdk.debug("Initialization.paramsLoader finished: push_k_uuid=${PushKDatabase.push_k_uuid}, devId=${PushKDatabase.deviceId}, push_k_user_msisdn=${PushKDatabase.push_k_user_msisdn}, push_k_user_Password=${PushKDatabase.push_k_user_Password}, push_k_registration_token=${PushKDatabase.push_k_registration_token}, push_k_user_id=${PushKDatabase.push_k_user_id}, push_k_registration_createdAt=${PushKDatabase.push_k_registration_createdAt}")
+        PushSDKLogger.debug("Initialization.paramsLoader finished: push_k_uuid=${PushKDatabase.push_k_uuid}, devId=${PushKDatabase.deviceId}, push_k_user_msisdn=${PushKDatabase.push_k_user_msisdn}, push_k_user_Password=${PushKDatabase.push_k_user_Password}, push_k_registration_token=${PushKDatabase.push_k_registration_token}, push_k_user_id=${PushKDatabase.push_k_user_id}, push_k_registration_createdAt=${PushKDatabase.push_k_registration_createdAt}")
 
         return PushKDatabase
     }
@@ -107,17 +107,17 @@ internal class Initialization(val context: Context) {
         push_k_registration_createdAt: String,
         registrationStatus: Boolean
     ) {
-        PushKLoggerSdk.debug("Initialization.hSdkInitSaveToLocal  started")
+        PushSDKLogger.debug("Initialization.hSdkInitSaveToLocal  started")
         val pushUuid = UUID.randomUUID().toString()
-        PushKLoggerSdk.debug("Initialization.hSdkInit  pushUuid=$pushUuid, deviceId=$deviceId, push_k_user_msisdn=$push_k_user_msisdn, push_k_user_Password=$push_k_user_Password, push_k_registration_token=$push_k_registration_token, push_k_user_id=$push_k_user_id, push_k_registration_createdAt=$push_k_registration_createdAt")
-        sharedPreference.saveString("push_k_uuid", pushUuid)
-        sharedPreference.saveString("deviceId", deviceId)
-        sharedPreference.saveString("push_k_user_msisdn", push_k_user_msisdn)
-        sharedPreference.saveString("push_k_user_Password", push_k_user_Password)
-        sharedPreference.saveString("push_k_registration_token", push_k_registration_token)
-        sharedPreference.saveString("push_k_user_id", push_k_user_id)
-        sharedPreference.saveString("push_k_registration_createdAt", push_k_registration_createdAt)
-        sharedPreference.save("registrationstatus", registrationStatus)
+        PushSDKLogger.debug("Initialization.hSdkInit  pushUuid=$pushUuid, deviceId=$deviceId, push_k_user_msisdn=$push_k_user_msisdn, push_k_user_Password=$push_k_user_Password, push_k_registration_token=$push_k_registration_token, push_k_user_id=$push_k_user_id, push_k_registration_createdAt=$push_k_registration_createdAt")
+        sharedPreferencesHandler.saveString("push_k_uuid", pushUuid)
+        sharedPreferencesHandler.saveString("deviceId", deviceId)
+        sharedPreferencesHandler.saveString("push_k_user_msisdn", push_k_user_msisdn)
+        sharedPreferencesHandler.saveString("push_k_user_Password", push_k_user_Password)
+        sharedPreferencesHandler.saveString("push_k_registration_token", push_k_registration_token)
+        sharedPreferencesHandler.saveString("push_k_user_id", push_k_user_id)
+        sharedPreferencesHandler.saveString("push_k_registration_createdAt", push_k_registration_createdAt)
+        sharedPreferencesHandler.save("registrationstatus", registrationStatus)
 
         PushKDatabase.push_k_uuid = pushUuid
         PushKDatabase.deviceId = deviceId
@@ -132,10 +132,10 @@ internal class Initialization(val context: Context) {
 
     fun clearData() {
         //sharedPreference.clearSharedPreference()
-        sharedPreference.save("registrationstatus", false)
-        sharedPreference.saveString("deviceId", "")
-        sharedPreference.saveString("push_k_user_id", "")
+        sharedPreferencesHandler.save("registrationstatus", false)
+        sharedPreferencesHandler.saveString("deviceId", "")
+        sharedPreferencesHandler.saveString("push_k_user_id", "")
         PushKDatabase.registrationStatus = false
-        PushKLoggerSdk.debug("Initialization.clearData  processed")
+        PushSDKLogger.debug("Initialization.clearData  processed")
     }
 }

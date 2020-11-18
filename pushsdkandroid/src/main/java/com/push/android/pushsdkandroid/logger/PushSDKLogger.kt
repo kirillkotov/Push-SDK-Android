@@ -10,10 +10,9 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-internal object PushKLoggerSdk {
+internal object PushSDKLogger {
 
     fun error(message: String) {
-
         if (Build.VERSION.SDK_INT >= 26) {
             val current = LocalDateTime.now()
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")

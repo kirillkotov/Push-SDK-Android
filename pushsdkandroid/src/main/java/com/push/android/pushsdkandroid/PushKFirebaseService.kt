@@ -21,8 +21,8 @@ import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
 import com.push.android.pushsdkandroid.add.GetInfo
 import com.push.android.pushsdkandroid.add.RewriteParams
-import com.push.android.pushsdkandroid.core.PushKApi
-import com.push.android.pushsdkandroid.logger.PushKLoggerSdk
+import com.push.android.pushsdkandroid.core.APIHandler
+import com.push.android.pushsdkandroid.logger.PushSDKLogger
 import com.push.android.pushsdkandroid.models.PushDataModel
 import java.net.URL
 import java.util.*
@@ -52,7 +52,7 @@ open class PushKFirebaseService(
     private val PARAM_NOTIFICATIONS_STYLE: NotificationStyle = NotificationStyle.LARGE_ICON
 ) : FirebaseMessagingService() {
 
-    private var api: PushKApi = PushKApi()
+    private var api: APIHandler = APIHandler()
     private var getDevInform: GetInfo = GetInfo()
 
     /**
@@ -141,7 +141,7 @@ open class PushKFirebaseService(
                 return BitmapFactory.decodeStream(inputStream)
             }
         } catch (e: Exception) {
-            PushKLoggerSdk.debug(Log.getStackTraceString(e))
+            PushSDKLogger.debug(Log.getStackTraceString(e))
             return null
         }
     }
@@ -153,7 +153,7 @@ open class PushKFirebaseService(
     private fun isAppInForeground(): Boolean {
         val isInForeground =
             ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)
-        PushKLoggerSdk.debug("App is in foreground: $isInForeground")
+        PushSDKLogger.debug("App is in foreground: $isInForeground")
         return isInForeground
     }
 
@@ -169,7 +169,7 @@ open class PushKFirebaseService(
         val message = Gson().fromJson(data.toString(), PushDataModel::class.java).message
         if (message == null) {
             //message is empty, thus it must be an error
-            PushKLoggerSdk.error("message is empty")
+            PushSDKLogger.error("message is empty")
             //TODO do something if needed
             //then stop executing
             return
@@ -374,10 +374,10 @@ open class PushKFirebaseService(
                 action = DEFAULT_BROADCAST_ACTION
                 sendBroadcast(this)
             }
-            PushKLoggerSdk.debug("datapush broadcast success")
+            PushSDKLogger.debug("datapush broadcast success")
         } catch (e: Exception) {
             PushKPushMess.message = ""
-            PushKLoggerSdk.debug("datapush broadcast error: ${Log.getStackTraceString(e)}")
+            PushSDKLogger.debug("datapush broadcast error: ${Log.getStackTraceString(e)}")
         }
     }
 
@@ -386,7 +386,7 @@ open class PushKFirebaseService(
      */
     override fun onCreate() {
         super.onCreate()
-        PushKLoggerSdk.debug("PushFirebaseService.onCreate : MyService onCreate")
+        PushSDKLogger.debug("PushFirebaseService.onCreate : MyService onCreate")
     }
 
     /**
@@ -394,7 +394,7 @@ open class PushKFirebaseService(
      */
     override fun onDestroy() {
         super.onDestroy()
-        PushKLoggerSdk.debug("PushFirebaseService.onDestroy : MyService onDestroy")
+        PushSDKLogger.debug("PushFirebaseService.onDestroy : MyService onDestroy")
     }
 
     /**
@@ -403,22 +403,22 @@ open class PushKFirebaseService(
      */
     override fun onNewToken(newToken: String) {
         super.onNewToken(newToken)
-        PushKLoggerSdk.debug("PushFirebaseService.onNewToken : Result: Start step1, Function: onNewToken, Class: PushFirebaseService, new_token: $newToken")
+        PushSDKLogger.debug("PushFirebaseService.onNewToken : Result: Start step1, Function: onNewToken, Class: PushFirebaseService, new_token: $newToken")
 
         try {
             if (newToken != "") {
                 val pushUpdateParams = RewriteParams(applicationContext)
                 pushUpdateParams.rewriteFirebaseToken(newToken)
-                PushKLoggerSdk.debug("PushFirebaseService.onNewToken : local update: success")
+                PushSDKLogger.debug("PushFirebaseService.onNewToken : local update: success")
             }
         } catch (e: Exception) {
-            PushKLoggerSdk.debug("PushFirebaseService.onNewToken : local update: unknown error")
+            PushSDKLogger.debug("PushFirebaseService.onNewToken : local update: unknown error")
         }
 
         try {
             if (PushKDatabase.push_k_registration_token != "" && PushKDatabase.firebase_registration_token != "") {
                 val localPhoneInfoNewToken = getDevInform.getPhoneType(applicationContext)
-                PushKLoggerSdk.debug("PushFirebaseService.onNewToken : localPhoneInfoNewToken: $localPhoneInfoNewToken")
+                PushSDKLogger.debug("PushFirebaseService.onNewToken : localPhoneInfoNewToken: $localPhoneInfoNewToken")
                 val answerPlatform = api.hDeviceUpdate(
                     PushKDatabase.push_k_registration_token,
                     PushKDatabase.firebase_registration_token,
@@ -428,13 +428,13 @@ open class PushKFirebaseService(
                     PushSDK.getSDKVersion(),
                     newToken
                 )
-                PushKLoggerSdk.debug("PushFirebaseService.onNewToken : update success $answerPlatform")
+                PushSDKLogger.debug("PushFirebaseService.onNewToken : update success $answerPlatform")
             } else {
-                PushKLoggerSdk.debug("PushFirebaseService.onNewToken : update: failed")
+                PushSDKLogger.debug("PushFirebaseService.onNewToken : update: failed")
             }
 
         } catch (e: Exception) {
-            PushKLoggerSdk.debug("PushFirebaseService.onNewToken : update: unknown error")
+            PushSDKLogger.debug("PushFirebaseService.onNewToken : update: unknown error")
         }
 
         // If you want to send messages to this application instance or
@@ -456,10 +456,10 @@ open class PushKFirebaseService(
      * messages. For more see: https://firebase.google.com/docs/cloud-messaging/concept-options
      */
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        PushKLoggerSdk.debug("PushFirebaseService.onMessageReceived : started")
+        PushSDKLogger.debug("PushFirebaseService.onMessageReceived : started")
         super.onMessageReceived(remoteMessage)
 
-        PushKLoggerSdk.debugFirebaseRemoteMessage(remoteMessage)
+        PushSDKLogger.debugFirebaseRemoteMessage(remoteMessage)
 
         // Check if message contains a data payload.
         if (remoteMessage.data.isNotEmpty()) {
@@ -472,14 +472,14 @@ open class PushKFirebaseService(
                             PushKDatabase.firebase_registration_token,
                             PushKDatabase.push_k_registration_token
                         )
-                        PushKLoggerSdk.debug("From Message Delivery Report: $pushAnswer")
-                        PushKLoggerSdk.debug("delivery report success: messid ${remoteMessage.messageId.toString()}, token: ${PushKDatabase.firebase_registration_token}, push_k_registration_token: ${PushKDatabase.push_k_registration_token}")
+                        PushSDKLogger.debug("From Message Delivery Report: $pushAnswer")
+                        PushSDKLogger.debug("delivery report success: messid ${remoteMessage.messageId.toString()}, token: ${PushKDatabase.firebase_registration_token}, push_k_registration_token: ${PushKDatabase.push_k_registration_token}")
                     } else {
-                        PushKLoggerSdk.debug("delivery report failed: messid ${remoteMessage.messageId.toString()}, token: ${PushKDatabase.firebase_registration_token}, push_k_registration_token: ${PushKDatabase.push_k_registration_token}")
+                        PushSDKLogger.debug("delivery report failed: messid ${remoteMessage.messageId.toString()}, token: ${PushKDatabase.firebase_registration_token}, push_k_registration_token: ${PushKDatabase.push_k_registration_token}")
                     }
                 }
             } catch (e: Exception) {
-                PushKLoggerSdk.debug("onMessageReceived: failed: ${Log.getStackTraceString(e)}")
+                PushSDKLogger.debug("onMessageReceived: failed: ${Log.getStackTraceString(e)}")
             }
 
             sendDataPushBroadcast(remoteMessage)

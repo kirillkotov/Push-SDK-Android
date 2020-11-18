@@ -6,11 +6,11 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.push.android.pushsdkandroid.add.Answer
+import com.push.android.pushsdkandroid.add.RequestAnswerHandler
 import com.push.android.pushsdkandroid.add.GetInfo
 import com.push.android.pushsdkandroid.add.RewriteParams
 import com.push.android.pushsdkandroid.core.*
-import com.push.android.pushsdkandroid.logger.PushKLoggerSdk
+import com.push.android.pushsdkandroid.logger.PushSDKLogger
 import com.push.android.pushsdkandroid.models.*
 import com.push.android.pushsdkandroid.models.PushKDataApi
 import com.push.android.pushsdkandroid.models.PushKDataApi2
@@ -79,8 +79,8 @@ class PushSDK(
     private var context: Context by Delegates.notNull()
     private var initHObject: Initialization = Initialization(context)
     private var localDeviceInfo: GetInfo = GetInfo()
-    private var apiPushData: PushKApi = PushKApi()
-    private var answerAny: Answer = Answer()
+    private var apiPushData: APIHandler = APIHandler()
+    private var requestAnswerHandlerAny: RequestAnswerHandler = RequestAnswerHandler()
     private var rewriteParams: RewriteParams = RewriteParams(context)
     private var pushDeviceType: String = ""
 
@@ -95,7 +95,7 @@ class PushSDK(
                 this.push_update_registration()
             }
         } catch (e: Exception) {
-            PushKLoggerSdk.error("PushSDK.init registration update problem $e")
+            PushSDKLogger.error("PushSDK.init registration update problem $e")
         }
         updateToken()
     }
@@ -150,10 +150,10 @@ class PushSDK(
             updateToken()
             initHObject.hSdkGetParametersFromLocal()
             val xPushSessionId = PushKDatabase.firebase_registration_token
-            PushKLoggerSdk.debug("Start push_register_new X_Push_Client_API_Key: ${X_Push_Client_API_Key}, X_Push_App_Fingerprint: ${X_Push_App_Fingerprint}, registrationstatus: ${PushKDatabase.registrationStatus}, X_Push_Session_Id: $xPushSessionId")
+            PushSDKLogger.debug("Start push_register_new X_Push_Client_API_Key: ${X_Push_Client_API_Key}, X_Push_App_Fingerprint: ${X_Push_App_Fingerprint}, registrationstatus: ${PushKDatabase.registrationStatus}, X_Push_Session_Id: $xPushSessionId")
 
             if (PushKDatabase.registrationStatus) {
-                return answerAny.pushKRegisterNewRegisterExists2(
+                return requestAnswerHandlerAny.pushKRegisterNewRegisterExists2(
                     PushKDatabase.deviceId,
                     PushKDatabase.push_k_registration_token,
                     PushKDatabase.push_k_user_id,
@@ -178,8 +178,8 @@ class PushSDK(
                     //rewriteParams.rewritePushUserMsisdn(user_msisdn)
                     //rewriteParams.rewritePushUserPassword(user_password)
 
-                    PushKLoggerSdk.debug("push_register_new response: $respPush")
-                    PushKLoggerSdk.debug("uuid: ${PushKDatabase.push_k_uuid}")
+                    PushSDKLogger.debug("push_register_new response: $respPush")
+                    PushSDKLogger.debug("uuid: ${PushKDatabase.push_k_uuid}")
 
                     var regStatus = false
                     if (respPush.code == 200) {
@@ -206,7 +206,7 @@ class PushSDK(
                         createdAt = respPush.body.createdAt
                     )
                 } else {
-                    return answerAny.registerProcedureAnswer2(
+                    return requestAnswerHandlerAny.registerProcedureAnswer2(
                         "901",
                         "X_Push_Session_Id is empty. Maybe firebase registration problem",
                         context
@@ -214,7 +214,7 @@ class PushSDK(
                 }
             }
         } catch (e: Exception) {
-            return answerAny.registerProcedureAnswer2("700", "unknown", context)
+            return requestAnswerHandlerAny.registerProcedureAnswer2("700", "unknown", context)
         }
     }
 
@@ -238,10 +238,10 @@ class PushSDK(
         try {
             updateToken()
             initHObject.hSdkGetParametersFromLocal()
-            PushKLoggerSdk.debug("Start push_register_new: X_Push_Client_API_Key: ${X_Push_Client_API_Key}, X_Push_App_Fingerprint: ${X_Push_App_Fingerprint}, registrationstatus: ${PushKDatabase.registrationStatus}, X_Push_Session_Id: $X_FCM_token")
+            PushSDKLogger.debug("Start push_register_new: X_Push_Client_API_Key: ${X_Push_Client_API_Key}, X_Push_App_Fingerprint: ${X_Push_App_Fingerprint}, registrationstatus: ${PushKDatabase.registrationStatus}, X_Push_Session_Id: $X_FCM_token")
 
             if (PushKDatabase.registrationStatus) {
-                return answerAny.pushKRegisterNewRegisterExists2(
+                return requestAnswerHandlerAny.pushKRegisterNewRegisterExists2(
                     PushKDatabase.deviceId,
                     PushKDatabase.push_k_registration_token,
                     PushKDatabase.push_k_user_id,
@@ -267,8 +267,8 @@ class PushSDK(
                     //rewriteParams.rewritePushUserMsisdn(user_msisdn)
                     //rewriteParams.rewritePushUserPassword(user_password)
 
-                    PushKLoggerSdk.debug("push_register_new response: $respPush")
-                    PushKLoggerSdk.debug("uuid: ${PushKDatabase.push_k_uuid}")
+                    PushSDKLogger.debug("push_register_new response: $respPush")
+                    PushSDKLogger.debug("uuid: ${PushKDatabase.push_k_uuid}")
 
                     var regStatus = false
                     if (respPush.code == 200) {
@@ -296,7 +296,7 @@ class PushSDK(
                         createdAt = respPush.body.createdAt
                     )
                 } else {
-                    return answerAny.registerProcedureAnswer2(
+                    return requestAnswerHandlerAny.registerProcedureAnswer2(
                         "901",
                         "X_Push_Session_Id is empty. Maybe firebase registration problem",
                         context
@@ -304,7 +304,7 @@ class PushSDK(
                 }
             }
         } catch (e: Exception) {
-            return answerAny.registerProcedureAnswer2("700", "unknown", context)
+            return requestAnswerHandlerAny.registerProcedureAnswer2("700", "unknown", context)
         }
     }
 
@@ -313,25 +313,25 @@ class PushSDK(
      */
     fun push_clear_current_device(): PushKFunAnswerGeneral {
         try {
-            PushKLoggerSdk.debug("push_clear_current_device start")
+            PushSDKLogger.debug("push_clear_current_device start")
             updateToken()
             initHObject.hSdkGetParametersFromLocal()
             val xPushSessionId = PushKDatabase.firebase_registration_token
             if (PushKDatabase.registrationStatus) {
-                PushKLoggerSdk.debug("Start push_clear_current_device: firebase_registration_token: ${xPushSessionId}, push_registration_token: ${PushKDatabase.push_k_registration_token}, registrationstatus: ${PushKDatabase.registrationStatus}, deviceId: ${PushKDatabase.deviceId}")
+                PushSDKLogger.debug("Start push_clear_current_device: firebase_registration_token: ${xPushSessionId}, push_registration_token: ${PushKDatabase.push_k_registration_token}, registrationstatus: ${PushKDatabase.registrationStatus}, deviceId: ${PushKDatabase.deviceId}")
 
                 val pushAnswer: PushKDataApi = apiPushData.hDeviceRevoke(
                     "[\"${PushKDatabase.deviceId}\"]",
                     xPushSessionId,
                     PushKDatabase.push_k_registration_token
                 )
-                PushKLoggerSdk.debug("push_answer : $pushAnswer")
+                PushSDKLogger.debug("push_answer : $pushAnswer")
 
                 if (pushAnswer.code == 200) {
-                    PushKLoggerSdk.debug("start clear data")
+                    PushSDKLogger.debug("start clear data")
                     val deviceId = PushKDatabase.deviceId
                     initHObject.clearData()
-                    return answerAny.generalAnswer(
+                    return requestAnswerHandlerAny.generalAnswer(
                         "200",
                         "{\"device\":\"$deviceId\"}",
                         "Success"
@@ -343,7 +343,7 @@ class PushSDK(
                         } catch (ee: Exception) {
                         }
                     }
-                    return answerAny.generalAnswer(
+                    return requestAnswerHandlerAny.generalAnswer(
                         pushAnswer.code.toString(),
                         "{\"body\":\"unknown\"}",
                         "Some problem"
@@ -365,16 +365,16 @@ class PushSDK(
      */
     fun push_get_message_history(period_in_seconds: Int): PushKFunAnswerGeneral {
         try {
-            PushKLoggerSdk.debug("push_get_message_history period_in_seconds: $period_in_seconds")
+            PushSDKLogger.debug("push_get_message_history period_in_seconds: $period_in_seconds")
             updateToken()
-            PushKLoggerSdk.debug("Start push_get_message_history request: firebase_registration_token: ${PushKDatabase.firebase_registration_token}, push_registration_token: ${PushKDatabase.push_k_registration_token}, period_in_seconds: $period_in_seconds")
+            PushSDKLogger.debug("Start push_get_message_history request: firebase_registration_token: ${PushKDatabase.firebase_registration_token}, push_registration_token: ${PushKDatabase.push_k_registration_token}, period_in_seconds: $period_in_seconds")
             if (PushKDatabase.registrationStatus) {
                 val messHistPush: PushKFunAnswerGeneral = apiPushData.hGetMessageHistory(
                     PushKDatabase.firebase_registration_token, //_xPushSessionId
                     PushKDatabase.push_k_registration_token,
                     period_in_seconds
                 )
-                PushKLoggerSdk.debug("push_get_message_history mess_hist_push: $messHistPush")
+                PushSDKLogger.debug("push_get_message_history mess_hist_push: $messHistPush")
 
                 if (messHistPush.code == 401) {
                     try {
@@ -382,7 +382,7 @@ class PushSDK(
                     } catch (ee: Exception) {
                     }
                 }
-                return answerAny.generalAnswer(
+                return requestAnswerHandlerAny.generalAnswer(
                     messHistPush.code.toString(),
                     messHistPush.body,
                     "Success"
@@ -402,7 +402,7 @@ class PushSDK(
      */
     fun push_get_device_all_from_server(): PushKFunAnswerGeneral {
         try {
-            PushKLoggerSdk.debug("Start push_get_device_all_from_server request: firebase_registration_token: ${PushKDatabase.firebase_registration_token}, push_registration_token: ${PushKDatabase.push_k_registration_token}")
+            PushSDKLogger.debug("Start push_get_device_all_from_server request: firebase_registration_token: ${PushKDatabase.firebase_registration_token}, push_registration_token: ${PushKDatabase.push_k_registration_token}")
 
             updateToken()
             if (PushKDatabase.registrationStatus) {
@@ -410,7 +410,7 @@ class PushSDK(
                     PushKDatabase.firebase_registration_token, //_xPushSessionId
                     PushKDatabase.push_k_registration_token
                 )
-                PushKLoggerSdk.debug("deviceAllPush : $deviceAllPush")
+                PushSDKLogger.debug("deviceAllPush : $deviceAllPush")
 
                 if (deviceAllPush.code == 401) {
                     try {
@@ -418,7 +418,7 @@ class PushSDK(
                     } catch (ee: Exception) {
                     }
                 }
-                return answerAny.generalAnswer(
+                return requestAnswerHandlerAny.generalAnswer(
                     deviceAllPush.code.toString(),
                     deviceAllPush.body,
                     "Success"
@@ -438,7 +438,7 @@ class PushSDK(
      */
     fun push_update_registration(): PushKFunAnswerGeneral {
         try {
-            PushKLoggerSdk.debug("push_update_registration started")
+            PushSDKLogger.debug("push_update_registration started")
             updateToken()
             if (PushKDatabase.registrationStatus) {
                 val resss: PushKDataApi = apiPushData.hDeviceUpdate(
@@ -456,7 +456,7 @@ class PushSDK(
                     } catch (ee: Exception) {
                     }
                 }
-                return answerAny.generalAnswer(resss.code.toString(), resss.body, "Success")
+                return requestAnswerHandlerAny.generalAnswer(resss.code.toString(), resss.body, "Success")
             } else {
                 return answerNotRegistered
             }
@@ -477,7 +477,7 @@ class PushSDK(
         message_text: String
     ): PushKFunAnswerGeneral {
         try {
-            PushKLoggerSdk.debug("push_send_message_callback message_id: $message_id, message_text: $message_text")
+            PushSDKLogger.debug("push_send_message_callback message_id: $message_id, message_text: $message_text")
             updateToken()
             if (PushKDatabase.registrationStatus) {
                 val respp: PushKDataApi = apiPushData.hMessageCallback(
@@ -492,7 +492,7 @@ class PushSDK(
                     } catch (ee: Exception) {
                     }
                 }
-                return answerAny.generalAnswer(respp.code.toString(), respp.body, "Success")
+                return requestAnswerHandlerAny.generalAnswer(respp.code.toString(), respp.body, "Success")
             } else {
                 return answerNotRegistered
             }
@@ -509,7 +509,7 @@ class PushSDK(
      */
     fun push_message_delivery_report(message_id: String): PushKFunAnswerGeneral {
         try {
-            PushKLoggerSdk.debug("push_message_delivery_report message_id: $message_id")
+            PushSDKLogger.debug("push_message_delivery_report message_id: $message_id")
             updateToken()
             if (PushKDatabase.registrationStatus) {
                 if (PushKDatabase.push_k_registration_token != "" && PushKDatabase.firebase_registration_token != "") {
@@ -524,9 +524,9 @@ class PushSDK(
                         } catch (ee: Exception) {
                         }
                     }
-                    return answerAny.generalAnswer(respp1.code.toString(), respp1.body, "Success")
+                    return requestAnswerHandlerAny.generalAnswer(respp1.code.toString(), respp1.body, "Success")
                 } else {
-                    return answerAny.generalAnswer(
+                    return requestAnswerHandlerAny.generalAnswer(
                         "700",
                         "{}",
                         "Failed. firebase_registration_token or push_registration_token empty"
@@ -554,14 +554,14 @@ class PushSDK(
                     PushKDatabase.firebase_registration_token, //_xPushSessionId
                     PushKDatabase.push_k_registration_token
                 )
-                PushKLoggerSdk.debug("push_clear_all_device deviceAllPush: $deviceAllPush")
+                PushSDKLogger.debug("push_clear_all_device deviceAllPush: $deviceAllPush")
                 //push_clear_all_device deviceList: ["1062", "1063"]
                 val devices = Gson().fromJson(deviceAllPush.body, JsonObject::class.java).getAsJsonArray("devices")
                 val deviceIds = JsonArray()
                 for (device in devices) {
                     deviceIds.add(device.asJsonObject.getAsJsonPrimitive("id").asString)
                 }
-                PushKLoggerSdk.debug("push_clear_all_device deviceIds: $deviceIds")
+                PushSDKLogger.debug("push_clear_all_device deviceIds: $deviceIds")
 
                 val pushAnswer: PushKDataApi = apiPushData.hDeviceRevoke(
                     deviceIds.toString(),
@@ -569,12 +569,12 @@ class PushSDK(
                     PushKDatabase.push_k_registration_token
                 )
 
-                PushKLoggerSdk.debug("push_answer : $pushAnswer")
+                PushSDKLogger.debug("push_answer : $pushAnswer")
 
                 if (pushAnswer.code == 200) {
-                    PushKLoggerSdk.debug("start clear data")
+                    PushSDKLogger.debug("start clear data")
                     initHObject.clearData()
-                    return answerAny.generalAnswer("200", "{\"devices\":$deviceIds}", "Success")
+                    return requestAnswerHandlerAny.generalAnswer("200", "{\"devices\":$deviceIds}", "Success")
                 } else {
                     if (pushAnswer.code == 401) {
                         try {
@@ -582,7 +582,7 @@ class PushSDK(
                         } catch (ee: Exception) {
                         }
                     }
-                    return answerAny.generalAnswer(
+                    return requestAnswerHandlerAny.generalAnswer(
                         pushAnswer.code.toString(),
                         "{\"body\":\"unknown\"}",
                         "Some problem"
@@ -605,11 +605,11 @@ class PushSDK(
      * @return PushKFunAnswerGeneral
      */
     fun rewrite_msisdn(newmsisdn: String): PushKFunAnswerGeneral {
-        PushKLoggerSdk.debug("rewrite_msisdn start: $newmsisdn")
+        PushSDKLogger.debug("rewrite_msisdn start: $newmsisdn")
         return try {
             if (PushKDatabase.registrationStatus) {
                 rewriteParams.rewritePushUserMsisdn(newmsisdn)
-                answerAny.generalAnswer("200", "{}", "Success")
+                requestAnswerHandlerAny.generalAnswer("200", "{}", "Success")
             } else {
                 answerNotRegistered
             }
@@ -626,11 +626,11 @@ class PushSDK(
      */
     fun rewrite_password(newPassword: String): PushKFunAnswerGeneral {
 
-        PushKLoggerSdk.debug("rewrite_password start: $newPassword")
+        PushSDKLogger.debug("rewrite_password start: $newPassword")
 
         return if (PushKDatabase.registrationStatus) {
             rewriteParams.rewritePushUserPassword(newPassword)
-            answerAny.generalAnswer("200", "{}", "Success")
+            requestAnswerHandlerAny.generalAnswer("200", "{}", "Success")
         } else {
             answerNotRegistered
         }
@@ -653,11 +653,11 @@ class PushSDK(
                         PushKDatabase.push_k_registration_token, context
                     )
 
-                    PushKLoggerSdk.debug("push_k_check_queue answerData: $answerData")
+                    PushSDKLogger.debug("push_k_check_queue answerData: $answerData")
 
-                    return answerAny.generalAnswer("200", "{}", "Success")
+                    return requestAnswerHandlerAny.generalAnswer("200", "{}", "Success")
                 } else {
-                    return answerAny.generalAnswer(
+                    return requestAnswerHandlerAny.generalAnswer(
                         "700",
                         "{}",
                         "Failed. firebase_registration_token or push_k_registration_token empty"
@@ -675,11 +675,11 @@ class PushSDK(
      * Update FCM token
      */
     private fun updateToken() {
-        PushKLoggerSdk.debug("PushSDK.updateToken started2")
+        PushSDKLogger.debug("PushSDK.updateToken started2")
         FirebaseInstanceId.getInstance().instanceId
             .addOnCompleteListener(OnCompleteListener { task ->
                 if (!task.isSuccessful) {
-                    PushKLoggerSdk.debug("PushSDK.updateToken experimental: failed")
+                    PushSDKLogger.debug("PushSDK.updateToken experimental: failed")
                     return@OnCompleteListener
                 }
                 // Get new Instance ID token
@@ -687,12 +687,12 @@ class PushSDK(
                     if (it.token != "") {
                         if (it.token != PushKDatabase.firebase_registration_token) {
                             PushKDatabase.firebase_registration_token = it.token
-                            PushKLoggerSdk.debug("PushSDK.updateToken token2: $it.token")
+                            PushSDKLogger.debug("PushSDK.updateToken token2: $it.token")
                             rewriteParams.rewriteFirebaseToken(it.token)
                         }
                     }
                 }
             })
-        PushKLoggerSdk.debug("PushSDK.updateToken finished2")
+        PushSDKLogger.debug("PushSDK.updateToken finished2")
     }
 }

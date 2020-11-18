@@ -1,9 +1,9 @@
 package com.push.android.pushsdkandroid.core
 
 import android.content.Context
-import com.push.android.pushsdkandroid.add.Answer
+import com.push.android.pushsdkandroid.add.RequestAnswerHandler
 import com.push.android.pushsdkandroid.add.GetInfo
-import com.push.android.pushsdkandroid.logger.PushKLoggerSdk
+import com.push.android.pushsdkandroid.logger.PushSDKLogger
 import com.push.android.pushsdkandroid.models.PushKDataApi
 import com.push.android.pushsdkandroid.models.PushKDataApi2
 import com.push.android.pushsdkandroid.models.PushKFunAnswerGeneral
@@ -20,10 +20,10 @@ import javax.net.ssl.SSLSocketFactory
 /**
  * Communication with push rest server (REST API)
  */
-internal class PushKApi {
+internal class APIHandler {
 
     //class init for creation answers
-    private var answerForm: Answer = Answer()
+    private var requestAnswerHandlerForm: RequestAnswerHandler = RequestAnswerHandler()
     private var osVersionClass: GetInfo = GetInfo()
 
     //parameters for procedures
@@ -60,10 +60,10 @@ internal class PushKApi {
             val md = MessageDigest.getInstance("SHA-256")
             val digest = md.digest(bytes)
             val resp: String = digest.fold("", { str, it -> str + "%02x".format(it) })
-            PushKLoggerSdk.debug("Result: OK, Function: hash, Class: PushKApi, input: $sss, output: $resp")
+            PushSDKLogger.debug("Result: OK, Function: hash, Class: PushKApi, input: $sss, output: $resp")
             resp
         } catch (e: Exception) {
-            PushKLoggerSdk.debug("Result: FAILED, Function: hash, Class: PushKApi, input: $sss, output: failed")
+            PushSDKLogger.debug("Result: FAILED, Function: hash, Class: PushKApi, input: $sss, output: failed")
             "failed"
         }
     }
@@ -88,13 +88,13 @@ internal class PushKApi {
 
         val threadNetF1 = Thread(Runnable {
             try {
-                PushKLoggerSdk.debug("Result: Start step1, Function: push_device_register, Class: PushKApi, xPlatformClientAPIKey: $xPlatformClientAPIKey, X_Push_Session_Id: $X_Push_Session_Id, X_Push_App_Fingerprint: $X_Push_App_Fingerprint, device_Name: $device_Name, device_Type: $device_Type, os_Type: $os_Type, sdk_Version: $sdk_Version, user_Pass: $user_Pass, user_Phone: $user_Phone")
+                PushSDKLogger.debug("Result: Start step1, Function: push_device_register, Class: PushKApi, xPlatformClientAPIKey: $xPlatformClientAPIKey, X_Push_Session_Id: $X_Push_Session_Id, X_Push_App_Fingerprint: $X_Push_App_Fingerprint, device_Name: $device_Name, device_Type: $device_Type, os_Type: $os_Type, sdk_Version: $sdk_Version, user_Pass: $user_Pass, user_Phone: $user_Phone")
 
                 val message =
                     "{\"userPhone\":\"$user_Phone\",\"userPass\":\"$user_Pass\",\"osType\":\"$os_Type\",\"osVersion\":\"$osVersion\",\"deviceType\":\"$device_Type\",\"deviceName\":\"$device_Name\",\"sdkVersion\":\"$sdk_Version\"}"
                 //val message = "{\"userPhone\":\"$user_Phone\",\"userPass\":\"$user_Pass\",\"osType\":\"$os_Type\",\"osVersion\":\"$os_version\",\"deviceType\":\"$device_Type\",\"deviceName\":\"$device_Name\",\"sdkVersion\":\"$sdk_Version\"}"
 
-                PushKLoggerSdk.debug("Result: Start step2, Function: push_device_register, Class: PushKApi, message: $message")
+                PushSDKLogger.debug("Result: Start step2, Function: push_device_register, Class: PushKApi, message: $message")
 
                 val currentTimestamp = System.currentTimeMillis()
                 val postData: ByteArray = message.toByteArray(Charset.forName("UTF-8"))
@@ -124,7 +124,7 @@ internal class PushKApi {
 
                     wr.flush()
 
-                    PushKLoggerSdk.debug("Result: Finished step3, Function: push_device_register, Class: PushKApi, Response Code : $responseCode")
+                    PushSDKLogger.debug("Result: Finished step3, Function: push_device_register, Class: PushKApi, Response Code : $responseCode")
 
                     functionCodeAnswer = responseCode
                     if (responseCode == 200) {
@@ -139,16 +139,16 @@ internal class PushKApi {
                             }
                             it.close()
 
-                            PushKLoggerSdk.debug("Result: Finished step4, Function: push_device_register, Class: PushKApi, Response : $response")
+                            PushSDKLogger.debug("Result: Finished step4, Function: push_device_register, Class: PushKApi, Response : $response")
 
-                            functionNetAnswer = answerForm.registerProcedureAnswer2(
+                            functionNetAnswer = requestAnswerHandlerForm.registerProcedureAnswer2(
                                 responseCode.toString(),
                                 response.toString(),
                                 context
                             )
                         }
                     } else {
-                        functionNetAnswer = answerForm.registerProcedureAnswer2(
+                        functionNetAnswer = requestAnswerHandlerForm.registerProcedureAnswer2(
                             responseCode.toString(),
                             "unknown",
                             context
@@ -158,9 +158,9 @@ internal class PushKApi {
                 }
             } catch (e: Exception) {
 
-                PushKLoggerSdk.debug("Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${e.stackTrace}")
+                PushSDKLogger.debug("Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${e.stackTrace}")
 
-                functionNetAnswer = answerForm.registerProcedureAnswer2(
+                functionNetAnswer = requestAnswerHandlerForm.registerProcedureAnswer2(
                     "705",
                     "unknown",
                     context
@@ -189,11 +189,11 @@ internal class PushKApi {
 
             try {
 
-                PushKLoggerSdk.debug("Result: Start step1, Function: push_device_revoke, Class: PushKApi, dev_list: $dev_list, X_Push_Session_Id: $X_Push_Session_Id, X_Push_Auth_Token: $X_Push_Auth_Token")
+                PushSDKLogger.debug("Result: Start step1, Function: push_device_revoke, Class: PushKApi, dev_list: $dev_list, X_Push_Session_Id: $X_Push_Session_Id, X_Push_Auth_Token: $X_Push_Auth_Token")
 
                 val message2 = "{\"devices\":$dev_list}"
 
-                PushKLoggerSdk.debug("Result: Start step2, Function: push_device_revoke, Class: PushKApi, message2: $message2")
+                PushSDKLogger.debug("Result: Start step2, Function: push_device_revoke, Class: PushKApi, message2: $message2")
 
                 val currentTimestamp2 = System.currentTimeMillis() // We want timestamp in seconds
                 val authToken = hash("$X_Push_Auth_Token:$currentTimestamp2")
@@ -231,10 +231,10 @@ internal class PushKApi {
                                 inputLine = it.readLine()
                             }
                             it.close()
-                            PushKLoggerSdk.debug("Response : $response")
+                            PushSDKLogger.debug("Response : $response")
                         }
                     } catch (e: Exception) {
-                        PushKLoggerSdk.debug("Failed")
+                        PushSDKLogger.debug("Failed")
                     }
 
                     functionNetAnswer2 = responseCode.toString()
@@ -269,19 +269,19 @@ internal class PushKApi {
                 val currentTimestamp1 =
                     (System.currentTimeMillis() / 1000L) - period_in_seconds // We want timestamp in seconds
 
-                PushKLoggerSdk.debug("Result: val currentTimestamp1, Function: hGetMessageHistory, Class: PushKApi, currentTimestamp1: $currentTimestamp1")
+                PushSDKLogger.debug("Result: val currentTimestamp1, Function: hGetMessageHistory, Class: PushKApi, currentTimestamp1: $currentTimestamp1")
 
                 //this timestamp for token
                 val currentTimestamp2 = System.currentTimeMillis() / 1000L
 
-                PushKLoggerSdk.debug("Result: val currentTimestamp2, Function: hGetMessageHistory, Class: PushKApi, currentTimestamp2: $currentTimestamp2")
+                PushSDKLogger.debug("Result: val currentTimestamp2, Function: hGetMessageHistory, Class: PushKApi, currentTimestamp2: $currentTimestamp2")
 
                 val authToken = hash("$X_Push_Auth_Token:$currentTimestamp2")
 
-                PushKLoggerSdk.debug("Result: val authToken, Function: hGetMessageHistory, Class: PushKApi, authToken: $authToken")
+                PushSDKLogger.debug("Result: val authToken, Function: hGetMessageHistory, Class: PushKApi, authToken: $authToken")
 
 
-                PushKLoggerSdk.debug("\nSent 'GET' request to push_get_device_all with : X_Push_Session_Id : $X_Push_Session_Id; X_Push_Auth_Token : $X_Push_Auth_Token; period_in_seconds : $period_in_seconds")
+                PushSDKLogger.debug("\nSent 'GET' request to push_get_device_all with : X_Push_Session_Id : $X_Push_Session_Id; X_Push_Auth_Token : $X_Push_Auth_Token; period_in_seconds : $period_in_seconds")
 
                 val mURL2 = URL("$BASE_URL$API_URL_MESSAGE_HISTORY${currentTimestamp1}")
 
@@ -299,16 +299,16 @@ internal class PushKApi {
 
                     requestMethod = "GET"
 
-                    PushKLoggerSdk.debug("Sent 'GET' request to URL : $url; Response Code : $responseCode")
+                    PushSDKLogger.debug("Sent 'GET' request to URL : $url; Response Code : $responseCode")
                     functionCodeAnswer3 = responseCode
 
                     inputStream.bufferedReader().use {
                         functionNetAnswer3 = it.readLine().toString()
-                        PushKLoggerSdk.debug("Result: val functionNetAnswer3, Function: hGetMessageHistory, Class: PushKApi, functionNetAnswer3: $functionNetAnswer3")
+                        PushSDKLogger.debug("Result: val functionNetAnswer3, Function: hGetMessageHistory, Class: PushKApi, functionNetAnswer3: $functionNetAnswer3")
                     }
                 }
             } catch (e: Exception) {
-                PushKLoggerSdk.debug("Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${e.stackTrace}")
+                PushSDKLogger.debug("Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${e.stackTrace}")
                 functionCodeAnswer3 = 700
                 functionNetAnswer3 = "Failed"
             }
@@ -342,7 +342,7 @@ internal class PushKApi {
                     val authToken = hash("$X_Push_Auth_Token:$currentTimestamp2")
 
 
-                    PushKLoggerSdk.debug("Result: Start step1, Function: push_get_device_all, Class: PushKApi, X_Push_Session_Id: $X_Push_Session_Id, X_Push_Auth_Token: $X_Push_Auth_Token, currentTimestamp2: $currentTimestamp2, auth_token: $authToken")
+                    PushSDKLogger.debug("Result: Start step1, Function: push_get_device_all, Class: PushKApi, X_Push_Session_Id: $X_Push_Session_Id, X_Push_Auth_Token: $X_Push_Auth_Token, currentTimestamp2: $currentTimestamp2, auth_token: $authToken")
 
                     val mURL2 = URL("$BASE_URL$API_URL_GET_DEVICE_ALL")
 
@@ -357,7 +357,7 @@ internal class PushKApi {
 
                         sslSocketFactory = SSLSocketFactory.getDefault() as SSLSocketFactory
 
-                        PushKLoggerSdk.debug("\nSent 'GET' request to URL : $url; Response Code : $responseCode")
+                        PushSDKLogger.debug("\nSent 'GET' request to URL : $url; Response Code : $responseCode")
                         functionCodeAnswer4 = responseCode
 
                         //if (responseCode==401) { init_push.clearData() }
@@ -366,11 +366,11 @@ internal class PushKApi {
 
                             functionNetAnswer4 = it.readLine().toString()
 
-                            PushKLoggerSdk.debug("Result: Finish step2, Function: push_get_device_all, Class: PushKApi, function_net_answer4: $functionNetAnswer4")
+                            PushSDKLogger.debug("Result: Finish step2, Function: push_get_device_all, Class: PushKApi, function_net_answer4: $functionNetAnswer4")
                         }
                     }
                 } catch (e: Exception) {
-                    PushKLoggerSdk.debug("Result: Failed step3, Function: push_get_device_all, Class: PushKApi, exception: $e")
+                    PushSDKLogger.debug("Result: Failed step3, Function: push_get_device_all, Class: PushKApi, exception: $e")
 
 
                     functionNetAnswer4 = "Failed"
@@ -409,7 +409,7 @@ internal class PushKApi {
                 val message =
                     "{\"fcmToken\": \"$fcm_Token\",\"osType\": \"$os_Type\",\"osVersion\": \"$osVersion\",\"deviceType\": \"$device_Type\",\"deviceName\": \"$device_Name\",\"sdkVersion\": \"$sdk_Version\" }"
 
-                PushKLoggerSdk.debug(message)
+                PushSDKLogger.debug(message)
 
                 val currentTimestamp2 = System.currentTimeMillis() // We want timestamp in seconds
 
@@ -458,7 +458,7 @@ internal class PushKApi {
                 }
 
             } catch (e: Exception) {
-                PushKLoggerSdk.debug("Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${e.stackTrace}")
+                PushSDKLogger.debug("Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${e.stackTrace}")
 
                 functionNetAnswer5 = "Failed"
             }
@@ -491,7 +491,7 @@ internal class PushKApi {
 
             try {
                 val message2 = "{\"messageId\": \"$message_id\", \"answer\": \"$push_answer\"}"
-                PushKLoggerSdk.debug("Body message to push server : $message2")
+                PushSDKLogger.debug("Body message to push server : $message2")
                 val currentTimestamp2 = System.currentTimeMillis() // We want timestamp in seconds
 
                 val authToken = hash("$X_Push_Auth_Token:$currentTimestamp2")
@@ -524,8 +524,8 @@ internal class PushKApi {
 
                     wr.write(postData2)
                     wr.flush()
-                    PushKLoggerSdk.debug("URL : $url")
-                    PushKLoggerSdk.debug("Response Code : $responseCode")
+                    PushSDKLogger.debug("URL : $url")
+                    PushSDKLogger.debug("Response Code : $responseCode")
                     functionCodeAnswer6 = responseCode
                     BufferedReader(InputStreamReader(inputStream)).use {
                         val response = StringBuffer()
@@ -536,14 +536,14 @@ internal class PushKApi {
                             inputLine = it.readLine()
                         }
                         it.close()
-                        PushKLoggerSdk.debug("Response : $response")
+                        PushSDKLogger.debug("Response : $response")
 
                         functionNetAnswer6 = response.toString()
                     }
                 }
 
             } catch (e: Exception) {
-                PushKLoggerSdk.debug("Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${e.stackTrace}")
+                PushSDKLogger.debug("Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${e.stackTrace}")
             }
         })
 
@@ -572,11 +572,11 @@ internal class PushKApi {
                 try {
                     val message2 = "{\"messageId\": \"$message_id\"}"
 
-                    PushKLoggerSdk.debug("Body message to push server : $message2")
+                    PushSDKLogger.debug("Body message to push server : $message2")
                     val currentTimestamp2 =
                         System.currentTimeMillis() // We want timestamp in seconds
 
-                    PushKLoggerSdk.debug("Timestamp : $currentTimestamp2")
+                    PushSDKLogger.debug("Timestamp : $currentTimestamp2")
 
                     val authToken = hash("$X_Push_Auth_Token:$currentTimestamp2")
 
@@ -608,8 +608,8 @@ internal class PushKApi {
                         val wr = DataOutputStream(outputStream)
                         wr.write(postData2)
                         wr.flush()
-                        PushKLoggerSdk.debug("URL : $url")
-                        PushKLoggerSdk.debug("Response Code : $responseCode")
+                        PushSDKLogger.debug("URL : $url")
+                        PushSDKLogger.debug("Response Code : $responseCode")
 
                         BufferedReader(InputStreamReader(inputStream)).use {
                             val response = StringBuffer()
@@ -620,7 +620,7 @@ internal class PushKApi {
                                 inputLine = it.readLine()
                             }
                             it.close()
-                            PushKLoggerSdk.debug("Response : $response")
+                            PushSDKLogger.debug("Response : $response")
                         }
                         functionNetAnswer7 = responseCode.toString()
                     }

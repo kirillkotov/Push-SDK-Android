@@ -7,7 +7,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JSON
 
-internal class Answer {
+internal class RequestAnswerHandler {
 
     @Serializable
     data class ParentRegistration(
