@@ -3,12 +3,16 @@ package com.push.android.pushsdkandroid
 import android.content.Context
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
+import com.google.gson.Gson
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import com.push.android.pushsdkandroid.add.Answer
 import com.push.android.pushsdkandroid.add.GetInfo
 import com.push.android.pushsdkandroid.add.PushParsing
 import com.push.android.pushsdkandroid.add.RewriteParams
 import com.push.android.pushsdkandroid.core.*
 import com.push.android.pushsdkandroid.logger.PushKLoggerSdk
+import com.push.android.pushsdkandroid.models.PushDataModel
 import kotlin.properties.Delegates
 
 /**
@@ -566,7 +570,15 @@ class PushSDK(
                 PushKLoggerSdk.debug("push_clear_all_device deviceAllPush: $deviceAllPush")
 
                 val deviceList: String = parsing.parseIdDevicesAll(deviceAllPush.body)
+                //push_clear_all_device deviceList: ["1062", "1063"]
+                val devices = Gson().fromJson(deviceAllPush.body, JsonObject::class.java).getAsJsonArray("devices")
                 PushKLoggerSdk.debug("push_clear_all_device deviceList: $deviceList")
+                PushKLoggerSdk.debug("push_clear_all_device devices: $devices")
+                val deviceIds = JsonArray()
+                for (device in devices) {
+                    deviceIds.add(device.asJsonObject.getAsJsonPrimitive("id").asString)
+                }
+                PushKLoggerSdk.debug("push_clear_all_device deviceIds: $deviceIds")
 
                 val pushAnswer: PushKDataApi = apiPushData.hDeviceRevoke(
                     deviceList,
