@@ -8,11 +8,9 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.push.android.pushsdkandroid.add.Answer
 import com.push.android.pushsdkandroid.add.GetInfo
-import com.push.android.pushsdkandroid.add.PushParsing
 import com.push.android.pushsdkandroid.add.RewriteParams
 import com.push.android.pushsdkandroid.core.*
 import com.push.android.pushsdkandroid.logger.PushKLoggerSdk
-import com.push.android.pushsdkandroid.models.PushDataModel
 import kotlin.properties.Delegates
 
 /**
@@ -92,10 +90,8 @@ class PushSDK(
     private var apiPushData: PushKApi = PushKApi()
     private var answerAny: Answer = Answer()
     private var rewriteParams: RewriteParams = RewriteParams(context)
-    private var parsing: PushParsing = PushParsing()
     private var pushInternalParamsObject: PushSdkParameters = PushSdkParameters
     private var pushDeviceType: String = ""
-    private var parsingPushClass: PushParsing = PushParsing()
 
     //main class initialization
     init {
@@ -568,13 +564,8 @@ class PushSDK(
                     PushKDatabase.push_k_registration_token
                 )
                 PushKLoggerSdk.debug("push_clear_all_device deviceAllPush: $deviceAllPush")
-
-                //val deviceList: String = parsing.parseIdDevicesAll(deviceAllPush.body)
                 //push_clear_all_device deviceList: ["1062", "1063"]
-
                 val devices = Gson().fromJson(deviceAllPush.body, JsonObject::class.java).getAsJsonArray("devices")
-                //PushKLoggerSdk.debug("push_clear_all_device deviceList: $deviceList")
-                //PushKLoggerSdk.debug("push_clear_all_device devices: $devices")
                 val deviceIds = JsonArray()
                 for (device in devices) {
                     deviceIds.add(device.asJsonObject.getAsJsonPrimitive("id").asString)
@@ -592,7 +583,6 @@ class PushSDK(
                 if (pushAnswer.code == 200) {
                     PushKLoggerSdk.debug("start clear data")
                     initHObject.clearData()
-                    //return answerAny.generalAnswer("200", "{\"devices\":$deviceList}", "Success")
                     return answerAny.generalAnswer("200", "{\"devices\":$deviceIds}", "Success")
                 } else {
                     if (pushAnswer.code == 401) {
