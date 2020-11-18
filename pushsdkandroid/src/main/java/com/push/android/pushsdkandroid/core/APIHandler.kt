@@ -34,7 +34,7 @@ internal class APIHandler {
      * TODO find an elegant way of doing this
      */
     companion object {
-        var BASE_URL: String = ""
+        var baseURL: String = ""
             get() {
                 return "/$API_VERSION$field"
             }
@@ -47,35 +47,35 @@ internal class APIHandler {
         const val HEADER_AUTH_TOKEN: String = "X-Hyber-Auth-Token"
         val API_URL_DEVICE_UPDATE: String = "device/update"
             get() {
-                return "$BASE_URL$field"
+                return "$baseURL$field"
             }
         val API_URL_DEVICE_REGISTRATION: String = "/device/registration"
             get() {
-                return "$BASE_URL$field"
+                return "$baseURL$field"
             }
         val API_URL_DEVICE_REVOKE: String = "/device/revoke"
             get() {
-                return "$BASE_URL$field"
+                return "$baseURL$field"
             }
         val API_URL_GET_DEVICE_ALL: String = "/device/all"
             get() {
-                return "$BASE_URL$field"
+                return "$baseURL$field"
             }
         val API_URL_MESSAGE_CALLBACK: String = "/message/callback"
             get() {
-                return "$BASE_URL$field"
+                return "$baseURL$field"
             }
         val API_URL_MESSAGE_DELIVERY_REPORT: String = "/message/dr"
             get() {
-                return "$BASE_URL$field"
+                return "$baseURL$field"
             }
         val API_URL_MESSAGE_QUEUE: String = "/message/queue"
             get() {
-                return "$BASE_URL$field"
+                return "$baseURL$field"
             }
         val API_URL_MESSAGE_HISTORY: String = "/message/history?startDate="
             get() {
-                return "$BASE_URL$field"
+                return "$baseURL$field"
             }
     }
 
