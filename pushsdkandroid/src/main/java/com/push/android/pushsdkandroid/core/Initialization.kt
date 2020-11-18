@@ -7,6 +7,7 @@ import com.push.android.pushsdkandroid.logger.PushSDKLogger
 import com.push.android.pushsdkandroid.models.PushOperativeData
 import java.util.*
 
+internal lateinit var PushKDatabase: PushOperativeData
 
 /**
  * Initialization of various parameters
