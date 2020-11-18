@@ -569,11 +569,12 @@ class PushSDK(
                 )
                 PushKLoggerSdk.debug("push_clear_all_device deviceAllPush: $deviceAllPush")
 
-                val deviceList: String = parsing.parseIdDevicesAll(deviceAllPush.body)
+                //val deviceList: String = parsing.parseIdDevicesAll(deviceAllPush.body)
                 //push_clear_all_device deviceList: ["1062", "1063"]
+
                 val devices = Gson().fromJson(deviceAllPush.body, JsonObject::class.java).getAsJsonArray("devices")
-                PushKLoggerSdk.debug("push_clear_all_device deviceList: $deviceList")
-                PushKLoggerSdk.debug("push_clear_all_device devices: $devices")
+                //PushKLoggerSdk.debug("push_clear_all_device deviceList: $deviceList")
+                //PushKLoggerSdk.debug("push_clear_all_device devices: $devices")
                 val deviceIds = JsonArray()
                 for (device in devices) {
                     deviceIds.add(device.asJsonObject.getAsJsonPrimitive("id").asString)
@@ -581,7 +582,7 @@ class PushSDK(
                 PushKLoggerSdk.debug("push_clear_all_device deviceIds: $deviceIds")
 
                 val pushAnswer: PushKDataApi = apiPushData.hDeviceRevoke(
-                    deviceList,
+                    deviceIds.toString(),
                     PushKDatabase.firebase_registration_token, //_xPushSessionId
                     PushKDatabase.push_k_registration_token
                 )
@@ -591,7 +592,8 @@ class PushSDK(
                 if (pushAnswer.code == 200) {
                     PushKLoggerSdk.debug("start clear data")
                     initHObject.clearData()
-                    return answerAny.generalAnswer("200", "{\"devices\":$deviceList}", "Success")
+                    //return answerAny.generalAnswer("200", "{\"devices\":$deviceList}", "Success")
+                    return answerAny.generalAnswer("200", "{\"devices\":$deviceIds}", "Success")
                 } else {
                     if (pushAnswer.code == 401) {
                         try {
