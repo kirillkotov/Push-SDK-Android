@@ -18,7 +18,7 @@ import javax.net.ssl.HttpsURLConnection
 import javax.net.ssl.SSLSocketFactory
 
 /**
- * class for communication with push rest server (REST API)
+ * Communication with push rest server (REST API)
  */
 internal class PushKApi {
 

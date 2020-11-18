@@ -3,7 +3,6 @@ package com.push.android.pushsdkandroid.core
 import android.content.Context
 import android.content.SharedPreferences
 
-
 @Suppress("unused")
 internal class SharedPreference(val context: Context) {
     private val preferenceDatabase = "push_k_database"

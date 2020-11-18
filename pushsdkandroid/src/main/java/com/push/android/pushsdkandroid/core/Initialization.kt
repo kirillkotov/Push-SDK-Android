@@ -8,7 +8,9 @@ import com.push.android.pushsdkandroid.models.PushOperativeData
 import java.util.*
 
 
-//function for initialization different parameters
+/**
+ * Initialization of various parameters
+ */
 internal class Initialization(val context: Context) {
     private val sharedPreference: SharedPreference = SharedPreference(context)
 

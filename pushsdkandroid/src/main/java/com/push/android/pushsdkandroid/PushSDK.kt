@@ -17,62 +17,7 @@ import com.push.android.pushsdkandroid.models.PushKDataApi2
 import com.push.android.pushsdkandroid.models.PushOperativeData
 import kotlin.properties.Delegates
 
-/**
- * An object used for storing and exchanging data, will surely need to be redone, as it is no good;
- * Will be deprecated in later versions
- */
-object PushKPushMess {
-    /**
-     * Latest message received
-     */
-    var message: String? = null   //global variable for push messages
-
-    /**
-     * SDK logging level; Can be "error" or "debug"
-     */
-    var log_level_active: String = "error" //global variable sdk log level
-}
-
 internal lateinit var PushKDatabase: PushOperativeData
-
-/**
- * This class is under question
- */
-@Suppress("unused")
-@Deprecated("to be removed")
-internal class PushSDKQueue {
-    /**
-     * check queue (possibly duplicate)
-     */
-    fun push_check_queue(context: Context): PushKFunAnswerGeneral {
-        val answerNotKnown = PushKFunAnswerGeneral(710, "Failed", "Unknown error", "unknown")
-        try {
-            val answ = Answer()
-            val answerNotRegistered = PushKFunAnswerGeneral(
-                704,
-                "Failed",
-                "Registration data not found",
-                "Not registered"
-            )
-            val initPushParams2 = Initialization(context)
-            initPushParams2.hSdkGetParametersFromLocal()
-
-            return if (PushKDatabase.registrationStatus) {
-                val queue = QueueProc()
-                val anss = queue.pushDeviceMessQueue(
-                    PushKDatabase.firebase_registration_token,
-                    PushKDatabase.push_k_registration_token, context
-                )
-                PushKLoggerSdk.debug("PushSDKQueue.push_check_queue response: $anss")
-                answ.generalAnswer("200", "{}", "Success")
-            } else {
-                answerNotRegistered
-            }
-        } catch (e: Exception) {
-            return answerNotKnown
-        }
-    }
-}
 
 /**
  * Main class, used for initialization
