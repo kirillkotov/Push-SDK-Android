@@ -697,12 +697,13 @@ class PushSDK(
                     return@OnCompleteListener
                 }
                 // Get new Instance ID token
-                val token = task.result!!.token
-                if (token != "") {
-                    if (token != PushKDatabase.firebase_registration_token) {
-                        PushKDatabase.firebase_registration_token = token
-                        PushKLoggerSdk.debug("PushSDK.updateToken token2: $token")
-                        rewriteParams.rewriteFirebaseToken(token)
+                task.result?.let {
+                    if (it.token != "") {
+                        if (it.token != PushKDatabase.firebase_registration_token) {
+                            PushKDatabase.firebase_registration_token = it.token
+                            PushKLoggerSdk.debug("PushSDK.updateToken token2: $it.token")
+                            rewriteParams.rewriteFirebaseToken(it.token)
+                        }
                     }
                 }
             })
