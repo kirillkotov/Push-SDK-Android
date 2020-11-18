@@ -13,3 +13,7 @@ Utilities; Not useful for the end-user.
 # Package com.push.android.pushsdkandroid.core
 
 The "core" sdk package. Contains some core classes.
+
+# Package com.push.android.pushsdkandroid.models
+
+Data models

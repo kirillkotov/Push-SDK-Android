@@ -31,7 +31,7 @@ class PushSDK(
 ) {
 
     /**
-     * Constants and public static methods
+     * Constants and public methods
      */
     companion object {
 
