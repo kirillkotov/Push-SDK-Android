@@ -101,7 +101,6 @@ class PushSDK(
         updateToken()
     }
 
-
     private var answerNotRegistered: PushKFunAnswerGeneral =
         PushKFunAnswerGeneral(704, "Failed", "Registration data not found", "Not registered")
     private var answerNotKnown: PushKFunAnswerGeneral =

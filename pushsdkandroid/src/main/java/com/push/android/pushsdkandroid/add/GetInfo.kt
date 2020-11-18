@@ -36,7 +36,7 @@ internal class GetInfo {
     }
 
     /**
-     * get device type (phone or tablet)
+     * Get device type (phone or tablet)
      */
     fun getPhoneType(context: Context): String {
         return try {
