@@ -36,9 +36,6 @@ internal class APIHandler {
      */
     companion object {
         var baseURL: String = ""
-            get() {
-                return "/$API_VERSION$field"
-            }
         const val API_VERSION = "2.3"
         const val HEADER_CLIENT_API_KEY: String = "X-Hyber-Client-API-Key"
         const val HEADER_APP_FINGERPRINT: String = "X-Hyber-App-Fingerprint"
@@ -47,35 +44,35 @@ internal class APIHandler {
         const val HEADER_AUTH_TOKEN: String = "X-Hyber-Auth-Token"
         val API_URL_DEVICE_UPDATE: String = "device/update"
             get() {
-                return "$baseURL$field"
+                return "$baseURL$field/$API_VERSION"
             }
         val API_URL_DEVICE_REGISTRATION: String = "/device/registration"
             get() {
-                return "$baseURL$field"
+                return "$baseURL$field/$API_VERSION"
             }
         val API_URL_DEVICE_REVOKE: String = "/device/revoke"
             get() {
-                return "$baseURL$field"
+                return "$baseURL$field/$API_VERSION"
             }
         val API_URL_GET_DEVICE_ALL: String = "/device/all"
             get() {
-                return "$baseURL$field"
+                return "$baseURL$field/$API_VERSION"
             }
         val API_URL_MESSAGE_CALLBACK: String = "/message/callback"
             get() {
-                return "$baseURL$field"
+                return "$baseURL$field/$API_VERSION"
             }
         val API_URL_MESSAGE_DELIVERY_REPORT: String = "/message/dr"
             get() {
-                return "$baseURL$field"
+                return "$baseURL$field/$API_VERSION"
             }
         val API_URL_MESSAGE_QUEUE: String = "/message/queue"
             get() {
-                return "$baseURL$field"
+                return "$baseURL$field/$API_VERSION"
             }
         val API_URL_MESSAGE_HISTORY: String = "/message/history"
             get() {
-                return "$baseURL$field"
+                return "$baseURL$field/$API_VERSION"
             }
     }
 
