@@ -30,25 +30,53 @@ internal class APIHandler {
     private val osVersion: String = osVersionClass.getAndroidVersion()
 
     /**
-     * Headers and API URLs
+     * Headers and API URLs.
+     * TODO find an elegant way of doing this
      */
     companion object {
-        const val HEADER_CLIENT_API_KEY = "X-Hyber-Client-API-Key"
-        const val HEADER_APP_FINGERPRINT = "X-Hyber-App-Fingerprint"
-        const val HEADER_SESSION_ID = "X-Hyber-Session-Id"
-        const val HEADER_TIMESTAMP = "X-Hyber-Timestamp"
-        const val HEADER_AUTH_TOKEN = "X-Hyber-Auth-Token"
+        var BASE_URL: String = ""
+            get() {
+                return "/$API_VERSION$field"
+            }
 
-        const val BASE_URL = "https://test-push.hyber.im/api/2.3/"
-
-        const val API_URL_DEVICE_UPDATE = "device/update"
-        const val API_URL_DEVICE_REGISTRATION = "device/registration"
-        const val API_URL_DEVICE_REVOKE = "device/revoke"
-        const val API_URL_GET_DEVICE_ALL = "device/all"
-        const val API_URL_MESSAGE_CALLBACK = "message/callback"
-        const val API_URL_MESSAGE_DELIVERY_REPORT = "message/dr"
-        const val API_URL_MESSAGE_QUEUE = "message/queue"
-        const val API_URL_MESSAGE_HISTORY = "message/history?startDate="
+        const val API_VERSION = "2.3"
+        const val HEADER_CLIENT_API_KEY: String = "X-Hyber-Client-API-Key"
+        const val HEADER_APP_FINGERPRINT: String = "X-Hyber-App-Fingerprint"
+        const val HEADER_SESSION_ID: String = "X-Hyber-Session-Id"
+        const val HEADER_TIMESTAMP: String = "X-Hyber-Timestamp"
+        const val HEADER_AUTH_TOKEN: String = "X-Hyber-Auth-Token"
+        val API_URL_DEVICE_UPDATE: String = "device/update"
+            get() {
+                return "$BASE_URL$field"
+            }
+        val API_URL_DEVICE_REGISTRATION: String = "/device/registration"
+            get() {
+                return "$BASE_URL$field"
+            }
+        val API_URL_DEVICE_REVOKE: String = "/device/revoke"
+            get() {
+                return "$BASE_URL$field"
+            }
+        val API_URL_GET_DEVICE_ALL: String = "/device/all"
+            get() {
+                return "$BASE_URL$field"
+            }
+        val API_URL_MESSAGE_CALLBACK: String = "/message/callback"
+            get() {
+                return "$BASE_URL$field"
+            }
+        val API_URL_MESSAGE_DELIVERY_REPORT: String = "/message/dr"
+            get() {
+                return "$BASE_URL$field"
+            }
+        val API_URL_MESSAGE_QUEUE: String = "/message/queue"
+            get() {
+                return "$BASE_URL$field"
+            }
+        val API_URL_MESSAGE_HISTORY: String = "/message/history?startDate="
+            get() {
+                return "$BASE_URL$field"
+            }
     }
 
     /**
@@ -98,7 +126,7 @@ internal class APIHandler {
 
                 val currentTimestamp = System.currentTimeMillis()
                 val postData: ByteArray = message.toByteArray(Charset.forName("UTF-8"))
-                val mURL = URL("$BASE_URL$API_URL_DEVICE_REGISTRATION")
+                val mURL = URL(API_URL_DEVICE_REGISTRATION)
                 val connectorWebPlatform = mURL.openConnection() as HttpsURLConnection
                 connectorWebPlatform.doOutput = true
                 connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
@@ -198,7 +226,7 @@ internal class APIHandler {
                 val currentTimestamp2 = System.currentTimeMillis() // We want timestamp in seconds
                 val authToken = hash("$X_Push_Auth_Token:$currentTimestamp2")
                 val postData2: ByteArray = message2.toByteArray(Charset.forName("UTF-8"))
-                val mURL2 = URL("$BASE_URL$API_URL_DEVICE_REVOKE")
+                val mURL2 = URL(API_URL_DEVICE_REVOKE)
 
                 val connectorWebPlatform = mURL2.openConnection() as HttpsURLConnection
                 connectorWebPlatform.doOutput = true
@@ -283,7 +311,7 @@ internal class APIHandler {
 
                 PushSDKLogger.debug("\nSent 'GET' request to push_get_device_all with : X_Push_Session_Id : $X_Push_Session_Id; X_Push_Auth_Token : $X_Push_Auth_Token; period_in_seconds : $period_in_seconds")
 
-                val mURL2 = URL("$BASE_URL$API_URL_MESSAGE_HISTORY${currentTimestamp1}")
+                val mURL2 = URL("$API_URL_MESSAGE_HISTORY${currentTimestamp1}")
 
                 with(mURL2.openConnection() as HttpsURLConnection) {
                     requestMethod = "GET"  // optional default is GET
@@ -344,7 +372,7 @@ internal class APIHandler {
 
                     PushSDKLogger.debug("Result: Start step1, Function: push_get_device_all, Class: PushKApi, X_Push_Session_Id: $X_Push_Session_Id, X_Push_Auth_Token: $X_Push_Auth_Token, currentTimestamp2: $currentTimestamp2, auth_token: $authToken")
 
-                    val mURL2 = URL("$BASE_URL$API_URL_GET_DEVICE_ALL")
+                    val mURL2 = URL(API_URL_GET_DEVICE_ALL)
 
                     with(mURL2.openConnection() as HttpsURLConnection) {
                         requestMethod = "GET"  // optional default is GET
@@ -417,7 +445,7 @@ internal class APIHandler {
 
                 val postData: ByteArray = message.toByteArray(Charset.forName("UTF-8"))
 
-                val mURL = URL("$BASE_URL$API_URL_DEVICE_UPDATE")
+                val mURL = URL(API_URL_DEVICE_UPDATE)
 
                 val connectorWebPlatform = mURL.openConnection() as HttpsURLConnection
                 connectorWebPlatform.doOutput = true
@@ -499,7 +527,7 @@ internal class APIHandler {
 
                 val postData2: ByteArray = message2.toByteArray(Charset.forName("UTF-8"))
 
-                val mURL2 = URL("$BASE_URL$API_URL_MESSAGE_CALLBACK")
+                val mURL2 = URL(API_URL_MESSAGE_CALLBACK)
 
                 val connectorWebPlatform = mURL2.openConnection() as HttpsURLConnection
                 connectorWebPlatform.doOutput = true
@@ -582,7 +610,7 @@ internal class APIHandler {
 
                     val postData2: ByteArray = message2.toByteArray(Charset.forName("UTF-8"))
 
-                    val mURL2 = URL("$BASE_URL$API_URL_MESSAGE_DELIVERY_REPORT")
+                    val mURL2 = URL(API_URL_MESSAGE_DELIVERY_REPORT)
 
                     val connectorWebPlatform = mURL2.openConnection() as HttpsURLConnection
                     connectorWebPlatform.doOutput = true

@@ -26,6 +26,7 @@ import kotlin.properties.Delegates
 @Suppress("unused")
 class PushSDK(
     context: Context,
+    baseApiUrl: String,
     log_level: String = PUSHSDK_LOG_LEVEL_ERROR
 ) {
 
