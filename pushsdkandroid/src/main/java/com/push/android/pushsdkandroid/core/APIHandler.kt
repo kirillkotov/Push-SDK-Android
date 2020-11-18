@@ -183,7 +183,7 @@ internal class APIHandler {
                 }
             } catch (e: Exception) {
 
-                PushSDKLogger.debug("Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${e.stackTrace}")
+                PushSDKLogger.debug("Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${Log.getStackTraceString(e)}")
 
                 functionNetAnswer = requestAnswerHandlerForm.registerProcedureAnswer2(
                     "705",
@@ -333,7 +333,7 @@ internal class APIHandler {
                     }
                 }
             } catch (e: Exception) {
-                PushSDKLogger.debug("Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${e.stackTrace}")
+                PushSDKLogger.debug("Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${Log.getStackTraceString(e)}")
                 functionCodeAnswer3 = 700
                 functionNetAnswer3 = "Failed"
             }
@@ -395,7 +395,7 @@ internal class APIHandler {
                         }
                     }
                 } catch (e: Exception) {
-                    PushSDKLogger.debug("Result: Failed step3, Function: push_get_device_all, Class: PushKApi, exception: $e")
+                    PushSDKLogger.debug("Result: Failed step3, Function: push_get_device_all, Class: PushKApi, exception: ${Log.getStackTraceString(e)}")
 
 
                     functionNetAnswer4 = "Failed"
@@ -568,7 +568,7 @@ internal class APIHandler {
                 }
 
             } catch (e: Exception) {
-                PushSDKLogger.debug("Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${e.stackTrace}")
+                PushSDKLogger.debug("Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${Log.getStackTraceString(e)}")
             }
         })
 
