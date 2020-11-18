@@ -38,7 +38,6 @@ internal class APIHandler {
             get() {
                 return "/$API_VERSION$field"
             }
-
         const val API_VERSION = "2.3"
         const val HEADER_CLIENT_API_KEY: String = "X-Hyber-Client-API-Key"
         const val HEADER_APP_FINGERPRINT: String = "X-Hyber-App-Fingerprint"

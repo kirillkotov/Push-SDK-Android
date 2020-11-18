@@ -36,21 +36,21 @@ import kotlin.random.Random
  *
  * @constructor A "FirebaseMessagingService based" service for handling push messages
  *
- * @param PARAM_NOTIFICATIONS_SUMMARY_TITLE_AND_TEXT Summary notification title and text <title, text>,
+ * @param summaryNotificationTitleAndText Summary notification title and text <title, text>,
  * used for displaying a "summary notification", which serves as a root notification for other notifications
  * notifications will not be bundled(grouped) if null; Ignored if api level is below android 7
  *
- * @param PARAM_NOTIFICATIONS_ICON_RESOURCE_ID Notification small icon
+ * @param notificationIconResourceId Notification small icon
  *
- * @param PARAM_NOTIFICATIONS_STYLE Notification style
+ * @param notificationStyle Notification style
  *
  * @see NotificationStyle, (https://developer.android.com/training/notify-user/group), (https://stackoverflow.com/a/41114135)
  *
  */
 open class PushKFirebaseService(
-    private val PARAM_NOTIFICATIONS_SUMMARY_TITLE_AND_TEXT: Pair<String, String>?,
-    private val PARAM_NOTIFICATIONS_ICON_RESOURCE_ID: Int = android.R.drawable.ic_notification_overlay,
-    private val PARAM_NOTIFICATIONS_STYLE: NotificationStyle = NotificationStyle.LARGE_ICON
+    private val summaryNotificationTitleAndText: Pair<String, String>?,
+    private val notificationIconResourceId: Int = android.R.drawable.ic_notification_overlay,
+    private val notificationStyle: NotificationStyle = NotificationStyle.LARGE_ICON
 ) : FirebaseMessagingService() {
 
     private var api: APIHandler = APIHandler()
@@ -197,7 +197,7 @@ open class PushKFirebaseService(
                         setAutoCancel(true)
                         setContentTitle(message.title)
                         setContentText(message.body)
-                        setSmallIcon(PARAM_NOTIFICATIONS_ICON_RESOURCE_ID)
+                        setSmallIcon(notificationIconResourceId)
                         setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                         //actually should never be null, but just in case
                         packageManager.getLaunchIntentForPackage(applicationInfo.packageName)?.let {
@@ -213,7 +213,7 @@ open class PushKFirebaseService(
                             )
                             setContentIntent(pendingIntent)
                         }
-                        when (PARAM_NOTIFICATIONS_STYLE) {
+                        when (notificationStyle) {
                             NotificationStyle.DEFAULT_PLAIN_TEXT -> {
                                 //do nothing
                             }
@@ -239,7 +239,7 @@ open class PushKFirebaseService(
             //Not much point in making bundled notifications on API < 24
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 //construct the summary notification object
-                PARAM_NOTIFICATIONS_SUMMARY_TITLE_AND_TEXT?.let {
+                summaryNotificationTitleAndText?.let {
                     val summaryNotification =
                         NotificationCompat.Builder(
                             applicationContext,
@@ -250,9 +250,9 @@ open class PushKFirebaseService(
                                 setGroupSummary(true)
                                 priority = NotificationCompat.PRIORITY_MAX
                                 setAutoCancel(true)
-                                setContentTitle(PARAM_NOTIFICATIONS_SUMMARY_TITLE_AND_TEXT.first)
-                                setContentText(PARAM_NOTIFICATIONS_SUMMARY_TITLE_AND_TEXT.second)
-                                setSmallIcon(PARAM_NOTIFICATIONS_ICON_RESOURCE_ID)
+                                setContentTitle(summaryNotificationTitleAndText.first)
+                                setContentText(summaryNotificationTitleAndText.second)
+                                setSmallIcon(notificationIconResourceId)
                             }.build()
 
                     //show summary notification
