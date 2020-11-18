@@ -93,7 +93,7 @@ class PushSDK(
         try {
             val localDataLoaded = initHObject.hSdkGetParametersFromLocal()
             if (localDataLoaded.registrationStatus) {
-                this.pushUpdateRegistration()
+                this.updateRegistration()
             }
         } catch (e: Exception) {
             PushSDKLogger.error("PushSDK.init registration update problem $e")
@@ -140,7 +140,7 @@ class PushSDK(
      * @param userMsisdn Device phone number
      * @param userPassword password, associated with device phone number
      */
-    fun pushRegisterNew(
+    fun registerNewDevice(
         clientAPIKey: String,
         appFingerprint: String,
         userMsisdn: String,
@@ -228,7 +228,7 @@ class PushSDK(
      *
      * @return PushKFunAnswerRegister
      */
-    fun pushRegisterNew(
+    fun registerNewDevice(
         clientAPIKey: String,    // APP API key on push platform
         appFingerprint: String,   // App Fingerprint key
         userMsisdn: String,               // User MSISDN
@@ -311,7 +311,7 @@ class PushSDK(
     /**
      * Unregister the current device from database (if registered)
      */
-    fun pushClearCurrentDevice(): PushKFunAnswerGeneral {
+    fun unregisterCurrentDevice(): PushKFunAnswerGeneral {
         try {
             PushSDKLogger.debug("push_clear_current_device start")
             updateToken()
@@ -400,7 +400,7 @@ class PushSDK(
      *
      * @return PushKFunAnswerGeneral
      */
-    fun pushGetDeviceAllFromServer(): PushKFunAnswerGeneral {
+    fun getAllRegisteredDevices(): PushKFunAnswerGeneral {
         try {
             PushSDKLogger.debug("Start push_get_device_all_from_server request: firebase_registration_token: ${PushKDatabase.firebase_registration_token}, push_registration_token: ${PushKDatabase.push_k_registration_token}")
 
@@ -436,7 +436,7 @@ class PushSDK(
      *
      * @return PushKFunAnswerGeneral
      */
-    fun pushUpdateRegistration(): PushKFunAnswerGeneral {
+    fun updateRegistration(): PushKFunAnswerGeneral {
         try {
             PushSDKLogger.debug("push_update_registration started")
             updateToken()
@@ -472,7 +472,7 @@ class PushSDK(
      *
      * @return PushKFunAnswerGeneral
      */
-    fun pushSendMessageCallback(
+    fun sendMessageAndReceiveCallback(
         messageId: String,
         messageText: String
     ): PushKFunAnswerGeneral {
@@ -507,7 +507,7 @@ class PushSDK(
      *
      * @return PushKFunAnswerGeneral
      */
-    fun pushMessageDeliveryReport(messageId: String): PushKFunAnswerGeneral {
+    fun getMessageDeliveryReport(messageId: String): PushKFunAnswerGeneral {
         try {
             PushSDKLogger.debug("push_message_delivery_report message_id: $messageId")
             updateToken()
@@ -546,7 +546,7 @@ class PushSDK(
      *
      * @return PushKFunAnswerGeneral
      */
-    fun pushClearAllDevice(): PushKFunAnswerGeneral {
+    fun unregisterAllDevices(): PushKFunAnswerGeneral {
         try {
             updateToken()
             if (PushKDatabase.registrationStatus) {
@@ -636,13 +636,12 @@ class PushSDK(
         }
     }
 
-
     /**
      * Checks undelivered message queue and sends delivery report for the messages
      *
      * @return PushKFunAnswerGeneral
      */
-    fun pushCheckQueue(): PushKFunAnswerGeneral {
+    fun checkMessageQueue(): PushKFunAnswerGeneral {
         try {
             updateToken()
             if (PushKDatabase.registrationStatus) {
