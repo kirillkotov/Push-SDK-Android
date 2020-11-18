@@ -4,9 +4,12 @@ import android.os.Build
 import android.text.TextUtils
 import android.content.Context
 import android.content.res.Configuration
-import com.push.android.pushsdkandroid.logger.PushKLoggerSdk
+import com.push.android.pushsdkandroid.logger.PushSDKLogger
 
-class GetInfo {
+/**
+ * Utils for getting info
+ */
+internal class GetInfo {
 
     /** Returns the consumer friendly device name  */
     fun getDeviceName(): String? {
@@ -21,6 +24,9 @@ class GetInfo {
         }
     }
 
+    /**
+     * Get android version
+     */
     fun getAndroidVersion(): String {
         return try {
             Build.VERSION.RELEASE
@@ -29,16 +35,18 @@ class GetInfo {
         }
     }
 
-    //get device type (phone or tablet)
+    /**
+     * Get device type (phone or tablet)
+     */
     fun getPhoneType(context: Context): String {
         return try {
             val flagIsTab: Boolean =
                 context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK >= Configuration.SCREENLAYOUT_SIZE_LARGE
             if (flagIsTab) {
-                PushKLoggerSdk.debug("Result: Function: get_phone_type, Class: GetInfo, flagisTab: $flagIsTab, answer: tablet")
+                PushSDKLogger.debug("Result: Function: get_phone_type, Class: GetInfo, flagisTab: $flagIsTab, answer: tablet")
                 "tablet"
             } else {
-                PushKLoggerSdk.debug("Result: Function: get_phone_type, Class: GetInfo, flagisTab: $flagIsTab, answer: phone")
+                PushSDKLogger.debug("Result: Function: get_phone_type, Class: GetInfo, flagisTab: $flagIsTab, answer: phone")
                 "phone"
             }
         } catch (e: java.lang.Exception) {
@@ -46,6 +54,9 @@ class GetInfo {
         }
     }
 
+    /**
+     * Capitalize string (why?!?!)
+     */
     private fun capitalize(str: String): String? {
         if (TextUtils.isEmpty(str)) {
             return str

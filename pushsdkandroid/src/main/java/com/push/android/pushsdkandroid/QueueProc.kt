@@ -2,10 +2,9 @@ package com.push.android.pushsdkandroid
 
 import android.content.Context
 import android.content.Intent
-import com.push.android.pushsdkandroid.core.PushKApi
-import com.push.android.pushsdkandroid.core.PushKDataApi
-import com.push.android.pushsdkandroid.core.PushSdkParameters
-import com.push.android.pushsdkandroid.logger.PushKLoggerSdk
+import com.push.android.pushsdkandroid.core.APIHandler
+import com.push.android.pushsdkandroid.logger.PushSDKLogger
+import com.push.android.pushsdkandroid.models.PushKDataApi
 import kotlinx.serialization.Optional
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -19,29 +18,37 @@ import java.security.MessageDigest
 import javax.net.ssl.HttpsURLConnection
 import javax.net.ssl.SSLSocketFactory
 
+/**
+ * Queue handling
+ */
 internal class QueueProc {
 
-    //function for create special token for another procedures
+    /**
+     * Creates special token for use in requests
+     */
     private fun hash(sss: String): String {
         return try {
             val bytes = sss.toByteArray()
             val md = MessageDigest.getInstance("SHA-256")
             val digest = md.digest(bytes)
             val resp: String = digest.fold("", { str, it -> str + "%02x".format(it) })
-            PushKLoggerSdk.debug("Result: OK, Function: hash, Class: QueueProc, input: $sss, output: $resp")
+            PushSDKLogger.debug("Result: OK, Function: hash, Class: QueueProc, input: $sss, output: $resp")
             resp
         } catch (e: Exception) {
-            PushKLoggerSdk.debug("Result: FAILED, Function: hash, Class: QueueProc, input: $sss, output: failed")
+            PushSDKLogger.debug("Result: FAILED, Function: hash, Class: QueueProc, input: $sss, output: failed")
             "failed"
         }
     }
 
+    /**
+     * Process the push queue
+     */
     private fun processPushQueue(
         queue: String,
         X_Push_Session_Id: String,
         X_Push_Auth_Token: String
     ) {
-        val apiPush = PushKApi()
+        val apiPush = APIHandler()
 
         @Serializable
         data class Empty(
@@ -86,14 +93,17 @@ internal class QueueProc {
             Thread.sleep(2000)
             //initPush_params.push_init3()
             list.forEach {
-                PushKLoggerSdk.debug("fb token: $X_Push_Session_Id")
+                PushSDKLogger.debug("fb token: $X_Push_Session_Id")
                 apiPush.hMessageDr(it.messageId, X_Push_Session_Id, X_Push_Auth_Token)
-                PushKLoggerSdk.debug("Result: Start step2, Function: processPushQueue, Class: QueueProc, message: ${it.messageId}")
+                PushSDKLogger.debug("Result: Start step2, Function: processPushQueue, Class: QueueProc, message: ${it.messageId}")
             }
         }
     }
 
 
+    /**
+     * Obtain the push message queue
+     */
     internal fun pushDeviceMessQueue(
         X_Push_Session_Id: String,
         X_Push_Auth_Token: String,
@@ -103,19 +113,19 @@ internal class QueueProc {
 
         val threadNetF2 = Thread(Runnable {
 
-            val pushUrlMessQueue: String = PushSdkParameters.branchCurrentActivePath!!.fun_pushsdk_url_mess_queue
+            val pushUrlMessQueue = APIHandler.API_URL_MESSAGE_QUEUE
 
             try {
-                PushKLoggerSdk.debug("Result: Start step1, Function: push_device_mess_queue, Class: QueueProc, X_Push_Session_Id: $X_Push_Session_Id, X_Push_Auth_Token: $X_Push_Auth_Token")
+                PushSDKLogger.debug("Result: Start step1, Function: push_device_mess_queue, Class: QueueProc, X_Push_Session_Id: $X_Push_Session_Id, X_Push_Auth_Token: $X_Push_Auth_Token")
 
                 val message2 = "{}"
 
-                PushKLoggerSdk.debug("Result: Start step2, Function: push_device_mess_queue, Class: QueueProc, message2: $message2")
+                PushSDKLogger.debug("Result: Start step2, Function: push_device_mess_queue, Class: QueueProc, message2: $message2")
 
                 val currentTimestamp2 = System.currentTimeMillis() // We want timestamp in seconds
                 //val date = Date(currentTimestamp * 1000) // Timestamp must be in ms to be converted to Date
 
-                PushKLoggerSdk.debug("QueueProc.pushDeviceMessQueue \"currentTimestamp2 : $currentTimestamp2\"")
+                PushSDKLogger.debug("QueueProc.pushDeviceMessQueue \"currentTimestamp2 : $currentTimestamp2\"")
 
                 val authToken = hash("$X_Push_Auth_Token:$currentTimestamp2")
 
@@ -127,9 +137,9 @@ internal class QueueProc {
                 urlConnectorPlatform.doOutput = true
                 urlConnectorPlatform.setRequestProperty("Content-Language", "en-US")
                 urlConnectorPlatform.setRequestProperty("Content-Type", "application/json")
-                urlConnectorPlatform.setRequestProperty("X-Hyber-Session-Id", X_Push_Session_Id)
-                urlConnectorPlatform.setRequestProperty("X-Hyber-Timestamp", currentTimestamp2.toString())
-                urlConnectorPlatform.setRequestProperty("X-Hyber-Auth-Token", authToken)
+                urlConnectorPlatform.setRequestProperty(APIHandler.HEADER_SESSION_ID, X_Push_Session_Id)
+                urlConnectorPlatform.setRequestProperty(APIHandler.HEADER_TIMESTAMP, currentTimestamp2.toString())
+                urlConnectorPlatform.setRequestProperty(APIHandler.HEADER_AUTH_TOKEN, authToken)
 
                 urlConnectorPlatform.sslSocketFactory = SSLSocketFactory.getDefault() as SSLSocketFactory
 
@@ -140,8 +150,8 @@ internal class QueueProc {
                     wr.write(postData2)
                     wr.flush()
 
-                    PushKLoggerSdk.debug("QueueProc.pushDeviceMessQueue \"URL : $url\"")
-                    PushKLoggerSdk.debug("QueueProc.pushDeviceMessQueue \"Response Code : $responseCode\"")
+                    PushSDKLogger.debug("QueueProc.pushDeviceMessQueue \"URL : $url\"")
+                    PushSDKLogger.debug("QueueProc.pushDeviceMessQueue \"Response Code : $responseCode\"")
                     try {
                         BufferedReader(InputStreamReader(inputStream)).use {
                             val response = StringBuffer()
@@ -168,10 +178,10 @@ internal class QueueProc {
                                 X_Push_Session_Id,
                                 X_Push_Auth_Token
                             )
-                            PushKLoggerSdk.debug("QueueProc.pushDeviceMessQueue Response : $response")
+                            PushSDKLogger.debug("QueueProc.pushDeviceMessQueue Response : $response")
                         }
                     } catch (e: Exception) {
-                        PushKLoggerSdk.debug("QueueProc.pushDeviceMessQueue response: unknown Fail")
+                        PushSDKLogger.debug("QueueProc.pushDeviceMessQueue response: unknown Fail")
                     }
 
                     functionNetAnswer2 = responseCode.toString()

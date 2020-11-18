@@ -3,9 +3,8 @@ package com.push.android.pushsdkandroid.core
 import android.content.Context
 import android.content.SharedPreferences
 
-
 @Suppress("unused")
-internal class SharedPreference(val context: Context) {
+internal class SharedPreferencesHandler(val context: Context) {
     private val preferenceDatabase = "push_k_database"
     private var sharedPref: SharedPreferences =
         context.getSharedPreferences(preferenceDatabase, Context.MODE_PRIVATE)
@@ -28,8 +27,8 @@ internal class SharedPreference(val context: Context) {
         editor.apply()
     }
 
-    fun getValueString(KEY_NAME: String): String? {
-        return sharedPref.getString(KEY_NAME, "")
+    fun getValueString(KEY_NAME: String): String {
+        return sharedPref.getString(KEY_NAME, "") ?: ""
     }
 
     fun getValueInt(KEY_NAME: String): Int {

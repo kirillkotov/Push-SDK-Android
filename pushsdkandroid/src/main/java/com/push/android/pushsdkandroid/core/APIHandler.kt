@@ -1,9 +1,14 @@
 package com.push.android.pushsdkandroid.core
 
 import android.content.Context
-import com.push.android.pushsdkandroid.add.Answer
+import android.util.Log
+import com.push.android.pushsdkandroid.add.RequestAnswerHandler
 import com.push.android.pushsdkandroid.add.GetInfo
-import com.push.android.pushsdkandroid.logger.PushKLoggerSdk
+import com.push.android.pushsdkandroid.logger.PushSDKLogger
+import com.push.android.pushsdkandroid.models.PushKDataApi
+import com.push.android.pushsdkandroid.models.PushKDataApi2
+import com.push.android.pushsdkandroid.models.PushKFunAnswerGeneral
+import com.push.android.pushsdkandroid.models.PushKFunAnswerRegister
 import java.io.BufferedReader
 import java.io.DataOutputStream
 import java.io.InputStreamReader
@@ -13,32 +18,84 @@ import java.security.MessageDigest
 import javax.net.ssl.HttpsURLConnection
 import javax.net.ssl.SSLSocketFactory
 
-//class for communication with push rest server (REST API)
-internal class PushKApi {
+/**
+ * Communication with push rest server (REST API)
+ */
+internal class APIHandler {
 
     //class init for creation answers
-    private var answerForm: Answer = Answer()
+    private var requestAnswerHandlerForm: RequestAnswerHandler = RequestAnswerHandler()
     private var osVersionClass: GetInfo = GetInfo()
 
     //parameters for procedures
     private val osVersion: String = osVersionClass.getAndroidVersion()
 
-    //function for create special token for another procedures
+    /**
+     * Headers and API URLs.
+     * TODO find an elegant way of doing this
+     */
+    companion object {
+        var baseURL: String = ""
+        const val API_VERSION = "3.0"
+        const val HEADER_CLIENT_API_KEY: String = "X-Push-Client-API-Key"
+        const val HEADER_APP_FINGERPRINT: String = "X-Push-App-Fingerprint"
+        const val HEADER_SESSION_ID: String = "X-Push-Session-Id"
+        const val HEADER_TIMESTAMP: String = "X-Push-Timestamp"
+        const val HEADER_AUTH_TOKEN: String = "X-Push-Auth-Token"
+        val API_URL_DEVICE_UPDATE: String = "device/update"
+            get() {
+                return "$baseURL$API_VERSION$field"
+            }
+        val API_URL_DEVICE_REGISTRATION: String = "/device/registration"
+            get() {
+                return "$baseURL$API_VERSION$field"
+            }
+        val API_URL_DEVICE_REVOKE: String = "/device/revoke"
+            get() {
+                return "$baseURL$API_VERSION$field"
+            }
+        val API_URL_GET_DEVICE_ALL: String = "/device/all"
+            get() {
+                return "$baseURL$API_VERSION$field"
+            }
+        val API_URL_MESSAGE_CALLBACK: String = "/message/callback"
+            get() {
+                return "$baseURL$API_VERSION$field"
+            }
+        val API_URL_MESSAGE_DELIVERY_REPORT: String = "/message/dr"
+            get() {
+                return "$baseURL$API_VERSION$field"
+            }
+        val API_URL_MESSAGE_QUEUE: String = "/message/queue"
+            get() {
+                return "$baseURL$API_VERSION$field"
+            }
+        val API_URL_MESSAGE_HISTORY: String = "/message/history"
+            get() {
+                return "$baseURL$API_VERSION$field"
+            }
+    }
+
+    /**
+     * Creates special token for use in requests
+     */
     private fun hash(sss: String): String {
         return try {
             val bytes = sss.toByteArray()
             val md = MessageDigest.getInstance("SHA-256")
             val digest = md.digest(bytes)
             val resp: String = digest.fold("", { str, it -> str + "%02x".format(it) })
-            PushKLoggerSdk.debug("Result: OK, Function: hash, Class: PushKApi, input: $sss, output: $resp")
+            PushSDKLogger.debug("Result: OK, Function: hash, Class: PushKApi, input: $sss, output: $resp")
             resp
         } catch (e: Exception) {
-            PushKLoggerSdk.debug("Result: FAILED, Function: hash, Class: PushKApi, input: $sss, output: failed")
+            PushSDKLogger.debug("Result: FAILED, Function: hash, Class: PushKApi, input: $sss, output: failed")
             "failed"
         }
     }
 
-    //POST procedure for new registration
+    /**
+     * Registration POST request
+     */
     fun hDeviceRegister(
         xPlatformClientAPIKey: String,
         X_Push_Session_Id: String,
@@ -52,33 +109,32 @@ internal class PushKApi {
         context: Context
     ): PushKDataApi2 {
         var functionNetAnswer = PushKFunAnswerRegister()
-        var functionCodeAnswer = 0
+        //var functionCodeAnswer = 0
 
         val threadNetF1 = Thread(Runnable {
             try {
-                PushKLoggerSdk.debug("Result: Start step1, Function: push_device_register, Class: PushKApi, xPlatformClientAPIKey: $xPlatformClientAPIKey, X_Push_Session_Id: $X_Push_Session_Id, X_Push_App_Fingerprint: $X_Push_App_Fingerprint, device_Name: $device_Name, device_Type: $device_Type, os_Type: $os_Type, sdk_Version: $sdk_Version, user_Pass: $user_Pass, user_Phone: $user_Phone")
+                PushSDKLogger.debug("Result: Start step1, Function: push_device_register, Class: PushKApi, xPlatformClientAPIKey: $xPlatformClientAPIKey, X_Push_Session_Id: $X_Push_Session_Id, X_Push_App_Fingerprint: $X_Push_App_Fingerprint, device_Name: $device_Name, device_Type: $device_Type, os_Type: $os_Type, sdk_Version: $sdk_Version, user_Pass: $user_Pass, user_Phone: $user_Phone")
 
                 val message =
                     "{\"userPhone\":\"$user_Phone\",\"userPass\":\"$user_Pass\",\"osType\":\"$os_Type\",\"osVersion\":\"$osVersion\",\"deviceType\":\"$device_Type\",\"deviceName\":\"$device_Name\",\"sdkVersion\":\"$sdk_Version\"}"
                 //val message = "{\"userPhone\":\"$user_Phone\",\"userPass\":\"$user_Pass\",\"osType\":\"$os_Type\",\"osVersion\":\"$os_version\",\"deviceType\":\"$device_Type\",\"deviceName\":\"$device_Name\",\"sdkVersion\":\"$sdk_Version\"}"
 
-                PushKLoggerSdk.debug("Result: Start step2, Function: push_device_register, Class: PushKApi, message: $message")
+                PushSDKLogger.debug("Result: Start step2, Function: push_device_register, Class: PushKApi, message: $message")
 
-                val currentTimestamp = System.currentTimeMillis()
+                //val currentTimestamp = System.currentTimeMillis()
                 val postData: ByteArray = message.toByteArray(Charset.forName("UTF-8"))
-                val mURL =
-                    URL(PushSdkParameters.branchCurrentActivePath!!.fun_pushsdk_url_registration)
+                val mURL = URL(API_URL_DEVICE_REGISTRATION)
                 val connectorWebPlatform = mURL.openConnection() as HttpsURLConnection
                 connectorWebPlatform.doOutput = true
                 connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
                 connectorWebPlatform.setRequestProperty(
-                    "X-Hyber-Client-API-Key",
+                    HEADER_CLIENT_API_KEY,
                     xPlatformClientAPIKey
                 )
                 connectorWebPlatform.setRequestProperty("Content-Type", "application/json")
-                connectorWebPlatform.setRequestProperty("X-Hyber-Session-Id", X_Push_Session_Id)
+                connectorWebPlatform.setRequestProperty(HEADER_SESSION_ID, X_Push_Session_Id)
                 connectorWebPlatform.setRequestProperty(
-                    "X-Hyber-App-Fingerprint",
+                    HEADER_APP_FINGERPRINT,
                     X_Push_App_Fingerprint
                 )
                 connectorWebPlatform.sslSocketFactory =
@@ -93,9 +149,9 @@ internal class PushKApi {
 
                     wr.flush()
 
-                    PushKLoggerSdk.debug("Result: Finished step3, Function: push_device_register, Class: PushKApi, Response Code : $responseCode")
+                    PushSDKLogger.debug("Result: Finished step3, Function: push_device_register, Class: PushKApi, Response Code : $responseCode")
 
-                    functionCodeAnswer = responseCode
+                    //functionCodeAnswer = responseCode
                     if (responseCode == 200) {
 
                         BufferedReader(InputStreamReader(inputStream)).use {
@@ -108,16 +164,16 @@ internal class PushKApi {
                             }
                             it.close()
 
-                            PushKLoggerSdk.debug("Result: Finished step4, Function: push_device_register, Class: PushKApi, Response : $response")
+                            PushSDKLogger.debug("Result: Finished step4, Function: push_device_register, Class: PushKApi, Response : $response")
 
-                            functionNetAnswer = answerForm.registerProcedureAnswer2(
+                            functionNetAnswer = requestAnswerHandlerForm.registerProcedureAnswer2(
                                 responseCode.toString(),
                                 response.toString(),
                                 context
                             )
                         }
                     } else {
-                        functionNetAnswer = answerForm.registerProcedureAnswer2(
+                        functionNetAnswer = requestAnswerHandlerForm.registerProcedureAnswer2(
                             responseCode.toString(),
                             "unknown",
                             context
@@ -127,9 +183,9 @@ internal class PushKApi {
                 }
             } catch (e: Exception) {
 
-                PushKLoggerSdk.debug("Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${e.stackTrace}")
+                PushSDKLogger.debug("Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${Log.getStackTraceString(e)}")
 
-                functionNetAnswer = answerForm.registerProcedureAnswer2(
+                functionNetAnswer = requestAnswerHandlerForm.registerProcedureAnswer2(
                     "705",
                     "unknown",
                     context
@@ -143,7 +199,9 @@ internal class PushKApi {
         return PushKDataApi2(functionNetAnswer.code, functionNetAnswer, 0)
     }
 
-    //POST
+    /**
+     * POST request to revoke registration
+     */
     fun hDeviceRevoke(
         dev_list: String,
         X_Push_Session_Id: String,
@@ -156,27 +214,27 @@ internal class PushKApi {
 
             try {
 
-                PushKLoggerSdk.debug("Result: Start step1, Function: push_device_revoke, Class: PushKApi, dev_list: $dev_list, X_Push_Session_Id: $X_Push_Session_Id, X_Push_Auth_Token: $X_Push_Auth_Token")
+                PushSDKLogger.debug("Result: Start step1, Function: push_device_revoke, Class: PushKApi, dev_list: $dev_list, X_Push_Session_Id: $X_Push_Session_Id, X_Push_Auth_Token: $X_Push_Auth_Token")
 
                 val message2 = "{\"devices\":$dev_list}"
 
-                PushKLoggerSdk.debug("Result: Start step2, Function: push_device_revoke, Class: PushKApi, message2: $message2")
+                PushSDKLogger.debug("Result: Start step2, Function: push_device_revoke, Class: PushKApi, message2: $message2")
 
                 val currentTimestamp2 = System.currentTimeMillis() // We want timestamp in seconds
                 val authToken = hash("$X_Push_Auth_Token:$currentTimestamp2")
                 val postData2: ByteArray = message2.toByteArray(Charset.forName("UTF-8"))
-                val mURL2 = URL(PushSdkParameters.branchCurrentActivePath!!.fun_pushsdk_url_revoke)
+                val mURL2 = URL(API_URL_DEVICE_REVOKE)
 
                 val connectorWebPlatform = mURL2.openConnection() as HttpsURLConnection
                 connectorWebPlatform.doOutput = true
                 connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
                 connectorWebPlatform.setRequestProperty("Content-Type", "application/json")
-                connectorWebPlatform.setRequestProperty("X-Hyber-Session-Id", X_Push_Session_Id)
+                connectorWebPlatform.setRequestProperty(HEADER_SESSION_ID, X_Push_Session_Id)
                 connectorWebPlatform.setRequestProperty(
-                    "X-Hyber-Timestamp",
+                    HEADER_TIMESTAMP,
                     currentTimestamp2.toString()
                 )
-                connectorWebPlatform.setRequestProperty("X-Hyber-Auth-Token", authToken)
+                connectorWebPlatform.setRequestProperty(HEADER_AUTH_TOKEN, authToken)
 
                 connectorWebPlatform.sslSocketFactory =
                     SSLSocketFactory.getDefault() as SSLSocketFactory
@@ -198,10 +256,10 @@ internal class PushKApi {
                                 inputLine = it.readLine()
                             }
                             it.close()
-                            PushKLoggerSdk.debug("Response : $response")
+                            PushSDKLogger.debug("Response : $response")
                         }
                     } catch (e: Exception) {
-                        PushKLoggerSdk.debug("Failed")
+                        PushSDKLogger.debug("Failed")
                     }
 
                     functionNetAnswer2 = responseCode.toString()
@@ -217,7 +275,9 @@ internal class PushKApi {
         return PushKDataApi(functionNetAnswer2.toInt(), "{}", 0)
     }
 
-    //GET
+    /**
+     * GET request to get message history
+     */
     fun hGetMessageHistory(
         X_Push_Session_Id: String,
         X_Push_Auth_Token: String,
@@ -234,22 +294,21 @@ internal class PushKApi {
                 val currentTimestamp1 =
                     (System.currentTimeMillis() / 1000L) - period_in_seconds // We want timestamp in seconds
 
-                PushKLoggerSdk.debug("Result: val currentTimestamp1, Function: hGetMessageHistory, Class: PushKApi, currentTimestamp1: $currentTimestamp1")
+                PushSDKLogger.debug("Result: val currentTimestamp1, Function: hGetMessageHistory, Class: PushKApi, currentTimestamp1: $currentTimestamp1")
 
                 //this timestamp for token
                 val currentTimestamp2 = System.currentTimeMillis() / 1000L
 
-                PushKLoggerSdk.debug("Result: val currentTimestamp2, Function: hGetMessageHistory, Class: PushKApi, currentTimestamp2: $currentTimestamp2")
+                PushSDKLogger.debug("Result: val currentTimestamp2, Function: hGetMessageHistory, Class: PushKApi, currentTimestamp2: $currentTimestamp2")
 
                 val authToken = hash("$X_Push_Auth_Token:$currentTimestamp2")
 
-                PushKLoggerSdk.debug("Result: val authToken, Function: hGetMessageHistory, Class: PushKApi, authToken: $authToken")
+                PushSDKLogger.debug("Result: val authToken, Function: hGetMessageHistory, Class: PushKApi, authToken: $authToken")
 
 
-                PushKLoggerSdk.debug("\nSent 'GET' request to push_get_device_all with : X_Push_Session_Id : $X_Push_Session_Id; X_Push_Auth_Token : $X_Push_Auth_Token; period_in_seconds : $period_in_seconds")
+                PushSDKLogger.debug("\nSent 'GET' request to push_get_device_all with : X_Push_Session_Id : $X_Push_Session_Id; X_Push_Auth_Token : $X_Push_Auth_Token; period_in_seconds : $period_in_seconds")
 
-                val mURL2 =
-                    URL(PushSdkParameters.branchCurrentActivePath!!.pushsdk_url_message_history + currentTimestamp1.toString())
+                val mURL2 = URL("$API_URL_MESSAGE_HISTORY?startDate=${currentTimestamp1}")
 
                 with(mURL2.openConnection() as HttpsURLConnection) {
                     requestMethod = "GET"  // optional default is GET
@@ -257,24 +316,24 @@ internal class PushKApi {
                     //doOutput = true
                     setRequestProperty("Content-Language", "en-US")
                     setRequestProperty("Content-Type", "application/json")
-                    setRequestProperty("X-Hyber-Session-Id", X_Push_Session_Id)
-                    setRequestProperty("X-Hyber-Timestamp", currentTimestamp2.toString())
-                    setRequestProperty("X-Hyber-Auth-Token", authToken)
+                    setRequestProperty(HEADER_SESSION_ID, X_Push_Session_Id)
+                    setRequestProperty(HEADER_TIMESTAMP, currentTimestamp2.toString())
+                    setRequestProperty(HEADER_AUTH_TOKEN, authToken)
 
                     sslSocketFactory = SSLSocketFactory.getDefault() as SSLSocketFactory
 
                     requestMethod = "GET"
 
-                    PushKLoggerSdk.debug("Sent 'GET' request to URL : $url; Response Code : $responseCode")
+                    PushSDKLogger.debug("Sent 'GET' request to URL : $url; Response Code : $responseCode")
                     functionCodeAnswer3 = responseCode
 
                     inputStream.bufferedReader().use {
                         functionNetAnswer3 = it.readLine().toString()
-                        PushKLoggerSdk.debug("Result: val functionNetAnswer3, Function: hGetMessageHistory, Class: PushKApi, functionNetAnswer3: $functionNetAnswer3")
+                        PushSDKLogger.debug("Result: val functionNetAnswer3, Function: hGetMessageHistory, Class: PushKApi, functionNetAnswer3: $functionNetAnswer3")
                     }
                 }
             } catch (e: Exception) {
-                PushKLoggerSdk.debug("Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${e.stackTrace}")
+                PushSDKLogger.debug("Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${Log.getStackTraceString(e)}")
                 functionCodeAnswer3 = 700
                 functionNetAnswer3 = "Failed"
             }
@@ -287,7 +346,9 @@ internal class PushKApi {
     }
 
 
-    //GET
+    /**
+     * GET request to get all registered devices
+     */
     fun hGetDeviceAll(X_Push_Session_Id: String, X_Push_Auth_Token: String): PushKDataApi {
 
         try {
@@ -306,25 +367,22 @@ internal class PushKApi {
                     val authToken = hash("$X_Push_Auth_Token:$currentTimestamp2")
 
 
-                    PushKLoggerSdk.debug("Result: Start step1, Function: push_get_device_all, Class: PushKApi, X_Push_Session_Id: $X_Push_Session_Id, X_Push_Auth_Token: $X_Push_Auth_Token, currentTimestamp2: $currentTimestamp2, auth_token: $authToken")
+                    PushSDKLogger.debug("Result: Start step1, Function: push_get_device_all, Class: PushKApi, X_Push_Session_Id: $X_Push_Session_Id, X_Push_Auth_Token: $X_Push_Auth_Token, currentTimestamp2: $currentTimestamp2, auth_token: $authToken")
 
-
-                    val mURL2 =
-                        URL(PushSdkParameters.branchCurrentActivePath!!.fun_pushsdk_url_get_device_all)
-
+                    val mURL2 = URL(API_URL_GET_DEVICE_ALL)
 
                     with(mURL2.openConnection() as HttpsURLConnection) {
                         requestMethod = "GET"  // optional default is GET
                         //doOutput = true
                         setRequestProperty("Content-Language", "en-US")
                         setRequestProperty("Content-Type", "application/json")
-                        setRequestProperty("X-Hyber-Session-Id", X_Push_Session_Id)
-                        setRequestProperty("X-Hyber-Timestamp", currentTimestamp2.toString())
-                        setRequestProperty("X-Hyber-Auth-Token", authToken)
+                        setRequestProperty(HEADER_SESSION_ID, X_Push_Session_Id)
+                        setRequestProperty(HEADER_TIMESTAMP, currentTimestamp2.toString())
+                        setRequestProperty(HEADER_AUTH_TOKEN, authToken)
 
                         sslSocketFactory = SSLSocketFactory.getDefault() as SSLSocketFactory
 
-                        PushKLoggerSdk.debug("\nSent 'GET' request to URL : $url; Response Code : $responseCode")
+                        PushSDKLogger.debug("\nSent 'GET' request to URL : $url; Response Code : $responseCode")
                         functionCodeAnswer4 = responseCode
 
                         //if (responseCode==401) { init_push.clearData() }
@@ -333,11 +391,11 @@ internal class PushKApi {
 
                             functionNetAnswer4 = it.readLine().toString()
 
-                            PushKLoggerSdk.debug("Result: Finish step2, Function: push_get_device_all, Class: PushKApi, function_net_answer4: $functionNetAnswer4")
+                            PushSDKLogger.debug("Result: Finish step2, Function: push_get_device_all, Class: PushKApi, function_net_answer4: $functionNetAnswer4")
                         }
                     }
                 } catch (e: Exception) {
-                    PushKLoggerSdk.debug("Result: Failed step3, Function: push_get_device_all, Class: PushKApi, exception: $e")
+                    PushSDKLogger.debug("Result: Failed step3, Function: push_get_device_all, Class: PushKApi, exception: ${Log.getStackTraceString(e)}")
 
 
                     functionNetAnswer4 = "Failed"
@@ -354,7 +412,9 @@ internal class PushKApi {
 
     }
 
-    //POST
+    /**
+     * POST request to update device registration
+     */
     fun hDeviceUpdate(
         X_Push_Auth_Token: String,
         X_Push_Session_Id: String,
@@ -374,7 +434,7 @@ internal class PushKApi {
                 val message =
                     "{\"fcmToken\": \"$fcm_Token\",\"osType\": \"$os_Type\",\"osVersion\": \"$osVersion\",\"deviceType\": \"$device_Type\",\"deviceName\": \"$device_Name\",\"sdkVersion\": \"$sdk_Version\" }"
 
-                PushKLoggerSdk.debug(message)
+                PushSDKLogger.debug(message)
 
                 val currentTimestamp2 = System.currentTimeMillis() // We want timestamp in seconds
 
@@ -382,17 +442,16 @@ internal class PushKApi {
 
                 val postData: ByteArray = message.toByteArray(Charset.forName("UTF-8"))
 
-                val mURL =
-                    URL(PushSdkParameters.branchCurrentActivePath!!.fun_pushsdk_url_device_update)
+                val mURL = URL(API_URL_DEVICE_UPDATE)
 
                 val connectorWebPlatform = mURL.openConnection() as HttpsURLConnection
                 connectorWebPlatform.doOutput = true
                 connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
                 connectorWebPlatform.setRequestProperty("Content-Type", "application/json")
-                connectorWebPlatform.setRequestProperty("X-Hyber-Session-Id", X_Push_Session_Id)
-                connectorWebPlatform.setRequestProperty("X-Hyber-Auth-Token", authToken)
+                connectorWebPlatform.setRequestProperty(HEADER_SESSION_ID, X_Push_Session_Id)
+                connectorWebPlatform.setRequestProperty(HEADER_AUTH_TOKEN, authToken)
                 connectorWebPlatform.setRequestProperty(
-                    "X-Hyber-Timestamp",
+                    HEADER_TIMESTAMP,
                     currentTimestamp2.toString()
                 )
                 connectorWebPlatform.sslSocketFactory =
@@ -424,7 +483,7 @@ internal class PushKApi {
                 }
 
             } catch (e: Exception) {
-                PushKLoggerSdk.debug("Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${e.stackTrace}")
+                PushSDKLogger.debug("Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${Log.getStackTraceString(e)}")
 
                 functionNetAnswer5 = "Failed"
             }
@@ -440,7 +499,9 @@ internal class PushKApi {
 
     }
 
-    //POST
+    /**
+     * Message callback - POST request
+     */
     fun hMessageCallback(
         message_id: String,
         push_answer: String,
@@ -455,7 +516,7 @@ internal class PushKApi {
 
             try {
                 val message2 = "{\"messageId\": \"$message_id\", \"answer\": \"$push_answer\"}"
-                PushKLoggerSdk.debug("Body message to push server : $message2")
+                PushSDKLogger.debug("Body message to push server : $message2")
                 val currentTimestamp2 = System.currentTimeMillis() // We want timestamp in seconds
 
                 val authToken = hash("$X_Push_Auth_Token:$currentTimestamp2")
@@ -463,19 +524,18 @@ internal class PushKApi {
 
                 val postData2: ByteArray = message2.toByteArray(Charset.forName("UTF-8"))
 
-                val mURL2 =
-                    URL(PushSdkParameters.branchCurrentActivePath!!.fun_pushsdk_url_message_callback)
+                val mURL2 = URL(API_URL_MESSAGE_CALLBACK)
 
                 val connectorWebPlatform = mURL2.openConnection() as HttpsURLConnection
                 connectorWebPlatform.doOutput = true
                 connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
                 connectorWebPlatform.setRequestProperty("Content-Type", "application/json")
-                connectorWebPlatform.setRequestProperty("X-Hyber-Session-Id", X_Push_Session_Id)
+                connectorWebPlatform.setRequestProperty(HEADER_SESSION_ID, X_Push_Session_Id)
                 connectorWebPlatform.setRequestProperty(
-                    "X-Hyber-Timestamp",
+                    HEADER_TIMESTAMP,
                     currentTimestamp2.toString()
                 )
-                connectorWebPlatform.setRequestProperty("X-Hyber-Auth-Token", authToken)
+                connectorWebPlatform.setRequestProperty(HEADER_AUTH_TOKEN, authToken)
 
                 connectorWebPlatform.sslSocketFactory =
                     SSLSocketFactory.getDefault() as SSLSocketFactory
@@ -489,8 +549,8 @@ internal class PushKApi {
 
                     wr.write(postData2)
                     wr.flush()
-                    PushKLoggerSdk.debug("URL : $url")
-                    PushKLoggerSdk.debug("Response Code : $responseCode")
+                    PushSDKLogger.debug("URL : $url")
+                    PushSDKLogger.debug("Response Code : $responseCode")
                     functionCodeAnswer6 = responseCode
                     BufferedReader(InputStreamReader(inputStream)).use {
                         val response = StringBuffer()
@@ -501,14 +561,14 @@ internal class PushKApi {
                             inputLine = it.readLine()
                         }
                         it.close()
-                        PushKLoggerSdk.debug("Response : $response")
+                        PushSDKLogger.debug("Response : $response")
 
                         functionNetAnswer6 = response.toString()
                     }
                 }
 
             } catch (e: Exception) {
-                PushKLoggerSdk.debug("Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${e.stackTrace}")
+                PushSDKLogger.debug("Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${Log.getStackTraceString(e)}")
             }
         })
 
@@ -519,7 +579,9 @@ internal class PushKApi {
 
     }
 
-    //POST
+    /**
+     * POST request - report message delivery
+     */
     fun hMessageDr(
         message_id: String,
         X_Push_Session_Id: String,
@@ -535,32 +597,31 @@ internal class PushKApi {
                 try {
                     val message2 = "{\"messageId\": \"$message_id\"}"
 
-                    PushKLoggerSdk.debug("Body message to push server : $message2")
+                    PushSDKLogger.debug("Body message to push server : $message2")
                     val currentTimestamp2 =
                         System.currentTimeMillis() // We want timestamp in seconds
 
-                    PushKLoggerSdk.debug("Timestamp : $currentTimestamp2")
+                    PushSDKLogger.debug("Timestamp : $currentTimestamp2")
 
                     val authToken = hash("$X_Push_Auth_Token:$currentTimestamp2")
 
                     val postData2: ByteArray = message2.toByteArray(Charset.forName("UTF-8"))
 
-                    val mURL2 =
-                        URL(PushSdkParameters.branchCurrentActivePath!!.fun_pushsdk_url_message_dr)
+                    val mURL2 = URL(API_URL_MESSAGE_DELIVERY_REPORT)
 
                     val connectorWebPlatform = mURL2.openConnection() as HttpsURLConnection
                     connectorWebPlatform.doOutput = true
                     connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
                     connectorWebPlatform.setRequestProperty("Content-Type", "application/json")
                     connectorWebPlatform.setRequestProperty(
-                        "X-Hyber-Session-Id",
+                        HEADER_SESSION_ID,
                         X_Push_Session_Id
                     )
                     connectorWebPlatform.setRequestProperty(
-                        "X-Hyber-Timestamp",
+                        HEADER_TIMESTAMP,
                         currentTimestamp2.toString()
                     )
-                    connectorWebPlatform.setRequestProperty("X-Hyber-Auth-Token", authToken)
+                    connectorWebPlatform.setRequestProperty(HEADER_AUTH_TOKEN, authToken)
 
                     connectorWebPlatform.sslSocketFactory =
                         SSLSocketFactory.getDefault() as SSLSocketFactory
@@ -572,8 +633,8 @@ internal class PushKApi {
                         val wr = DataOutputStream(outputStream)
                         wr.write(postData2)
                         wr.flush()
-                        PushKLoggerSdk.debug("URL : $url")
-                        PushKLoggerSdk.debug("Response Code : $responseCode")
+                        PushSDKLogger.debug("URL : $url")
+                        PushSDKLogger.debug("Response Code : $responseCode")
 
                         BufferedReader(InputStreamReader(inputStream)).use {
                             val response = StringBuffer()
@@ -584,7 +645,7 @@ internal class PushKApi {
                                 inputLine = it.readLine()
                             }
                             it.close()
-                            PushKLoggerSdk.debug("Response : $response")
+                            PushSDKLogger.debug("Response : $response")
                         }
                         functionNetAnswer7 = responseCode.toString()
                     }
