@@ -26,6 +26,17 @@ internal class PushKApi {
     private val osVersion: String = osVersionClass.getAndroidVersion()
 
     /**
+     * Headers
+     */
+    companion object {
+        const val HEADER_CLIENT_API_KEY = "X-Hyber-Client-API-Key"
+        const val HEADER_APP_FINGERPRINT = "X-Hyber-App-Fingerprint"
+        const val HEADER_SESSION_ID = "X-Hyber-Session-Id"
+        const val HEADER_TIMESTAMP = "X-Hyber-Timestamp"
+        const val HEADER_AUTH_TOKEN = "X-Hyber-Auth-Token"
+    }
+
+    /**
      * Creates special token for use in requests
      */
     private fun hash(sss: String): String {
@@ -78,13 +89,13 @@ internal class PushKApi {
                 connectorWebPlatform.doOutput = true
                 connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
                 connectorWebPlatform.setRequestProperty(
-                    "X-Hyber-Client-API-Key",
+                    HEADER_CLIENT_API_KEY,
                     xPlatformClientAPIKey
                 )
                 connectorWebPlatform.setRequestProperty("Content-Type", "application/json")
-                connectorWebPlatform.setRequestProperty("X-Hyber-Session-Id", X_Push_Session_Id)
+                connectorWebPlatform.setRequestProperty(HEADER_SESSION_ID, X_Push_Session_Id)
                 connectorWebPlatform.setRequestProperty(
-                    "X-Hyber-App-Fingerprint",
+                    HEADER_APP_FINGERPRINT,
                     X_Push_App_Fingerprint
                 )
                 connectorWebPlatform.sslSocketFactory =
@@ -179,12 +190,12 @@ internal class PushKApi {
                 connectorWebPlatform.doOutput = true
                 connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
                 connectorWebPlatform.setRequestProperty("Content-Type", "application/json")
-                connectorWebPlatform.setRequestProperty("X-Hyber-Session-Id", X_Push_Session_Id)
+                connectorWebPlatform.setRequestProperty(HEADER_SESSION_ID, X_Push_Session_Id)
                 connectorWebPlatform.setRequestProperty(
-                    "X-Hyber-Timestamp",
+                    HEADER_TIMESTAMP,
                     currentTimestamp2.toString()
                 )
-                connectorWebPlatform.setRequestProperty("X-Hyber-Auth-Token", authToken)
+                connectorWebPlatform.setRequestProperty(HEADER_AUTH_TOKEN, authToken)
 
                 connectorWebPlatform.sslSocketFactory =
                     SSLSocketFactory.getDefault() as SSLSocketFactory
@@ -267,9 +278,9 @@ internal class PushKApi {
                     //doOutput = true
                     setRequestProperty("Content-Language", "en-US")
                     setRequestProperty("Content-Type", "application/json")
-                    setRequestProperty("X-Hyber-Session-Id", X_Push_Session_Id)
-                    setRequestProperty("X-Hyber-Timestamp", currentTimestamp2.toString())
-                    setRequestProperty("X-Hyber-Auth-Token", authToken)
+                    setRequestProperty(HEADER_SESSION_ID, X_Push_Session_Id)
+                    setRequestProperty(HEADER_TIMESTAMP, currentTimestamp2.toString())
+                    setRequestProperty(HEADER_AUTH_TOKEN, authToken)
 
                     sslSocketFactory = SSLSocketFactory.getDefault() as SSLSocketFactory
 
@@ -330,9 +341,9 @@ internal class PushKApi {
                         //doOutput = true
                         setRequestProperty("Content-Language", "en-US")
                         setRequestProperty("Content-Type", "application/json")
-                        setRequestProperty("X-Hyber-Session-Id", X_Push_Session_Id)
-                        setRequestProperty("X-Hyber-Timestamp", currentTimestamp2.toString())
-                        setRequestProperty("X-Hyber-Auth-Token", authToken)
+                        setRequestProperty(HEADER_SESSION_ID, X_Push_Session_Id)
+                        setRequestProperty(HEADER_TIMESTAMP, currentTimestamp2.toString())
+                        setRequestProperty(HEADER_AUTH_TOKEN, authToken)
 
                         sslSocketFactory = SSLSocketFactory.getDefault() as SSLSocketFactory
 
@@ -403,10 +414,10 @@ internal class PushKApi {
                 connectorWebPlatform.doOutput = true
                 connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
                 connectorWebPlatform.setRequestProperty("Content-Type", "application/json")
-                connectorWebPlatform.setRequestProperty("X-Hyber-Session-Id", X_Push_Session_Id)
-                connectorWebPlatform.setRequestProperty("X-Hyber-Auth-Token", authToken)
+                connectorWebPlatform.setRequestProperty(HEADER_SESSION_ID, X_Push_Session_Id)
+                connectorWebPlatform.setRequestProperty(HEADER_AUTH_TOKEN, authToken)
                 connectorWebPlatform.setRequestProperty(
-                    "X-Hyber-Timestamp",
+                    HEADER_TIMESTAMP,
                     currentTimestamp2.toString()
                 )
                 connectorWebPlatform.sslSocketFactory =
@@ -486,12 +497,12 @@ internal class PushKApi {
                 connectorWebPlatform.doOutput = true
                 connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
                 connectorWebPlatform.setRequestProperty("Content-Type", "application/json")
-                connectorWebPlatform.setRequestProperty("X-Hyber-Session-Id", X_Push_Session_Id)
+                connectorWebPlatform.setRequestProperty(HEADER_SESSION_ID, X_Push_Session_Id)
                 connectorWebPlatform.setRequestProperty(
-                    "X-Hyber-Timestamp",
+                    HEADER_TIMESTAMP,
                     currentTimestamp2.toString()
                 )
-                connectorWebPlatform.setRequestProperty("X-Hyber-Auth-Token", authToken)
+                connectorWebPlatform.setRequestProperty(HEADER_AUTH_TOKEN, authToken)
 
                 connectorWebPlatform.sslSocketFactory =
                     SSLSocketFactory.getDefault() as SSLSocketFactory
@@ -571,14 +582,14 @@ internal class PushKApi {
                     connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
                     connectorWebPlatform.setRequestProperty("Content-Type", "application/json")
                     connectorWebPlatform.setRequestProperty(
-                        "X-Hyber-Session-Id",
+                        HEADER_SESSION_ID,
                         X_Push_Session_Id
                     )
                     connectorWebPlatform.setRequestProperty(
-                        "X-Hyber-Timestamp",
+                        HEADER_TIMESTAMP,
                         currentTimestamp2.toString()
                     )
-                    connectorWebPlatform.setRequestProperty("X-Hyber-Auth-Token", authToken)
+                    connectorWebPlatform.setRequestProperty(HEADER_AUTH_TOKEN, authToken)
 
                     connectorWebPlatform.sslSocketFactory =
                         SSLSocketFactory.getDefault() as SSLSocketFactory

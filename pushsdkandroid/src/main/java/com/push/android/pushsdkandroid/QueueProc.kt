@@ -138,9 +138,9 @@ internal class QueueProc {
                 urlConnectorPlatform.doOutput = true
                 urlConnectorPlatform.setRequestProperty("Content-Language", "en-US")
                 urlConnectorPlatform.setRequestProperty("Content-Type", "application/json")
-                urlConnectorPlatform.setRequestProperty("X-Hyber-Session-Id", X_Push_Session_Id)
-                urlConnectorPlatform.setRequestProperty("X-Hyber-Timestamp", currentTimestamp2.toString())
-                urlConnectorPlatform.setRequestProperty("X-Hyber-Auth-Token", authToken)
+                urlConnectorPlatform.setRequestProperty(PushKApi.HEADER_SESSION_ID, X_Push_Session_Id)
+                urlConnectorPlatform.setRequestProperty(PushKApi.HEADER_TIMESTAMP, currentTimestamp2.toString())
+                urlConnectorPlatform.setRequestProperty(PushKApi.HEADER_AUTH_TOKEN, authToken)
 
                 urlConnectorPlatform.sslSocketFactory = SSLSocketFactory.getDefault() as SSLSocketFactory
 
