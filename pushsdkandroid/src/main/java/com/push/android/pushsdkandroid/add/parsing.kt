@@ -23,27 +23,6 @@ internal class PushParsing {
         return restParsingStr
     }
 
-    fun parseMessageId(input_json: String): String {
-        PushKLoggerSdk.debug("Result: Function: parseMessageId, Class: PushParsing, input_json: $input_json")
-        val regex = ""","messageId":"(.+)",|messageId=(.+),|"messageId":"(.+)"""".toRegex()
-        val matchResults = regex.find(input_json)
-        val (res) = matchResults!!.destructured
-        PushKLoggerSdk.debug("Result: Function: parseMessageId, Class: PushParsing, output: $res")
-        return res
-    }
-
-/*
-    fun parseImageUrl(input_json: String): String {
-        PushKLoggerSdk.debug("Result: Function: parseImageUrl, Class: PushParsing, input_json: $input_json")
-        var matchResults = input_json.substringAfter(""""image":{""").substringAfter(""""url":"""").substringBefore(""""""")
-        if (matchResults.contains("\\/")) {
-            matchResults = matchResults.replace("\\/", "/")
-        }
-        PushKLoggerSdk.debug("Result: Function: parseMessageId, Class: PushParsing, output: $matchResults")
-        return matchResults
-    }
- */
-
     fun pathTransformation(baseUrl: String, pathUpl: UrlsPlatformList): UrlsPlatformList  {
         val lastSym: String = baseUrl.last().toString()
         var baseUrlUpdated = baseUrl

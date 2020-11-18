@@ -467,16 +467,19 @@ open class PushKFirebaseService(
         // Check if message contains a data payload.
         if (remoteMessage.data.isNotEmpty()) {
             try {
-                if (PushKDatabase.firebase_registration_token != "" && PushKDatabase.push_k_registration_token != "") {
-                    val pushAnswer = api.hMessageDr(
-                        parsing.parseMessageId(remoteMessage.data.toString()),
-                        PushKDatabase.firebase_registration_token,
-                        PushKDatabase.push_k_registration_token
-                    )
-                    PushKLoggerSdk.debug("From Message Delivery Report: $pushAnswer")
-                    PushKLoggerSdk.debug("delivery report success: messid ${remoteMessage.messageId.toString()}, token: ${PushKDatabase.firebase_registration_token}, push_k_registration_token: ${PushKDatabase.push_k_registration_token}")
-                } else {
-                    PushKLoggerSdk.debug("delivery report failed: messid ${remoteMessage.messageId.toString()}, token: ${PushKDatabase.firebase_registration_token}, push_k_registration_token: ${PushKDatabase.push_k_registration_token}")
+                val message = Gson().fromJson(remoteMessage.data.toString(), PushDataModel::class.java).message
+                message?.let {
+                    if (PushKDatabase.firebase_registration_token != "" && PushKDatabase.push_k_registration_token != "") {
+                        val pushAnswer = api.hMessageDr(
+                            message.messageId,
+                            PushKDatabase.firebase_registration_token,
+                            PushKDatabase.push_k_registration_token
+                        )
+                        PushKLoggerSdk.debug("From Message Delivery Report: $pushAnswer")
+                        PushKLoggerSdk.debug("delivery report success: messid ${remoteMessage.messageId.toString()}, token: ${PushKDatabase.firebase_registration_token}, push_k_registration_token: ${PushKDatabase.push_k_registration_token}")
+                    } else {
+                        PushKLoggerSdk.debug("delivery report failed: messid ${remoteMessage.messageId.toString()}, token: ${PushKDatabase.firebase_registration_token}, push_k_registration_token: ${PushKDatabase.push_k_registration_token}")
+                    }
                 }
             } catch (e: Exception) {
                 PushKLoggerSdk.debug("onMessageReceived: failed: ${Log.getStackTraceString(e)}")
