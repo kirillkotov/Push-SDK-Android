@@ -31,6 +31,13 @@ class PushSDK(
     log_level: String = PUSHSDK_LOG_LEVEL_ERROR
 ) {
 
+    /**
+     * Main class, used for initialization. Intended to work with API v3.0
+     * @see PushKFunAnswerGeneral
+     * @param context the context you would like to use
+     * @param customApiParams custom api params for special occasions (mostly debugging)
+     * @param log_level (optional) logging level, "error" or "debug"
+     */
     constructor(
         context: Context,
         customApiParams: ApiParams,
@@ -51,11 +58,13 @@ class PushSDK(
 
         /**
          * log level "error"
+         * TODO move to Enum
          */
         const val PUSHSDK_LOG_LEVEL_ERROR = "error"
 
         /**
          * log level "debug"
+         * TODO move to Enum
          */
         const val PUSHSDK_LOG_LEVEL_DEBUG = "debug"
 

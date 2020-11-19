@@ -1,6 +1,11 @@
 package com.push.android.pushsdkandroid
 
+/**
+ * Api handler parameters
+ */
 class ApiParams {
+
+    //values themselves, no need for explanation
     var baseURL = ""
     var apiVersion = "3.0"
     var headerClientApiKey = "X-Push-Client-API-Key"
@@ -9,7 +14,6 @@ class ApiParams {
     var headerTimestamp = "X-Push-Timestamp"
     var headerAuthToken = "X-Push-Auth-Token"
 
-    //goes like "https://api.com/api" + "3.0" + "/device/update"
     var deviceUpdatePath = "/device/update"
     var deviceRegistrationPath = "/device/registration"
     var deviceRevokePath = "/device/revoke"
@@ -19,6 +23,9 @@ class ApiParams {
     var messageQueuePath = "/message/queue"
     var messageHistoryPath = "/message/history"
 
+    /**
+     * Enum of possible paths
+     */
     enum class ApiPaths {
         DEVICE_UPDATE,
         DEVICE_REGISTRATION,
@@ -30,7 +37,12 @@ class ApiParams {
         MESSAGE_HISTORY
     }
 
-    fun getFullPathFor(path: ApiPaths): String {
+    //goes like "https://api.com/api" + "3.0" + "/device/update"
+    /**
+     * Get full URL path, e.g. https://example.io/api/2.3/message/dr
+     * @param path which path to get full URL for
+     */
+    fun getFullURLFor(path: ApiPaths): String {
         return "$baseURL/$apiVersion${when (path) {
             ApiPaths.DEVICE_UPDATE -> deviceUpdatePath
             ApiPaths.DEVICE_REGISTRATION -> deviceRegistrationPath
@@ -43,6 +55,10 @@ class ApiParams {
         }}"
     }
 
+    /**
+     * Set values from another instance, for convenience
+     * @param apiParams another instance to take params from
+     */
     fun setFrom(apiParams: ApiParams) {
         this.baseURL = apiParams.baseURL
         this.apiVersion = apiParams.apiVersion
