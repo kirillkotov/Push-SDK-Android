@@ -126,6 +126,7 @@ internal class APIHandler {
                 //val currentTimestamp = System.currentTimeMillis()
                 val postData: ByteArray = message.toByteArray(Charset.forName("UTF-8"))
                 val mURL = URL(API_PARAMS.deviceRegistrationPath)
+                PushSDKLogger.debug("Requesting $mURL")
                 val connectorWebPlatform = mURL.openConnection() as HttpsURLConnection
                 connectorWebPlatform.doOutput = true
                 connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
