@@ -55,7 +55,7 @@ class PushSDK(
          * Get SDK version
          * @return SDK version name
          */
-        fun getSDKVersion(): String {
+        fun getSDKVersionName(): String {
             return BuildConfig.VERSION_NAME
         }
 
@@ -184,7 +184,7 @@ class PushSDK(
                         getDeviceName(),
                         pushDeviceType,
                         getOSType(),
-                        getSDKVersion(),
+                        getSDKVersionName(),
                         userPassword,
                         userMsisdn,
                         context
@@ -273,7 +273,7 @@ class PushSDK(
                         getDeviceName(),
                         pushDeviceType,
                         getOSType(),
-                        getSDKVersion(),
+                        getSDKVersionName(),
                         userPassword,
                         userMsisdn,
                         context
@@ -461,7 +461,7 @@ class PushSDK(
                     getDeviceName(),
                     pushDeviceType,
                     getOSType(),
-                    getSDKVersion(),
+                    getSDKVersionName(),
                     PushKDatabase.firebase_registration_token
                 )
                 if (resss.code == 401) {
