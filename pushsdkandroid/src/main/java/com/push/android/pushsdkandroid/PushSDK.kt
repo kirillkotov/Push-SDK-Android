@@ -7,7 +7,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.push.android.pushsdkandroid.add.RequestAnswerHandler
-import com.push.android.pushsdkandroid.add.GetInfo
+import com.push.android.pushsdkandroid.add.Info
 import com.push.android.pushsdkandroid.add.RewriteParams
 import com.push.android.pushsdkandroid.core.*
 import com.push.android.pushsdkandroid.core.Initialization.Companion.PushKDatabase
@@ -72,14 +72,27 @@ class PushSDK(
          * @return current device name
          */
         fun getDeviceName(): String {
-            return GetInfo().getDeviceName().toString()
+            return Info.getDeviceName().toString()
+        }
+
+        /**
+         * Get device type (phone or tablet)
+         */
+        fun getDeviceType(context: Context): String {
+            return Info.getPhoneType(context)
+        }
+
+        /**
+         * Get device type (phone or tablet)
+         */
+        fun getAndroidVersion(): String {
+            return Info.getAndroidVersion()
         }
     }
 
     //any classes initialization
     private var context: Context by Delegates.notNull()
     private var initHObject: Initialization = Initialization(context)
-    private var localDeviceInfo: GetInfo = GetInfo()
     private var apiPushData: APIHandler = APIHandler()
     private var requestAnswerHandlerAny: RequestAnswerHandler = RequestAnswerHandler()
     private var rewriteParams: RewriteParams = RewriteParams(context)
@@ -90,7 +103,7 @@ class PushSDK(
         APIHandler.baseURL = baseApiUrl
         this.context = context
         PushKPushMess.log_level_active = log_level
-        pushDeviceType = localDeviceInfo.getPhoneType(context)
+        pushDeviceType = Info.getPhoneType(context)
         try {
             val localDataLoaded = initHObject.hSdkGetParametersFromLocal()
             if (localDataLoaded.registrationStatus) {

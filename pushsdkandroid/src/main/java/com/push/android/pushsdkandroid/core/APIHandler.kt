@@ -2,8 +2,9 @@ package com.push.android.pushsdkandroid.core
 
 import android.content.Context
 import android.util.Log
+import com.push.android.pushsdkandroid.PushSDK
 import com.push.android.pushsdkandroid.add.RequestAnswerHandler
-import com.push.android.pushsdkandroid.add.GetInfo
+import com.push.android.pushsdkandroid.add.Info
 import com.push.android.pushsdkandroid.logger.PushSDKLogger
 import com.push.android.pushsdkandroid.models.PushKDataApi
 import com.push.android.pushsdkandroid.models.PushKDataApi2
@@ -25,17 +26,16 @@ internal class APIHandler {
 
     //class init for creation answers
     private var requestAnswerHandlerForm: RequestAnswerHandler = RequestAnswerHandler()
-    private var osVersionClass: GetInfo = GetInfo()
 
     //parameters for procedures
-    private val osVersion: String = osVersionClass.getAndroidVersion()
+    private val osVersion = PushSDK.getAndroidVersion()
 
     /**
      * Headers and API URLs.
      * TODO find an elegant way of doing this
      */
     companion object {
-        var baseURL: String = ""
+        var baseURL = ""
         const val API_VERSION = "3.0"
         const val HEADER_CLIENT_API_KEY = "X-Push-Client-API-Key"
         const val HEADER_APP_FINGERPRINT = "X-Push-App-Fingerprint"
