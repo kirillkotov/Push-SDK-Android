@@ -59,35 +59,6 @@ class PushSDK(
             return BuildConfig.VERSION_NAME
         }
 
-        /**
-         * Get current OS Type
-         * @return current OS type
-         */
-        fun getOSType(): String {
-            return "android"
-        }
-
-        /**
-         * Get device name
-         * @return current device name
-         */
-        fun getDeviceName(): String {
-            return Info.getDeviceName().toString()
-        }
-
-        /**
-         * Get device type (phone or tablet)
-         */
-        fun getDeviceType(context: Context): String {
-            return Info.getPhoneType(context)
-        }
-
-        /**
-         * Get device type (phone or tablet)
-         */
-        fun getAndroidVersion(): String {
-            return Info.getAndroidVersion()
-        }
     }
 
     //any classes initialization
@@ -181,9 +152,9 @@ class PushSDK(
                         clientAPIKey,
                         xPushSessionId,
                         appFingerprint,
-                        getDeviceName(),
+                        Info.getDeviceName(),
                         pushDeviceType,
-                        getOSType(),
+                        Info.getOSType(),
                         getSDKVersionName(),
                         userPassword,
                         userMsisdn,
@@ -270,9 +241,9 @@ class PushSDK(
                         clientAPIKey,
                         firebaseToken,
                         appFingerprint,
-                        getDeviceName(),
+                        Info.getDeviceName(),
                         pushDeviceType,
-                        getOSType(),
+                        Info.getOSType(),
                         getSDKVersionName(),
                         userPassword,
                         userMsisdn,
@@ -458,9 +429,9 @@ class PushSDK(
                 val resss: PushKDataApi = apiPushData.hDeviceUpdate(
                     PushKDatabase.push_k_registration_token,
                     PushKDatabase.firebase_registration_token, //_xPushSessionId
-                    getDeviceName(),
+                    Info.getDeviceName(),
                     pushDeviceType,
-                    getOSType(),
+                    Info.getOSType(),
                     getSDKVersionName(),
                     PushKDatabase.firebase_registration_token
                 )

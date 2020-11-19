@@ -28,7 +28,7 @@ internal class APIHandler {
     private var requestAnswerHandlerForm: RequestAnswerHandler = RequestAnswerHandler()
 
     //parameters for procedures
-    private val osVersion = PushSDK.getAndroidVersion()
+    private val osVersion = Info.getAndroidVersion()
 
     /**
      * Headers and API URLs.

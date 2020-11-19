@@ -12,13 +12,15 @@ import com.push.android.pushsdkandroid.logger.PushSDKLogger
 internal object Info {
 
     /** Returns the consumer friendly device name  */
-    fun getDeviceName(): String? {
+    fun getDeviceName(): String {
         val manufacturer = Build.MANUFACTURER
         val model = Build.MODEL
         return try {
             if (model.startsWith(manufacturer)) {
-                capitalize(model)
-            } else capitalize(manufacturer) + " " + model
+                capitalize(model).toString()
+            } else {
+                capitalize(manufacturer) + " " + model
+            }
         } catch (e: Exception) {
             "unknown"
         }
@@ -76,6 +78,21 @@ internal object Info {
             phrase.append(c)
         }
         return phrase.toString()
+    }
+
+    /**
+     * Get current OS Type
+     * @return current OS type
+     */
+    fun getOSType(): String {
+        return "android"
+    }
+
+    /**
+     * Get device type (phone or tablet)
+     */
+    fun getDeviceType(context: Context): String {
+        return Info.getPhoneType(context)
     }
 
 

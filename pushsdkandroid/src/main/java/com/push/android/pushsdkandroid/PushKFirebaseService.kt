@@ -420,15 +420,15 @@ open class PushKFirebaseService(
 
         try {
             if (PushKDatabase.push_k_registration_token != "" && PushKDatabase.firebase_registration_token != "") {
-                val localPhoneInfoNewToken = PushSDK.getDeviceType(applicationContext)
+                val localPhoneInfoNewToken = Info.getDeviceType(applicationContext)
                 PushSDKLogger.debug("PushFirebaseService.onNewToken : localPhoneInfoNewToken: $localPhoneInfoNewToken")
                 val answerPlatform = api.hDeviceUpdate(
                     PushKDatabase.push_k_registration_token,
                     PushKDatabase.firebase_registration_token,
-                    PushSDK.getDeviceName(),
+                    Info.getDeviceName(),
                     localPhoneInfoNewToken,
-                    PushSDK.getOSType(),
-                    PushSDK.getSDKVersion(),
+                    Info.getOSType(),
+                    PushSDK.getSDKVersionName(),
                     newToken
                 )
                 PushSDKLogger.debug("PushFirebaseService.onNewToken : update success $answerPlatform")
