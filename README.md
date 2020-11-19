@@ -16,7 +16,6 @@ https://javadoc.jitpack.io/com/github/kirillkotov/Push-SDK-Android/315aec628b787
 https://javadoc.jitpack.io/com/github/kirillkotov/Push-SDK-Android/v1.0.0.47-test4/javadoc/com/push/android/pushsdkandroid/package-summary.html
 
 ## Short dependency info
-
 ### Push SDK
 
 Make sure you have declared maven repository in your project (top-level) `build.gradle`
