@@ -2,8 +2,9 @@ package com.push.android.pushsdkandroid.core
 
 import android.content.Context
 import android.util.Log
+import com.push.android.pushsdkandroid.PushSDK
 import com.push.android.pushsdkandroid.add.RequestAnswerHandler
-import com.push.android.pushsdkandroid.add.GetInfo
+import com.push.android.pushsdkandroid.add.Info
 import com.push.android.pushsdkandroid.logger.PushSDKLogger
 import com.push.android.pushsdkandroid.models.PushKDataApi
 import com.push.android.pushsdkandroid.models.PushKDataApi2
@@ -25,54 +26,55 @@ internal class APIHandler {
 
     //class init for creation answers
     private var requestAnswerHandlerForm: RequestAnswerHandler = RequestAnswerHandler()
-    private var osVersionClass: GetInfo = GetInfo()
 
     //parameters for procedures
-    private val osVersion: String = osVersionClass.getAndroidVersion()
+    private val osVersion = Info.getAndroidVersion()
 
     /**
      * Headers and API URLs.
      * TODO find an elegant way of doing this
      */
     companion object {
-        var baseURL: String = ""
+        var baseURL = ""
         const val API_VERSION = "3.0"
-        const val HEADER_CLIENT_API_KEY: String = "X-Push-Client-API-Key"
-        const val HEADER_APP_FINGERPRINT: String = "X-Push-App-Fingerprint"
-        const val HEADER_SESSION_ID: String = "X-Push-Session-Id"
-        const val HEADER_TIMESTAMP: String = "X-Push-Timestamp"
-        const val HEADER_AUTH_TOKEN: String = "X-Push-Auth-Token"
-        val API_URL_DEVICE_UPDATE: String = "device/update"
+        const val HEADER_CLIENT_API_KEY = "X-Push-Client-API-Key"
+        const val HEADER_APP_FINGERPRINT = "X-Push-App-Fingerprint"
+        const val HEADER_SESSION_ID = "X-Push-Session-Id"
+        const val HEADER_TIMESTAMP = "X-Push-Timestamp"
+        const val HEADER_AUTH_TOKEN = "X-Push-Auth-Token"
+
+        //goes like "https://api.com/api" + "3.0" + "/device/update"
+        val API_URL_DEVICE_UPDATE = "/device/update"
             get() {
-                return "$baseURL$API_VERSION$field"
+                return "$baseURL/$API_VERSION$field"
             }
-        val API_URL_DEVICE_REGISTRATION: String = "/device/registration"
+        val API_URL_DEVICE_REGISTRATION = "/device/registration"
             get() {
-                return "$baseURL$API_VERSION$field"
+                return "$baseURL/$API_VERSION$field"
             }
-        val API_URL_DEVICE_REVOKE: String = "/device/revoke"
+        val API_URL_DEVICE_REVOKE = "/device/revoke"
             get() {
-                return "$baseURL$API_VERSION$field"
+                return "$baseURL/$API_VERSION$field"
             }
-        val API_URL_GET_DEVICE_ALL: String = "/device/all"
+        val API_URL_GET_DEVICE_ALL = "/device/all"
             get() {
-                return "$baseURL$API_VERSION$field"
+                return "$baseURL/$API_VERSION$field"
             }
-        val API_URL_MESSAGE_CALLBACK: String = "/message/callback"
+        val API_URL_MESSAGE_CALLBACK = "/message/callback"
             get() {
-                return "$baseURL$API_VERSION$field"
+                return "$baseURL/$API_VERSION$field"
             }
-        val API_URL_MESSAGE_DELIVERY_REPORT: String = "/message/dr"
+        val API_URL_MESSAGE_DELIVERY_REPORT = "/message/dr"
             get() {
-                return "$baseURL$API_VERSION$field"
+                return "$baseURL/$API_VERSION$field"
             }
-        val API_URL_MESSAGE_QUEUE: String = "/message/queue"
+        val API_URL_MESSAGE_QUEUE = "/message/queue"
             get() {
-                return "$baseURL$API_VERSION$field"
+                return "$baseURL/$API_VERSION$field"
             }
-        val API_URL_MESSAGE_HISTORY: String = "/message/history"
+        val API_URL_MESSAGE_HISTORY = "/message/history"
             get() {
-                return "$baseURL$API_VERSION$field"
+                return "$baseURL/$API_VERSION$field"
             }
     }
 

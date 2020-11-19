@@ -7,7 +7,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.push.android.pushsdkandroid.add.RequestAnswerHandler
-import com.push.android.pushsdkandroid.add.GetInfo
+import com.push.android.pushsdkandroid.add.Info
 import com.push.android.pushsdkandroid.add.RewriteParams
 import com.push.android.pushsdkandroid.core.*
 import com.push.android.pushsdkandroid.core.Initialization.Companion.PushKDatabase
@@ -18,10 +18,10 @@ import com.push.android.pushsdkandroid.models.PushKDataApi2
 import kotlin.properties.Delegates
 
 /**
- * Main class, used for initialization
+ * Main class, used for initialization. Only works with API v3.0
  * @see PushKFunAnswerGeneral
  * @param context the context you would like to use
- * @param baseApiUrl base api url, like "https://example.io/api/"
+ * @param baseApiUrl base api url, like "https://example.io/api"
  * @param log_level (optional) logging level, "error" or "debug"
  */
 @Suppress("unused")
@@ -55,31 +55,15 @@ class PushSDK(
          * Get SDK version
          * @return SDK version name
          */
-        fun getSDKVersion(): String {
+        fun getSDKVersionName(): String {
             return BuildConfig.VERSION_NAME
         }
 
-        /**
-         * Get current OS Type
-         * @return current OS type
-         */
-        fun getOSType(): String {
-            return "android"
-        }
-
-        /**
-         * Get device name
-         * @return current device name
-         */
-        fun getDeviceName(): String {
-            return GetInfo().getDeviceName().toString()
-        }
     }
 
     //any classes initialization
     private var context: Context by Delegates.notNull()
     private var initHObject: Initialization = Initialization(context)
-    private var localDeviceInfo: GetInfo = GetInfo()
     private var apiPushData: APIHandler = APIHandler()
     private var requestAnswerHandlerAny: RequestAnswerHandler = RequestAnswerHandler()
     private var rewriteParams: RewriteParams = RewriteParams(context)
@@ -90,7 +74,7 @@ class PushSDK(
         APIHandler.baseURL = baseApiUrl
         this.context = context
         PushKPushMess.log_level_active = log_level
-        pushDeviceType = localDeviceInfo.getPhoneType(context)
+        pushDeviceType = Info.getPhoneType(context)
         try {
             val localDataLoaded = initHObject.hSdkGetParametersFromLocal()
             if (localDataLoaded.registrationStatus) {
@@ -168,10 +152,10 @@ class PushSDK(
                         clientAPIKey,
                         xPushSessionId,
                         appFingerprint,
-                        getDeviceName(),
+                        Info.getDeviceName(),
                         pushDeviceType,
-                        getOSType(),
-                        getSDKVersion(),
+                        Info.getOSType(),
+                        getSDKVersionName(),
                         userPassword,
                         userMsisdn,
                         context
@@ -257,10 +241,10 @@ class PushSDK(
                         clientAPIKey,
                         firebaseToken,
                         appFingerprint,
-                        getDeviceName(),
+                        Info.getDeviceName(),
                         pushDeviceType,
-                        getOSType(),
-                        getSDKVersion(),
+                        Info.getOSType(),
+                        getSDKVersionName(),
                         userPassword,
                         userMsisdn,
                         context
@@ -445,10 +429,10 @@ class PushSDK(
                 val resss: PushKDataApi = apiPushData.hDeviceUpdate(
                     PushKDatabase.push_k_registration_token,
                     PushKDatabase.firebase_registration_token, //_xPushSessionId
-                    getDeviceName(),
+                    Info.getDeviceName(),
                     pushDeviceType,
-                    getOSType(),
-                    getSDKVersion(),
+                    Info.getOSType(),
+                    getSDKVersionName(),
                     PushKDatabase.firebase_registration_token
                 )
                 if (resss.code == 401) {

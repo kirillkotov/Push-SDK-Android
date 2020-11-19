@@ -2,7 +2,7 @@ package com.push.android.pushsdkandroid
 
 /**
  * An object used for storing and exchanging data, will surely need to be redone, as it is no good;
- * Will be deprecated in later versions.
+ * Will be removed in future versions.
  * TODO fixme remove this, find a better way
  */
 @Deprecated("Will be removed in future versions")

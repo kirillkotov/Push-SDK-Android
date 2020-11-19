@@ -19,7 +19,7 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
-import com.push.android.pushsdkandroid.add.GetInfo
+import com.push.android.pushsdkandroid.add.Info
 import com.push.android.pushsdkandroid.add.RewriteParams
 import com.push.android.pushsdkandroid.core.APIHandler
 import com.push.android.pushsdkandroid.core.Initialization.Companion.PushKDatabase
@@ -54,7 +54,6 @@ open class PushKFirebaseService(
 ) : FirebaseMessagingService() {
 
     private var api: APIHandler = APIHandler()
-    private var getDevInform: GetInfo = GetInfo()
 
     /**
      * Constants used within the PushKFirebaseService
@@ -421,15 +420,15 @@ open class PushKFirebaseService(
 
         try {
             if (PushKDatabase.push_k_registration_token != "" && PushKDatabase.firebase_registration_token != "") {
-                val localPhoneInfoNewToken = getDevInform.getPhoneType(applicationContext)
+                val localPhoneInfoNewToken = Info.getDeviceType(applicationContext)
                 PushSDKLogger.debug("PushFirebaseService.onNewToken : localPhoneInfoNewToken: $localPhoneInfoNewToken")
                 val answerPlatform = api.hDeviceUpdate(
                     PushKDatabase.push_k_registration_token,
                     PushKDatabase.firebase_registration_token,
-                    PushSDK.getDeviceName(),
+                    Info.getDeviceName(),
                     localPhoneInfoNewToken,
-                    PushSDK.getOSType(),
-                    PushSDK.getSDKVersion(),
+                    Info.getOSType(),
+                    PushSDK.getSDKVersionName(),
                     newToken
                 )
                 PushSDKLogger.debug("PushFirebaseService.onNewToken : update success $answerPlatform")
