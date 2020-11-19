@@ -33,10 +33,9 @@ class PushSDK(
 
     constructor(
         context: Context,
-        baseApiUrl: String,
-        log_level: String = PUSHSDK_LOG_LEVEL_ERROR,
-        customApiParams: ApiParams
-    ) : this(context, baseApiUrl, log_level) {
+        customApiParams: ApiParams,
+        log_level: String = PUSHSDK_LOG_LEVEL_ERROR
+    ) : this(context, customApiParams.baseURL, log_level) {
         APIHandler.API_PARAMS.setFrom(customApiParams)
     }
 
