@@ -42,7 +42,9 @@ internal class APIHandler {
         const val HEADER_SESSION_ID: String = "X-Push-Session-Id"
         const val HEADER_TIMESTAMP: String = "X-Push-Timestamp"
         const val HEADER_AUTH_TOKEN: String = "X-Push-Auth-Token"
-        val API_URL_DEVICE_UPDATE: String = "device/update"
+
+        //goes like "https://api.com/api/" + "3.0" + "/device/update"
+        val API_URL_DEVICE_UPDATE: String = "/device/update"
             get() {
                 return "$baseURL$API_VERSION$field"
             }
