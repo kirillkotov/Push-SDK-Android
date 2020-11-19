@@ -5,7 +5,10 @@ package com.push.android.pushsdkandroid
  */
 class ApiParams {
 
-    //values themselves, no need for explanation
+    //values themselves, no need for much explanation
+    /**
+     * baseURL, must be structured like "https://api.com/api"
+     */
     var baseURL = ""
     var apiVersion = "3.0"
     var headerClientApiKey = "X-Push-Client-API-Key"
