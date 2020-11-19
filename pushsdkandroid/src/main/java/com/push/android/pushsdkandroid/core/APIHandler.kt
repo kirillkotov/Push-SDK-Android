@@ -2,14 +2,13 @@ package com.push.android.pushsdkandroid.core
 
 import android.content.Context
 import android.util.Log
-import com.push.android.pushsdkandroid.PushSDK
+import com.push.android.pushsdkandroid.ApiParams
 import com.push.android.pushsdkandroid.add.RequestAnswerHandler
 import com.push.android.pushsdkandroid.add.Info
 import com.push.android.pushsdkandroid.logger.PushSDKLogger
+import com.push.android.pushsdkandroid.models.*
 import com.push.android.pushsdkandroid.models.PushKDataApi
 import com.push.android.pushsdkandroid.models.PushKDataApi2
-import com.push.android.pushsdkandroid.models.PushKFunAnswerGeneral
-import com.push.android.pushsdkandroid.models.PushKFunAnswerRegister
 import java.io.BufferedReader
 import java.io.DataOutputStream
 import java.io.InputStreamReader
@@ -30,52 +29,11 @@ internal class APIHandler {
     //parameters for procedures
     private val osVersion = Info.getAndroidVersion()
 
-    /**
-     * Headers and API URLs.
-     * TODO find an elegant way of doing this
-     */
     companion object {
-        var baseURL = ""
-        const val API_VERSION = "3.0"
-        const val HEADER_CLIENT_API_KEY = "X-Push-Client-API-Key"
-        const val HEADER_APP_FINGERPRINT = "X-Push-App-Fingerprint"
-        const val HEADER_SESSION_ID = "X-Push-Session-Id"
-        const val HEADER_TIMESTAMP = "X-Push-Timestamp"
-        const val HEADER_AUTH_TOKEN = "X-Push-Auth-Token"
-
-        //goes like "https://api.com/api" + "3.0" + "/device/update"
-        val API_URL_DEVICE_UPDATE = "/device/update"
-            get() {
-                return "$baseURL/$API_VERSION$field"
-            }
-        val API_URL_DEVICE_REGISTRATION = "/device/registration"
-            get() {
-                return "$baseURL/$API_VERSION$field"
-            }
-        val API_URL_DEVICE_REVOKE = "/device/revoke"
-            get() {
-                return "$baseURL/$API_VERSION$field"
-            }
-        val API_URL_GET_DEVICE_ALL = "/device/all"
-            get() {
-                return "$baseURL/$API_VERSION$field"
-            }
-        val API_URL_MESSAGE_CALLBACK = "/message/callback"
-            get() {
-                return "$baseURL/$API_VERSION$field"
-            }
-        val API_URL_MESSAGE_DELIVERY_REPORT = "/message/dr"
-            get() {
-                return "$baseURL/$API_VERSION$field"
-            }
-        val API_URL_MESSAGE_QUEUE = "/message/queue"
-            get() {
-                return "$baseURL/$API_VERSION$field"
-            }
-        val API_URL_MESSAGE_HISTORY = "/message/history"
-            get() {
-                return "$baseURL/$API_VERSION$field"
-            }
+        /**
+         * Api parameters
+         */
+        val API_PARAMS = ApiParams()
     }
 
     /**
@@ -125,18 +83,19 @@ internal class APIHandler {
 
                 //val currentTimestamp = System.currentTimeMillis()
                 val postData: ByteArray = message.toByteArray(Charset.forName("UTF-8"))
-                val mURL = URL(API_URL_DEVICE_REGISTRATION)
+                val mURL = URL(API_PARAMS.getFullURLFor(ApiParams.ApiPaths.DEVICE_REGISTRATION))
+                PushSDKLogger.debug("Requesting $mURL")
                 val connectorWebPlatform = mURL.openConnection() as HttpsURLConnection
                 connectorWebPlatform.doOutput = true
                 connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
                 connectorWebPlatform.setRequestProperty(
-                    HEADER_CLIENT_API_KEY,
+                    API_PARAMS.headerClientApiKey,
                     xPlatformClientAPIKey
                 )
                 connectorWebPlatform.setRequestProperty("Content-Type", "application/json")
-                connectorWebPlatform.setRequestProperty(HEADER_SESSION_ID, X_Push_Session_Id)
+                connectorWebPlatform.setRequestProperty(API_PARAMS.headerSessionId, X_Push_Session_Id)
                 connectorWebPlatform.setRequestProperty(
-                    HEADER_APP_FINGERPRINT,
+                    API_PARAMS.headerAppFingerprint,
                     X_Push_App_Fingerprint
                 )
                 connectorWebPlatform.sslSocketFactory =
@@ -225,18 +184,18 @@ internal class APIHandler {
                 val currentTimestamp2 = System.currentTimeMillis() // We want timestamp in seconds
                 val authToken = hash("$X_Push_Auth_Token:$currentTimestamp2")
                 val postData2: ByteArray = message2.toByteArray(Charset.forName("UTF-8"))
-                val mURL2 = URL(API_URL_DEVICE_REVOKE)
+                val mURL2 = URL(API_PARAMS.getFullURLFor(ApiParams.ApiPaths.DEVICE_REVOKE))
 
                 val connectorWebPlatform = mURL2.openConnection() as HttpsURLConnection
                 connectorWebPlatform.doOutput = true
                 connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
                 connectorWebPlatform.setRequestProperty("Content-Type", "application/json")
-                connectorWebPlatform.setRequestProperty(HEADER_SESSION_ID, X_Push_Session_Id)
+                connectorWebPlatform.setRequestProperty(API_PARAMS.headerSessionId, X_Push_Session_Id)
                 connectorWebPlatform.setRequestProperty(
-                    HEADER_TIMESTAMP,
+                    API_PARAMS.headerTimestamp,
                     currentTimestamp2.toString()
                 )
-                connectorWebPlatform.setRequestProperty(HEADER_AUTH_TOKEN, authToken)
+                connectorWebPlatform.setRequestProperty(API_PARAMS.headerAuthToken, authToken)
 
                 connectorWebPlatform.sslSocketFactory =
                     SSLSocketFactory.getDefault() as SSLSocketFactory
@@ -310,7 +269,7 @@ internal class APIHandler {
 
                 PushSDKLogger.debug("\nSent 'GET' request to push_get_device_all with : X_Push_Session_Id : $X_Push_Session_Id; X_Push_Auth_Token : $X_Push_Auth_Token; period_in_seconds : $period_in_seconds")
 
-                val mURL2 = URL("$API_URL_MESSAGE_HISTORY?startDate=${currentTimestamp1}")
+                val mURL2 = URL("${API_PARAMS.messageHistoryPath}?startDate=${currentTimestamp1}")
 
                 with(mURL2.openConnection() as HttpsURLConnection) {
                     requestMethod = "GET"  // optional default is GET
@@ -318,9 +277,9 @@ internal class APIHandler {
                     //doOutput = true
                     setRequestProperty("Content-Language", "en-US")
                     setRequestProperty("Content-Type", "application/json")
-                    setRequestProperty(HEADER_SESSION_ID, X_Push_Session_Id)
-                    setRequestProperty(HEADER_TIMESTAMP, currentTimestamp2.toString())
-                    setRequestProperty(HEADER_AUTH_TOKEN, authToken)
+                    setRequestProperty(API_PARAMS.headerSessionId, X_Push_Session_Id)
+                    setRequestProperty(API_PARAMS.headerTimestamp, currentTimestamp2.toString())
+                    setRequestProperty(API_PARAMS.headerAuthToken, authToken)
 
                     sslSocketFactory = SSLSocketFactory.getDefault() as SSLSocketFactory
 
@@ -371,16 +330,16 @@ internal class APIHandler {
 
                     PushSDKLogger.debug("Result: Start step1, Function: push_get_device_all, Class: PushKApi, X_Push_Session_Id: $X_Push_Session_Id, X_Push_Auth_Token: $X_Push_Auth_Token, currentTimestamp2: $currentTimestamp2, auth_token: $authToken")
 
-                    val mURL2 = URL(API_URL_GET_DEVICE_ALL)
+                    val mURL2 = URL(API_PARAMS.getFullURLFor(ApiParams.ApiPaths.GET_DEVICE_ALL))
 
                     with(mURL2.openConnection() as HttpsURLConnection) {
                         requestMethod = "GET"  // optional default is GET
                         //doOutput = true
                         setRequestProperty("Content-Language", "en-US")
                         setRequestProperty("Content-Type", "application/json")
-                        setRequestProperty(HEADER_SESSION_ID, X_Push_Session_Id)
-                        setRequestProperty(HEADER_TIMESTAMP, currentTimestamp2.toString())
-                        setRequestProperty(HEADER_AUTH_TOKEN, authToken)
+                        setRequestProperty(API_PARAMS.headerSessionId, X_Push_Session_Id)
+                        setRequestProperty(API_PARAMS.headerTimestamp, currentTimestamp2.toString())
+                        setRequestProperty(API_PARAMS.headerAuthToken, authToken)
 
                         sslSocketFactory = SSLSocketFactory.getDefault() as SSLSocketFactory
 
@@ -444,16 +403,16 @@ internal class APIHandler {
 
                 val postData: ByteArray = message.toByteArray(Charset.forName("UTF-8"))
 
-                val mURL = URL(API_URL_DEVICE_UPDATE)
+                val mURL = URL(API_PARAMS.getFullURLFor(ApiParams.ApiPaths.DEVICE_UPDATE))
 
                 val connectorWebPlatform = mURL.openConnection() as HttpsURLConnection
                 connectorWebPlatform.doOutput = true
                 connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
                 connectorWebPlatform.setRequestProperty("Content-Type", "application/json")
-                connectorWebPlatform.setRequestProperty(HEADER_SESSION_ID, X_Push_Session_Id)
-                connectorWebPlatform.setRequestProperty(HEADER_AUTH_TOKEN, authToken)
+                connectorWebPlatform.setRequestProperty(API_PARAMS.headerSessionId, X_Push_Session_Id)
+                connectorWebPlatform.setRequestProperty(API_PARAMS.headerAuthToken, authToken)
                 connectorWebPlatform.setRequestProperty(
-                    HEADER_TIMESTAMP,
+                    API_PARAMS.headerTimestamp,
                     currentTimestamp2.toString()
                 )
                 connectorWebPlatform.sslSocketFactory =
@@ -526,18 +485,18 @@ internal class APIHandler {
 
                 val postData2: ByteArray = message2.toByteArray(Charset.forName("UTF-8"))
 
-                val mURL2 = URL(API_URL_MESSAGE_CALLBACK)
+                val mURL2 = URL(API_PARAMS.getFullURLFor(ApiParams.ApiPaths.MESSAGE_CALLBACK))
 
                 val connectorWebPlatform = mURL2.openConnection() as HttpsURLConnection
                 connectorWebPlatform.doOutput = true
                 connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
                 connectorWebPlatform.setRequestProperty("Content-Type", "application/json")
-                connectorWebPlatform.setRequestProperty(HEADER_SESSION_ID, X_Push_Session_Id)
+                connectorWebPlatform.setRequestProperty(API_PARAMS.headerSessionId, X_Push_Session_Id)
                 connectorWebPlatform.setRequestProperty(
-                    HEADER_TIMESTAMP,
+                    API_PARAMS.headerTimestamp,
                     currentTimestamp2.toString()
                 )
-                connectorWebPlatform.setRequestProperty(HEADER_AUTH_TOKEN, authToken)
+                connectorWebPlatform.setRequestProperty(API_PARAMS.headerAuthToken, authToken)
 
                 connectorWebPlatform.sslSocketFactory =
                     SSLSocketFactory.getDefault() as SSLSocketFactory
@@ -609,21 +568,21 @@ internal class APIHandler {
 
                     val postData2: ByteArray = message2.toByteArray(Charset.forName("UTF-8"))
 
-                    val mURL2 = URL(API_URL_MESSAGE_DELIVERY_REPORT)
+                    val mURL2 = URL(API_PARAMS.getFullURLFor(ApiParams.ApiPaths.MESSAGE_DELIVERY_REPORT))
 
                     val connectorWebPlatform = mURL2.openConnection() as HttpsURLConnection
                     connectorWebPlatform.doOutput = true
                     connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
                     connectorWebPlatform.setRequestProperty("Content-Type", "application/json")
                     connectorWebPlatform.setRequestProperty(
-                        HEADER_SESSION_ID,
+                        API_PARAMS.headerSessionId,
                         X_Push_Session_Id
                     )
                     connectorWebPlatform.setRequestProperty(
-                        HEADER_TIMESTAMP,
+                        API_PARAMS.headerTimestamp,
                         currentTimestamp2.toString()
                     )
-                    connectorWebPlatform.setRequestProperty(HEADER_AUTH_TOKEN, authToken)
+                    connectorWebPlatform.setRequestProperty(API_PARAMS.headerAuthToken, authToken)
 
                     connectorWebPlatform.sslSocketFactory =
                         SSLSocketFactory.getDefault() as SSLSocketFactory

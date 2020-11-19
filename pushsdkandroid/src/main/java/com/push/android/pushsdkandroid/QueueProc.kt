@@ -113,7 +113,7 @@ internal class QueueProc {
 
         val threadNetF2 = Thread(Runnable {
 
-            val pushUrlMessQueue = APIHandler.API_URL_MESSAGE_QUEUE
+            val pushUrlMessQueue = APIHandler.API_PARAMS.getFullURLFor(ApiParams.ApiPaths.MESSAGE_QUEUE)
 
             try {
                 PushSDKLogger.debug("Result: Start step1, Function: push_device_mess_queue, Class: QueueProc, X_Push_Session_Id: $X_Push_Session_Id, X_Push_Auth_Token: $X_Push_Auth_Token")
@@ -137,9 +137,9 @@ internal class QueueProc {
                 urlConnectorPlatform.doOutput = true
                 urlConnectorPlatform.setRequestProperty("Content-Language", "en-US")
                 urlConnectorPlatform.setRequestProperty("Content-Type", "application/json")
-                urlConnectorPlatform.setRequestProperty(APIHandler.HEADER_SESSION_ID, X_Push_Session_Id)
-                urlConnectorPlatform.setRequestProperty(APIHandler.HEADER_TIMESTAMP, currentTimestamp2.toString())
-                urlConnectorPlatform.setRequestProperty(APIHandler.HEADER_AUTH_TOKEN, authToken)
+                urlConnectorPlatform.setRequestProperty(APIHandler.API_PARAMS.headerSessionId, X_Push_Session_Id)
+                urlConnectorPlatform.setRequestProperty(APIHandler.API_PARAMS.headerTimestamp, currentTimestamp2.toString())
+                urlConnectorPlatform.setRequestProperty(APIHandler.API_PARAMS.headerAuthToken, authToken)
 
                 urlConnectorPlatform.sslSocketFactory = SSLSocketFactory.getDefault() as SSLSocketFactory
 
