@@ -11,37 +11,37 @@ class ApiParams {
 
     //goes like "https://api.com/api" + "3.0" + "/device/update"
     var deviceUpdatePath = "/device/update"
-        get() {
-            return "$baseURL/$apiVersion$field"
-        }
     var deviceRegistrationPath = "/device/registration"
-        get() {
-            return "$baseURL/$apiVersion$field"
-        }
     var deviceRevokePath = "/device/revoke"
-        get() {
-            return "$baseURL/$apiVersion$field"
-        }
     var getDeviceAllPath = "/device/all"
-        get() {
-            return "$baseURL/$apiVersion$field"
-        }
     var messageCallbackPath = "/message/callback"
-        get() {
-            return "$baseURL/$apiVersion$field"
-        }
     var messageDeliveryReportPath = "/message/dr"
-        get() {
-            return "$baseURL/$apiVersion$field"
-        }
     var messageQueuePath = "/message/queue"
-        get() {
-            return "$baseURL/$apiVersion$field"
-        }
     var messageHistoryPath = "/message/history"
-        get() {
-            return "$baseURL/$apiVersion$field"
-        }
+
+    enum class ApiPaths {
+        DEVICE_UPDATE,
+        DEVICE_REGISTRATION,
+        DEVICE_REVOKE,
+        GET_DEVICE_ALL,
+        MESSAGE_CALLBACK,
+        MESSAGE_DELIVERY_REPORT,
+        MESSAGE_QUEUE,
+        MESSAGE_HISTORY
+    }
+
+    fun getFullPathFor(path: ApiPaths): String {
+        return "$baseURL/$apiVersion${when (path) {
+            ApiPaths.DEVICE_UPDATE -> deviceUpdatePath
+            ApiPaths.DEVICE_REGISTRATION -> deviceRegistrationPath
+            ApiPaths.DEVICE_REVOKE -> deviceRevokePath
+            ApiPaths.GET_DEVICE_ALL -> getDeviceAllPath
+            ApiPaths.MESSAGE_CALLBACK -> messageCallbackPath
+            ApiPaths.MESSAGE_DELIVERY_REPORT -> messageDeliveryReportPath
+            ApiPaths.MESSAGE_QUEUE -> messageQueuePath
+            ApiPaths.MESSAGE_HISTORY -> messageHistoryPath
+        }}"
+    }
 
     fun setFrom(apiParams: ApiParams) {
         this.baseURL = apiParams.baseURL

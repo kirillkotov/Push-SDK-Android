@@ -125,7 +125,7 @@ internal class APIHandler {
 
                 //val currentTimestamp = System.currentTimeMillis()
                 val postData: ByteArray = message.toByteArray(Charset.forName("UTF-8"))
-                val mURL = URL(API_PARAMS.deviceRegistrationPath)
+                val mURL = URL(API_PARAMS.getFullPathFor(ApiParams.ApiPaths.DEVICE_REGISTRATION))
                 PushSDKLogger.debug("Requesting $mURL")
                 val connectorWebPlatform = mURL.openConnection() as HttpsURLConnection
                 connectorWebPlatform.doOutput = true
@@ -226,7 +226,7 @@ internal class APIHandler {
                 val currentTimestamp2 = System.currentTimeMillis() // We want timestamp in seconds
                 val authToken = hash("$X_Push_Auth_Token:$currentTimestamp2")
                 val postData2: ByteArray = message2.toByteArray(Charset.forName("UTF-8"))
-                val mURL2 = URL(API_PARAMS.deviceRevokePath)
+                val mURL2 = URL(API_PARAMS.getFullPathFor(ApiParams.ApiPaths.DEVICE_REVOKE))
 
                 val connectorWebPlatform = mURL2.openConnection() as HttpsURLConnection
                 connectorWebPlatform.doOutput = true
@@ -372,7 +372,7 @@ internal class APIHandler {
 
                     PushSDKLogger.debug("Result: Start step1, Function: push_get_device_all, Class: PushKApi, X_Push_Session_Id: $X_Push_Session_Id, X_Push_Auth_Token: $X_Push_Auth_Token, currentTimestamp2: $currentTimestamp2, auth_token: $authToken")
 
-                    val mURL2 = URL(API_PARAMS.getDeviceAllPath)
+                    val mURL2 = URL(API_PARAMS.getFullPathFor(ApiParams.ApiPaths.GET_DEVICE_ALL))
 
                     with(mURL2.openConnection() as HttpsURLConnection) {
                         requestMethod = "GET"  // optional default is GET
@@ -445,7 +445,7 @@ internal class APIHandler {
 
                 val postData: ByteArray = message.toByteArray(Charset.forName("UTF-8"))
 
-                val mURL = URL(API_PARAMS.deviceUpdatePath)
+                val mURL = URL(API_PARAMS.getFullPathFor(ApiParams.ApiPaths.DEVICE_UPDATE))
 
                 val connectorWebPlatform = mURL.openConnection() as HttpsURLConnection
                 connectorWebPlatform.doOutput = true
@@ -527,7 +527,7 @@ internal class APIHandler {
 
                 val postData2: ByteArray = message2.toByteArray(Charset.forName("UTF-8"))
 
-                val mURL2 = URL(API_PARAMS.messageCallbackPath)
+                val mURL2 = URL(API_PARAMS.getFullPathFor(ApiParams.ApiPaths.MESSAGE_CALLBACK))
 
                 val connectorWebPlatform = mURL2.openConnection() as HttpsURLConnection
                 connectorWebPlatform.doOutput = true
@@ -610,7 +610,7 @@ internal class APIHandler {
 
                     val postData2: ByteArray = message2.toByteArray(Charset.forName("UTF-8"))
 
-                    val mURL2 = URL(API_PARAMS.messageDeliveryReportPath)
+                    val mURL2 = URL(API_PARAMS.getFullPathFor(ApiParams.ApiPaths.MESSAGE_DELIVERY_REPORT))
 
                     val connectorWebPlatform = mURL2.openConnection() as HttpsURLConnection
                     connectorWebPlatform.doOutput = true
