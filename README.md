@@ -10,7 +10,7 @@ Get started by visiting:
 
 ### Documentation:
 #### New - recommended (no release build yet, lots of changes):
-https://javadoc.jitpack.io/com/github/kirillkotov/Push-SDK-Android/315aec628b787c568e1b4500de1800963bc2058c/javadoc/index.html
+https://javadoc.jitpack.io/com/github/kirillkotov/Push-SDK-Android/aa81625537/javadoc/index.html
 
 #### Old (v1.0.0.47)
 https://javadoc.jitpack.io/com/github/kirillkotov/Push-SDK-Android/v1.0.0.47-test4/javadoc/com/push/android/pushsdkandroid/package-summary.html
