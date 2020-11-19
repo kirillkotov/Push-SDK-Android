@@ -31,6 +31,15 @@ class PushSDK(
     log_level: String = PUSHSDK_LOG_LEVEL_ERROR
 ) {
 
+    constructor(
+        context: Context,
+        baseApiUrl: String,
+        log_level: String = PUSHSDK_LOG_LEVEL_ERROR,
+        customApiParams: ApiParams
+    ) : this(context, baseApiUrl, log_level) {
+        APIHandler.API_PARAMS.setFrom(customApiParams)
+    }
+
     /**
      * Constants and public methods
      */
@@ -71,7 +80,7 @@ class PushSDK(
 
     //main class initialization
     init {
-        APIHandler.baseURL = baseApiUrl
+        APIHandler.API_PARAMS.baseURL = baseApiUrl
         this.context = context
         PushKPushMess.log_level_active = log_level
         pushDeviceType = Info.getPhoneType(context)
