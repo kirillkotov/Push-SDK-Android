@@ -112,12 +112,11 @@ internal class QueueProc2 {
                             queueMessages.messages?.let {
                                 Intent().apply {
                                     action = "com.push.android.pushsdkandroid.pushqueue"
-                                    putExtra("data", it.toString())
+                                    putExtra("queue", response.toString())
                                     context.sendBroadcast(this)
                                 }
                             }
-
-                            PushSDKLogger.debug("QueueProc.pushDeviceMessQueue Response : ${queueMessages.messages}")
+                            PushSDKLogger.debug("QueueProc.pushDeviceMessQueue Response : $response")
 
 //                            try {
 //                                if (response.toString() != """{"messages":[]}""") {
