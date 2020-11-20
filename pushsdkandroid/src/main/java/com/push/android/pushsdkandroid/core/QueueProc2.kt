@@ -108,16 +108,16 @@ internal class QueueProc2 {
                             it.close()
 
                             //Parse string here as json, then foreach -> send delivery
-                            val messages = Gson().fromJson(response.toString(), QueueMessages::class.java).messages
-                            messages?.let {
+                            val queueMessages = Gson().fromJson(response.toString(), QueueMessages::class.java)
+                            queueMessages.messages?.let {
                                 Intent().apply {
                                     action = "com.push.android.pushsdkandroid.pushqueue"
-                                    putExtra("data", messages.toString())
+                                    putExtra("data", it.toString())
                                     context.sendBroadcast(this)
                                 }
                             }
 
-                            PushSDKLogger.debug("QueueProc.pushDeviceMessQueue Response : $messages")
+                            PushSDKLogger.debug("QueueProc.pushDeviceMessQueue Response : ${queueMessages.messages}")
 
 //                            try {
 //                                if (response.toString() != """{"messages":[]}""") {
