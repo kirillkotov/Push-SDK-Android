@@ -46,7 +46,7 @@ class ApiParams {
      * @param path which path to get full URL for
      */
     fun getFullURLFor(path: ApiPaths): String {
-        return "$baseURL/${when (path) {
+        return "$baseURL${when (path) {
             ApiPaths.DEVICE_UPDATE -> deviceUpdatePath
             ApiPaths.DEVICE_REGISTRATION -> deviceRegistrationPath
             ApiPaths.DEVICE_REVOKE -> deviceRevokePath
