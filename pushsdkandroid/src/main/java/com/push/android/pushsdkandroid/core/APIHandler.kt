@@ -3,6 +3,7 @@ package com.push.android.pushsdkandroid.core
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import com.google.gson.Gson
 import com.push.android.pushsdkandroid.add.Info
 import com.push.android.pushsdkandroid.logger.PushSDKLogger
 import com.push.android.pushsdkandroid.models.*
@@ -716,21 +717,40 @@ internal class APIHandler {
                             }
                             it.close()
 
-                            try {
-                                if (response.toString() != """{"messages":[]}""") {
-                                    Intent().apply {
-                                        action = "com.push.android.pushsdkandroid.pushqueue"
-                                        putExtra("data", response.toString())
-                                        context.sendBroadcast(this)
-                                    }
+                            //Parse string here as json, then foreach -> send delivery
+                            val queueMessages = Gson().fromJson(response.toString(), QueueMessages::class.java)
+                            queueMessages.messages?.let {messages ->
+                                Intent().apply {
+                                    action = "com.push.android.pushsdkandroid.pushqueue"
+                                    putExtra("queue", response.toString())
+                                    context.sendBroadcast(this)
                                 }
-                            } catch (e: Exception) {
 
+                                //send delivery reports here
+                                messages.forEach {message ->
+                                    PushSDKLogger.debug("fb token: $X_Push_Session_Id")
+                                    hMessageDr(message.messageId, X_Push_Session_Id, X_Push_Auth_Token)
+                                    PushSDKLogger.debug("Result: Start step2, Function: processPushQueue, Class: QueueProc, message: ${message.messageId}")
+                                }
                             }
                             PushSDKLogger.debug("QueueProc.pushDeviceMessQueue Response : $response")
+
+//                            try {
+//                                if (response.toString() != """{"messages":[]}""") {
+//                                    Intent().apply {
+//                                        action = "com.push.android.pushsdkandroid.pushqueue"
+//                                        putExtra("data", response.toString())
+//                                        context.sendBroadcast(this)
+//                                    }
+//                                }
+//                            } catch (e: Exception) {
+//
+//                            }
+
+//                            PushSDKLogger.debug("QueueProc.pushDeviceMessQueue Response : $response")
                         }
                     } catch (e: Exception) {
-                        PushSDKLogger.debug("QueueProc.pushDeviceMessQueue response: unknown Fail")
+                        PushSDKLogger.debug("QueueProc.pushDeviceMessQueue response: unknown Fail \n ${Log.getStackTraceString(e)}")
                     }
 
                     functionNetAnswer2 = responseCode.toString()

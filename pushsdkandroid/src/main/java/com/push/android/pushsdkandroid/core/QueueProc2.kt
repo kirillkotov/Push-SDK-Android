@@ -27,7 +27,7 @@ import javax.net.ssl.SSLSocketFactory
  * fixme remove the class, implement same functionality inside APIHandler
  */
 @Deprecated("will be removed once redone")
-internal class QueueProc2 {
+internal class QueueProc3 {
 
     /**
      * Creates special token for use in requests
@@ -109,11 +109,18 @@ internal class QueueProc2 {
 
                             //Parse string here as json, then foreach -> send delivery
                             val queueMessages = Gson().fromJson(response.toString(), QueueMessages::class.java)
-                            queueMessages.messages?.let {
+                            queueMessages.messages?.let {messages ->
                                 Intent().apply {
                                     action = "com.push.android.pushsdkandroid.pushqueue"
                                     putExtra("queue", response.toString())
                                     context.sendBroadcast(this)
+                                }
+
+                                //send delivery reports here
+                                messages.forEach {message ->
+                                    PushSDKLogger.debug("fb token: $X_Push_Session_Id")
+                                    //apiPush.hMessageDr(message.messageId, X_Push_Session_Id, X_Push_Auth_Token)
+                                    PushSDKLogger.debug("Result: Start step2, Function: processPushQueue, Class: QueueProc, message: ${message.messageId}")
                                 }
                             }
                             PushSDKLogger.debug("QueueProc.pushDeviceMessQueue Response : $response")
