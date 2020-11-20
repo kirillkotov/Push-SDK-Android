@@ -20,7 +20,9 @@ import javax.net.ssl.SSLSocketFactory
 
 /**
  * Queue handling
+ * fixme remove the class, implement same functionality inside APIHandler
  */
+@Deprecated("will be removed once redone")
 internal class QueueProc {
 
     /**

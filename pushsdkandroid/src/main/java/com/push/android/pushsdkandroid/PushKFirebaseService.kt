@@ -20,7 +20,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
 import com.push.android.pushsdkandroid.add.Info
-import com.push.android.pushsdkandroid.add.RewriteParams
+import com.push.android.pushsdkandroid.core.RewriteParams
 import com.push.android.pushsdkandroid.core.APIHandler
 import com.push.android.pushsdkandroid.core.Initialization.Companion.PushKDatabase
 import com.push.android.pushsdkandroid.logger.PushSDKLogger
@@ -410,7 +410,10 @@ open class PushKFirebaseService(
 
         try {
             if (newToken != "") {
-                val pushUpdateParams = RewriteParams(applicationContext)
+                val pushUpdateParams =
+                    RewriteParams(
+                        applicationContext
+                    )
                 pushUpdateParams.rewriteFirebaseToken(newToken)
                 PushSDKLogger.debug("PushFirebaseService.onNewToken : local update: success")
             }

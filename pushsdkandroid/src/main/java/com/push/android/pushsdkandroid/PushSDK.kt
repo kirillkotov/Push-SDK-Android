@@ -6,9 +6,9 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.push.android.pushsdkandroid.add.RequestAnswerHandler
+import com.push.android.pushsdkandroid.core.RequestAnswerHandler
 import com.push.android.pushsdkandroid.add.Info
-import com.push.android.pushsdkandroid.add.RewriteParams
+import com.push.android.pushsdkandroid.core.RewriteParams
 import com.push.android.pushsdkandroid.core.*
 import com.push.android.pushsdkandroid.core.Initialization.Companion.PushKDatabase
 import com.push.android.pushsdkandroid.logger.PushSDKLogger
@@ -82,8 +82,10 @@ class PushSDK(
     private var context: Context by Delegates.notNull()
     private var initHObject: Initialization = Initialization(context)
     private var apiPushData: APIHandler = APIHandler()
-    private var requestAnswerHandlerAny: RequestAnswerHandler = RequestAnswerHandler()
-    private var rewriteParams: RewriteParams = RewriteParams(context)
+    private var requestAnswerHandlerAny: RequestAnswerHandler =
+        RequestAnswerHandler()
+    private var rewriteParams: RewriteParams =
+        RewriteParams(context)
     private var pushDeviceType: String = ""
 
     //main class initialization

@@ -1,8 +1,7 @@
-package com.push.android.pushsdkandroid.add
+package com.push.android.pushsdkandroid.core
 
 import android.content.Context
 import com.push.android.pushsdkandroid.core.Initialization.Companion.PushKDatabase
-import com.push.android.pushsdkandroid.core.SharedPreferencesHandler
 
 //function for initialization different parameters
 //

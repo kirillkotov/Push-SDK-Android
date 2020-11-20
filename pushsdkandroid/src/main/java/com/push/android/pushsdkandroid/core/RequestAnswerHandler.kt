@@ -1,4 +1,4 @@
-package com.push.android.pushsdkandroid.add
+package com.push.android.pushsdkandroid.core
 
 import android.content.Context
 import com.push.android.pushsdkandroid.models.PushKFunAnswerGeneral
@@ -81,7 +81,8 @@ internal class RequestAnswerHandler {
         context: Context
     ): PushKFunAnswerRegister {
 
-        val pushKRewrite = RewriteParams(context)
+        val pushKRewrite =
+            RewriteParams(context)
         val answerRegistrar: PushKFunAnswerRegister
 
         when (resp_code) {

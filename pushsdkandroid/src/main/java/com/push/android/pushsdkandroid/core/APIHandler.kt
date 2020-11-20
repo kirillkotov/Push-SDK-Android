@@ -2,7 +2,6 @@ package com.push.android.pushsdkandroid.core
 
 import android.content.Context
 import android.util.Log
-import com.push.android.pushsdkandroid.add.RequestAnswerHandler
 import com.push.android.pushsdkandroid.add.Info
 import com.push.android.pushsdkandroid.logger.PushSDKLogger
 import com.push.android.pushsdkandroid.models.*
@@ -23,7 +22,8 @@ import javax.net.ssl.SSLSocketFactory
 internal class APIHandler {
 
     //class init for creation answers
-    private var requestAnswerHandlerForm: RequestAnswerHandler = RequestAnswerHandler()
+    private var requestAnswerHandlerForm: RequestAnswerHandler =
+        RequestAnswerHandler()
 
     //parameters for procedures
     private val osVersion = Info.getAndroidVersion()
