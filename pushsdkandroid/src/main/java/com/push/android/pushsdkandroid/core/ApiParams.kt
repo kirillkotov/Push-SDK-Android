@@ -10,7 +10,7 @@ class ApiParams {
      * baseURL, must be structured like "https://api.com/api"
      */
     var baseURL = ""
-    var apiVersion = "3.0"
+    //var apiVersion = "3.0"
     var headerClientApiKey = "X-Push-Client-API-Key"
     var headerAppFingerprint = "X-Push-App-Fingerprint"
     var headerSessionId = "X-Push-Session-Id"
@@ -46,7 +46,7 @@ class ApiParams {
      * @param path which path to get full URL for
      */
     fun getFullURLFor(path: ApiPaths): String {
-        return "$baseURL/$apiVersion${when (path) {
+        return "$baseURL/${when (path) {
             ApiPaths.DEVICE_UPDATE -> deviceUpdatePath
             ApiPaths.DEVICE_REGISTRATION -> deviceRegistrationPath
             ApiPaths.DEVICE_REVOKE -> deviceRevokePath
@@ -64,7 +64,7 @@ class ApiParams {
      */
     fun setFrom(apiParams: ApiParams) {
         this.baseURL = apiParams.baseURL
-        this.apiVersion = apiParams.apiVersion
+        //this.apiVersion = apiParams.apiVersion
         this.headerClientApiKey = apiParams.headerClientApiKey
         this.headerAppFingerprint = apiParams.headerAppFingerprint
         this.headerSessionId = apiParams.headerSessionId
