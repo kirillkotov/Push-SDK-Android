@@ -471,12 +471,12 @@ open class PushKFirebaseService(
                 val message = Gson().fromJson(remoteMessage.data.toString(), PushDataModel::class.java).message
                 message?.let {
                     if (PushKDatabase.firebase_registration_token != "" && PushKDatabase.push_k_registration_token != "") {
-                        val pushAnswer = api.hMessageDr(
-                            message.messageId,
-                            PushKDatabase.firebase_registration_token,
-                            PushKDatabase.push_k_registration_token
-                        )
-                        PushSDKLogger.debug("From Message Delivery Report: $pushAnswer")
+//                        val pushAnswer = api.hMessageDr(
+//                            message.messageId,
+//                            PushKDatabase.firebase_registration_token,
+//                            PushKDatabase.push_k_registration_token
+//                        )
+//                        PushSDKLogger.debug("From Message Delivery Report: $pushAnswer")
                         PushSDKLogger.debug("delivery report success: messid ${remoteMessage.messageId.toString()}, token: ${PushKDatabase.firebase_registration_token}, push_k_registration_token: ${PushKDatabase.push_k_registration_token}")
                     } else {
                         PushSDKLogger.debug("delivery report failed: messid ${remoteMessage.messageId.toString()}, token: ${PushKDatabase.firebase_registration_token}, push_k_registration_token: ${PushKDatabase.push_k_registration_token}")
