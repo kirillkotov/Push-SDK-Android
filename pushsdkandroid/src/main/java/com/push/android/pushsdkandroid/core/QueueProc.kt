@@ -1,8 +1,8 @@
-package com.push.android.pushsdkandroid
+package com.push.android.pushsdkandroid.core
 
 import android.content.Context
 import android.content.Intent
-import com.push.android.pushsdkandroid.core.APIHandler
+import com.push.android.pushsdkandroid.PushKPushMess
 import com.push.android.pushsdkandroid.logger.PushSDKLogger
 import com.push.android.pushsdkandroid.models.PushKDataApi
 import kotlinx.serialization.Optional

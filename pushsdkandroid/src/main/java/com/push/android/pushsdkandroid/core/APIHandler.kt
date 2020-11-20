@@ -2,7 +2,6 @@ package com.push.android.pushsdkandroid.core
 
 import android.content.Context
 import android.util.Log
-import com.push.android.pushsdkandroid.ApiParams
 import com.push.android.pushsdkandroid.add.RequestAnswerHandler
 import com.push.android.pushsdkandroid.add.Info
 import com.push.android.pushsdkandroid.logger.PushSDKLogger
@@ -93,7 +92,10 @@ internal class APIHandler {
                     xPlatformClientAPIKey
                 )
                 connectorWebPlatform.setRequestProperty("Content-Type", "application/json")
-                connectorWebPlatform.setRequestProperty(API_PARAMS.headerSessionId, X_Push_Session_Id)
+                connectorWebPlatform.setRequestProperty(
+                    API_PARAMS.headerSessionId,
+                    X_Push_Session_Id
+                )
                 connectorWebPlatform.setRequestProperty(
                     API_PARAMS.headerAppFingerprint,
                     X_Push_App_Fingerprint
@@ -144,7 +146,11 @@ internal class APIHandler {
                 }
             } catch (e: Exception) {
 
-                PushSDKLogger.debug("Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${Log.getStackTraceString(e)}")
+                PushSDKLogger.debug(
+                    "Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${Log.getStackTraceString(
+                        e
+                    )}"
+                )
 
                 functionNetAnswer = requestAnswerHandlerForm.registerProcedureAnswer2(
                     "705",
@@ -190,7 +196,10 @@ internal class APIHandler {
                 connectorWebPlatform.doOutput = true
                 connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
                 connectorWebPlatform.setRequestProperty("Content-Type", "application/json")
-                connectorWebPlatform.setRequestProperty(API_PARAMS.headerSessionId, X_Push_Session_Id)
+                connectorWebPlatform.setRequestProperty(
+                    API_PARAMS.headerSessionId,
+                    X_Push_Session_Id
+                )
                 connectorWebPlatform.setRequestProperty(
                     API_PARAMS.headerTimestamp,
                     currentTimestamp2.toString()
@@ -294,7 +303,11 @@ internal class APIHandler {
                     }
                 }
             } catch (e: Exception) {
-                PushSDKLogger.debug("Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${Log.getStackTraceString(e)}")
+                PushSDKLogger.debug(
+                    "Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${Log.getStackTraceString(
+                        e
+                    )}"
+                )
                 functionCodeAnswer3 = 700
                 functionNetAnswer3 = "Failed"
             }
@@ -356,7 +369,11 @@ internal class APIHandler {
                         }
                     }
                 } catch (e: Exception) {
-                    PushSDKLogger.debug("Result: Failed step3, Function: push_get_device_all, Class: PushKApi, exception: ${Log.getStackTraceString(e)}")
+                    PushSDKLogger.debug(
+                        "Result: Failed step3, Function: push_get_device_all, Class: PushKApi, exception: ${Log.getStackTraceString(
+                            e
+                        )}"
+                    )
 
 
                     functionNetAnswer4 = "Failed"
@@ -409,7 +426,10 @@ internal class APIHandler {
                 connectorWebPlatform.doOutput = true
                 connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
                 connectorWebPlatform.setRequestProperty("Content-Type", "application/json")
-                connectorWebPlatform.setRequestProperty(API_PARAMS.headerSessionId, X_Push_Session_Id)
+                connectorWebPlatform.setRequestProperty(
+                    API_PARAMS.headerSessionId,
+                    X_Push_Session_Id
+                )
                 connectorWebPlatform.setRequestProperty(API_PARAMS.headerAuthToken, authToken)
                 connectorWebPlatform.setRequestProperty(
                     API_PARAMS.headerTimestamp,
@@ -444,7 +464,11 @@ internal class APIHandler {
                 }
 
             } catch (e: Exception) {
-                PushSDKLogger.debug("Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${Log.getStackTraceString(e)}")
+                PushSDKLogger.debug(
+                    "Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${Log.getStackTraceString(
+                        e
+                    )}"
+                )
 
                 functionNetAnswer5 = "Failed"
             }
@@ -491,7 +515,10 @@ internal class APIHandler {
                 connectorWebPlatform.doOutput = true
                 connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
                 connectorWebPlatform.setRequestProperty("Content-Type", "application/json")
-                connectorWebPlatform.setRequestProperty(API_PARAMS.headerSessionId, X_Push_Session_Id)
+                connectorWebPlatform.setRequestProperty(
+                    API_PARAMS.headerSessionId,
+                    X_Push_Session_Id
+                )
                 connectorWebPlatform.setRequestProperty(
                     API_PARAMS.headerTimestamp,
                     currentTimestamp2.toString()
@@ -529,7 +556,11 @@ internal class APIHandler {
                 }
 
             } catch (e: Exception) {
-                PushSDKLogger.debug("Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${Log.getStackTraceString(e)}")
+                PushSDKLogger.debug(
+                    "Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${Log.getStackTraceString(
+                        e
+                    )}"
+                )
             }
         })
 
@@ -568,7 +599,8 @@ internal class APIHandler {
 
                     val postData2: ByteArray = message2.toByteArray(Charset.forName("UTF-8"))
 
-                    val mURL2 = URL(API_PARAMS.getFullURLFor(ApiParams.ApiPaths.MESSAGE_DELIVERY_REPORT))
+                    val mURL2 =
+                        URL(API_PARAMS.getFullURLFor(ApiParams.ApiPaths.MESSAGE_DELIVERY_REPORT))
 
                     val connectorWebPlatform = mURL2.openConnection() as HttpsURLConnection
                     connectorWebPlatform.doOutput = true

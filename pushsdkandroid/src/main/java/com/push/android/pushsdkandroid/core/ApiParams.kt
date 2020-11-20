@@ -1,4 +1,4 @@
-package com.push.android.pushsdkandroid
+package com.push.android.pushsdkandroid.core
 
 /**
  * Api handler parameters
