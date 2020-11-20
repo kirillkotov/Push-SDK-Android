@@ -2,9 +2,12 @@ package com.push.android.pushsdkandroid.core
 
 import android.content.Context
 import android.content.Intent
+import com.google.gson.Gson
 import com.push.android.pushsdkandroid.PushKFirebaseService
 import com.push.android.pushsdkandroid.logger.PushSDKLogger
+import com.push.android.pushsdkandroid.models.PushDataModel
 import com.push.android.pushsdkandroid.models.PushKDataApi
+import com.push.android.pushsdkandroid.models.QueueMessages
 import kotlinx.serialization.Optional
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -23,7 +26,7 @@ import javax.net.ssl.SSLSocketFactory
  * fixme remove the class, implement same functionality inside APIHandler
  */
 @Deprecated("will be removed once redone")
-internal class QueueProcOld {
+internal class QueueProc2 {
 
     /**
      * Creates special token for use in requests
@@ -43,70 +46,9 @@ internal class QueueProcOld {
     }
 
     /**
-     * Process the push queue
-     */
-    private fun processPushQueue(
-        queue: String,
-        X_Push_Session_Id: String,
-        X_Push_Auth_Token: String
-    ) {
-        val apiPush = APIHandler()
-
-        @Serializable
-        data class Empty(
-            @Optional
-            val url: String? = null,
-            @Optional
-            val button: String? = null,
-            @Optional
-            val text: String? = null,
-            @Optional
-            val messageId: String? = null
-        )
-
-        @Serializable
-        data class QueryList(
-            @SerialName("phone")
-            val phone: String,
-            @SerialName("messageId")
-            val messageId: String,
-            @SerialName("title")
-            val title: String,
-            @SerialName("body")
-            val body: String,
-            @SerialName("image")
-            val image: Empty?,
-            @SerialName("button")
-            val button: Empty?,
-            @SerialName("partner")
-            val partner: String,
-            @SerialName("time")
-            val time: String
-        )
-
-        @Serializable
-        data class ParentQu(
-            @Optional
-            val messages: List<QueryList>
-        )
-        val parent = JSON.parse(ParentQu.serializer(), queue)
-        if (parent.messages.isNotEmpty()) {
-            val list = parent.messages
-            Thread.sleep(2000)
-            //initPush_params.push_init3()
-            list.forEach {
-                PushSDKLogger.debug("fb token: $X_Push_Session_Id")
-                apiPush.hMessageDr(it.messageId, X_Push_Session_Id, X_Push_Auth_Token)
-                PushSDKLogger.debug("Result: Start step2, Function: processPushQueue, Class: QueueProc, message: ${it.messageId}")
-            }
-        }
-    }
-
-
-    /**
      * Obtain the push message queue
      */
-    internal fun pushDeviceMessQueue(
+    internal fun getDevicePushMsgQueue(
         X_Push_Session_Id: String,
         X_Push_Auth_Token: String,
         context: Context
@@ -164,24 +106,31 @@ internal class QueueProcOld {
                             }
                             it.close()
 
-                            try {
-                                if (response.toString() != """{"messages":[]}""") {
-                                    Intent().apply {
-                                        action = "com.push.android.pushsdkandroid.pushqueue"
-                                        putExtra("data", response.toString())
-                                        context.sendBroadcast(this)
-                                    }
+                            //Parse string here as json, then foreach -> send delivery
+                            val messages = Gson().fromJson(response.toString(), QueueMessages::class.java).messages
+                            messages?.let {
+                                Intent().apply {
+                                    action = "com.push.android.pushsdkandroid.pushqueue"
+                                    putExtra("data", messages.toString())
+                                    context.sendBroadcast(this)
                                 }
-                            } catch (e: Exception) {
-
                             }
 
-                            processPushQueue(
-                                response.toString(),
-                                X_Push_Session_Id,
-                                X_Push_Auth_Token
-                            )
-                            PushSDKLogger.debug("QueueProc.pushDeviceMessQueue Response : $response")
+                            PushSDKLogger.debug("QueueProc.pushDeviceMessQueue Response : $messages")
+
+//                            try {
+//                                if (response.toString() != """{"messages":[]}""") {
+//                                    Intent().apply {
+//                                        action = "com.push.android.pushsdkandroid.pushqueue"
+//                                        putExtra("data", response.toString())
+//                                        context.sendBroadcast(this)
+//                                    }
+//                                }
+//                            } catch (e: Exception) {
+//
+//                            }
+
+//                            PushSDKLogger.debug("QueueProc.pushDeviceMessQueue Response : $response")
                         }
                     } catch (e: Exception) {
                         PushSDKLogger.debug("QueueProc.pushDeviceMessQueue response: unknown Fail")

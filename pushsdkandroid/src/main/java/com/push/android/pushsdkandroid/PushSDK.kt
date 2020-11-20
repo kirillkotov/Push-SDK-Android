@@ -652,8 +652,8 @@ class PushSDK(
             updateToken()
             if (PushKDatabase.registrationStatus) {
                 if (PushKDatabase.firebase_registration_token != "" && PushKDatabase.push_k_registration_token != "") {
-                    val queue = QueueProc()
-                    val answerData = queue.pushDeviceMessQueue(
+                    val queue = QueueProc2()
+                    val answerData = queue.getDevicePushMsgQueue(
                         PushKDatabase.firebase_registration_token,
                         PushKDatabase.push_k_registration_token, context
                     )
