@@ -167,7 +167,7 @@ internal class QueueProc {
                             try {
                                 if (response.toString() != """{"messages":[]}""") {
                                     Intent().apply {
-                                        action = "com.push.android.pushsdkandroid.Push"
+                                        action = "com.push.android.pushsdkandroid.pushqueue"
                                         putExtra("data", response.toString())
                                         context.sendBroadcast(this)
                                     }
