@@ -2,6 +2,7 @@ package com.push.android.pushsdkandroid.core
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import com.google.gson.Gson
 import com.push.android.pushsdkandroid.PushKFirebaseService
 import com.push.android.pushsdkandroid.logger.PushSDKLogger
@@ -133,7 +134,7 @@ internal class QueueProc2 {
 //                            PushSDKLogger.debug("QueueProc.pushDeviceMessQueue Response : $response")
                         }
                     } catch (e: Exception) {
-                        PushSDKLogger.debug("QueueProc.pushDeviceMessQueue response: unknown Fail")
+                        PushSDKLogger.debug("QueueProc.pushDeviceMessQueue response: unknown Fail \n ${Log.getStackTraceString(e)}")
                     }
 
                     functionNetAnswer2 = responseCode.toString()
