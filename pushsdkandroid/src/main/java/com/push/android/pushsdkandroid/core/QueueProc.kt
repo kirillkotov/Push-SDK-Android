@@ -2,7 +2,7 @@ package com.push.android.pushsdkandroid.core
 
 import android.content.Context
 import android.content.Intent
-import com.push.android.pushsdkandroid.PushKPushMess
+import com.push.android.pushsdkandroid.PushKFirebaseService
 import com.push.android.pushsdkandroid.logger.PushSDKLogger
 import com.push.android.pushsdkandroid.models.PushKDataApi
 import kotlinx.serialization.Optional
@@ -166,13 +166,14 @@ internal class QueueProc {
 
                             try {
                                 if (response.toString() != """{"messages":[]}""") {
-                                    PushKPushMess.message = response.toString()
-                                    val intent = Intent()
-                                    intent.action = "com.push.android.pushsdkandroid.Push"
-                                    context.sendBroadcast(intent)
+                                    Intent().apply {
+                                        action = "com.push.android.pushsdkandroid.Push"
+                                        putExtra("data", response.toString())
+                                        context.sendBroadcast(this)
+                                    }
                                 }
                             } catch (e: Exception) {
-                                PushKPushMess.message = ""
+
                             }
 
                             processPushQueue(

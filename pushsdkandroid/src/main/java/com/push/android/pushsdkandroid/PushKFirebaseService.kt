@@ -371,7 +371,6 @@ open class PushKFirebaseService(
      */
     private fun sendDataPushBroadcast(remoteMessage: RemoteMessage) {
         try {
-            PushKPushMess.message = remoteMessage.data.toString().replace("\\/", "/")
             Intent().apply {
                 action = DEFAULT_BROADCAST_ACTION
                 putExtra("data", remoteMessage.data.toString())
@@ -379,7 +378,6 @@ open class PushKFirebaseService(
             }
             PushSDKLogger.debug("datapush broadcast success")
         } catch (e: Exception) {
-            PushKPushMess.message = ""
             PushSDKLogger.debug("datapush broadcast error: ${Log.getStackTraceString(e)}")
         }
     }

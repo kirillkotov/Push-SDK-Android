@@ -3,7 +3,6 @@ package com.push.android.pushsdkandroid.logger
 import android.os.Build
 import android.util.Log
 import com.google.firebase.messaging.RemoteMessage
-import com.push.android.pushsdkandroid.PushKPushMess
 import com.push.android.pushsdkandroid.PushSDK
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
@@ -26,7 +25,7 @@ internal object PushSDKLogger {
     }
 
     fun debug(message: String) {
-        if (PushKPushMess.log_level_active == "debug") {
+        if (PushSDK.currentLogLevel == PushSDK.PUSHSDK_LOG_LEVEL_DEBUG) {
             if (Build.VERSION.SDK_INT >= 26) {
                 val current = LocalDateTime.now()
                 val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")

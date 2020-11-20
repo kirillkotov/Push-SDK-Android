@@ -68,6 +68,8 @@ class PushSDK(
          */
         const val PUSHSDK_LOG_LEVEL_DEBUG = "debug"
 
+        var currentLogLevel = PUSHSDK_LOG_LEVEL_ERROR
+
         /**
          * Get SDK version
          * @return SDK version name
@@ -92,7 +94,7 @@ class PushSDK(
     init {
         APIHandler.API_PARAMS.baseURL = baseApiUrl
         this.context = context
-        PushKPushMess.log_level_active = log_level
+        currentLogLevel = log_level
         pushDeviceType = Info.getPhoneType(context)
         try {
             val localDataLoaded = initHObject.hSdkGetParametersFromLocal()
