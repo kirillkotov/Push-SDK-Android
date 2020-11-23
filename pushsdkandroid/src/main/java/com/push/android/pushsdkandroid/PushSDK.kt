@@ -22,13 +22,13 @@ import kotlin.properties.Delegates
  * @see PushKFunAnswerGeneral
  * @param context the context you would like to use
  * @param baseApiUrl base api url, like "https://example.io/api"
- * @param log_level (optional) logging level, "error" or "debug"
+ * @param log_level (optional) logging level
  */
 @Suppress("unused")
 class PushSDK(
     context: Context,
     baseApiUrl: String,
-    log_level: String = PUSHSDK_LOG_LEVEL_ERROR
+    log_level: LogLevels = LogLevels.PUSHSDK_LOG_LEVEL_ERROR
 ) {
 
     /**
@@ -36,12 +36,12 @@ class PushSDK(
      * @see PushKFunAnswerGeneral
      * @param context the context you would like to use
      * @param customApiParams custom api params for special occasions (mostly debugging)
-     * @param log_level (optional) logging level, "error" or "debug"
+     * @param log_level (optional) logging level
      */
     constructor(
         context: Context,
         customApiParams: ApiParams,
-        log_level: String = PUSHSDK_LOG_LEVEL_ERROR
+        log_level: LogLevels = LogLevels.PUSHSDK_LOG_LEVEL_ERROR
     ) : this(context, customApiParams.baseURL, log_level) {
         APIHandler.API_PARAMS.setFrom(customApiParams)
     }
@@ -57,18 +57,17 @@ class PushSDK(
         const val TAG_LOGGING = "PushPushSDK"
 
         /**
-         * log level "error"
-         * TODO move to Enum
+         * Log levels
          */
-        const val PUSHSDK_LOG_LEVEL_ERROR = "error"
+        enum class LogLevels {
+            PUSHSDK_LOG_LEVEL_ERROR,
+            PUSHSDK_LOG_LEVEL_DEBUG
+        }
 
         /**
-         * log level "debug"
-         * TODO move to Enum
+         * Current log level
          */
-        const val PUSHSDK_LOG_LEVEL_DEBUG = "debug"
-
-        var currentLogLevel = PUSHSDK_LOG_LEVEL_ERROR
+        var currentLogLevel = LogLevels.PUSHSDK_LOG_LEVEL_ERROR
 
         /**
          * Get SDK version
