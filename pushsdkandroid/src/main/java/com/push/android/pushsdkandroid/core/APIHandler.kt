@@ -659,7 +659,8 @@ internal class APIHandler {
     }
 
     /**
-     * Obtain the push message queue
+     * Obtain the push message queue;
+     * Will also broadcast an intent with all the queued message
      */
     internal fun getDevicePushMsgQueue(
         X_Push_Session_Id: String,

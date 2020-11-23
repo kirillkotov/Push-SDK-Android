@@ -643,7 +643,8 @@ class PushSDK(
     }
 
     /**
-     * Checks undelivered message queue and sends delivery report for the messages
+     * Checks undelivered message queue and sends delivery report for the messages;
+     * Will also broadcast an intent with all the queued message
      *
      * @return PushKFunAnswerGeneral
      */
