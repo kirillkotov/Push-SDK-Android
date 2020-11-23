@@ -46,7 +46,7 @@ internal data class PushOperativeData(
 )
 
 internal data class QueueMessages(
-    val messages: List<PushDataMessageModel>?
+    val messages: List<PushDataMessageModel>
 )
 
 /**

@@ -35,6 +35,8 @@ internal class APIHandler {
          * Api parameters
          */
         val API_PARAMS = ApiParams()
+
+        const val INTENT_ACTION_QUEUE = "com.push.android.pushsdkandroid.pushqueue"
     }
 
     /**
@@ -719,35 +721,19 @@ internal class APIHandler {
 
                             //Parse string here as json, then foreach -> send delivery
                             val queueMessages = Gson().fromJson(response.toString(), QueueMessages::class.java)
-                            queueMessages.messages?.let {messages ->
-                                Intent().apply {
-                                    action = "com.push.android.pushsdkandroid.pushqueue"
-                                    putExtra("queue", response.toString())
-                                    context.sendBroadcast(this)
-                                }
+                            Intent().apply {
+                                action = INTENT_ACTION_QUEUE
+                                putExtra("queue", response.toString())
+                                context.sendBroadcast(this)
+                            }
 
-                                //send delivery reports here
-                                messages.forEach {message ->
-                                    PushSDKLogger.debug("fb token: $X_Push_Session_Id")
-                                    hMessageDr(message.messageId, X_Push_Session_Id, X_Push_Auth_Token)
-                                    PushSDKLogger.debug("Result: Start step2, Function: processPushQueue, Class: QueueProc, message: ${message.messageId}")
-                                }
+                            //send delivery reports here
+                            queueMessages.messages.forEach {message ->
+                                PushSDKLogger.debug("fb token: $X_Push_Session_Id")
+                                hMessageDr(message.messageId, X_Push_Session_Id, X_Push_Auth_Token)
+                                PushSDKLogger.debug("Result: Start step2, Function: processPushQueue, Class: QueueProc, message: ${message.messageId}")
                             }
                             PushSDKLogger.debug("QueueProc.pushDeviceMessQueue Response : $response")
-
-//                            try {
-//                                if (response.toString() != """{"messages":[]}""") {
-//                                    Intent().apply {
-//                                        action = "com.push.android.pushsdkandroid.pushqueue"
-//                                        putExtra("data", response.toString())
-//                                        context.sendBroadcast(this)
-//                                    }
-//                                }
-//                            } catch (e: Exception) {
-//
-//                            }
-
-//                            PushSDKLogger.debug("QueueProc.pushDeviceMessQueue Response : $response")
                         }
                     } catch (e: Exception) {
                         PushSDKLogger.debug("QueueProc.pushDeviceMessQueue response: unknown Fail \n ${Log.getStackTraceString(e)}")
