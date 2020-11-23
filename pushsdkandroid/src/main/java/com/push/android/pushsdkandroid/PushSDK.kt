@@ -78,6 +78,8 @@ class PushSDK(
             return BuildConfig.VERSION_NAME
         }
 
+        const val INTENT_ACTION_QUEUE = "com.push.android.pushsdkandroid.pushqueue"
+
     }
 
     //any classes initialization

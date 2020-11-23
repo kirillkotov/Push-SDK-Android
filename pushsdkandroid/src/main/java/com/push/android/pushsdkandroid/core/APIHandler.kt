@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.google.gson.Gson
+import com.push.android.pushsdkandroid.PushSDK
 import com.push.android.pushsdkandroid.add.Info
 import com.push.android.pushsdkandroid.logger.PushSDKLogger
 import com.push.android.pushsdkandroid.models.*
@@ -35,8 +36,6 @@ internal class APIHandler {
          * Api parameters
          */
         val API_PARAMS = ApiParams()
-
-        const val INTENT_ACTION_QUEUE = "com.push.android.pushsdkandroid.pushqueue"
     }
 
     /**
@@ -722,19 +721,30 @@ internal class APIHandler {
 
                             //Parse string here as json, then foreach -> send delivery
                             val queueMessages = Gson().fromJson(response.toString(), QueueMessages::class.java)
-                            Intent().apply {
-                                action = INTENT_ACTION_QUEUE
-                                putExtra("queue", response.toString())
-                                context.sendBroadcast(this)
-                            }
 
-                            //send delivery reports here
-                            queueMessages.messages.forEach {message ->
-                                PushSDKLogger.debug("fb token: $X_Push_Session_Id")
-                                hMessageDr(message.messageId, X_Push_Session_Id, X_Push_Auth_Token)
-                                PushSDKLogger.debug("Result: Start step2, Function: processPushQueue, Class: QueueProc, message: ${message.messageId}")
+                            //send broadcast with queued messages
+                            if (queueMessages.messages.isNotEmpty()) {
+                                Intent().apply {
+                                    action = PushSDK.INTENT_ACTION_QUEUE
+                                    putExtra("queue", response.toString())
+                                    context.sendBroadcast(this)
+                                }
+
+                                //send delivery reports here
+                                queueMessages.messages.forEach { message ->
+                                    PushSDKLogger.debug("fb token: $X_Push_Session_Id")
+                                    hMessageDr(
+                                        message.messageId,
+                                        X_Push_Session_Id,
+                                        X_Push_Auth_Token
+                                    )
+                                    PushSDKLogger.debug("Result: Start step2, Function: processPushQueue, Class: QueueProc, message: ${message.messageId}")
+                                }
+                                PushSDKLogger.debug("QueueProc.pushDeviceMessQueue Response : $response")
                             }
-                            PushSDKLogger.debug("QueueProc.pushDeviceMessQueue Response : $response")
+                            else {
+                                PushSDKLogger.debug("QueueProc.pushDeviceMessQueue had no queued messages")
+                            }
                         }
                     } catch (e: Exception) {
                         PushSDKLogger.debug("QueueProc.pushDeviceMessQueue response: unknown Fail \n ${Log.getStackTraceString(e)}")
