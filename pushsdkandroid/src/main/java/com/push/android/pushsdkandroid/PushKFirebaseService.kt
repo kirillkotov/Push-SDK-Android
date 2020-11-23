@@ -75,16 +75,6 @@ open class PushKFirebaseService(
         const val DEFAULT_NOTIFICATION_GROUP_ID = "pushsdk.notification.group"
 
         /**
-         * Intent action when user clicks a notification
-         */
-        const val DEFAULT_NOTIFICATION_ACTION = "pushsdk.intent.action.notification"
-
-        /**
-         * Action for intent that is broadcasted when a push is received
-         */
-        const val DEFAULT_BROADCAST_ACTION = "com.push.android.pushsdkandroid.Push"
-
-        /**
          * The "user-visible" name of the channel
          */
         const val NOTIFICATION_CHANNEL_NAME = "PushSDK channel"
@@ -207,7 +197,7 @@ open class PushKFirebaseService(
                                 this@PushKFirebaseService,
                                 0,
                                 it.apply {
-                                    action = DEFAULT_NOTIFICATION_ACTION
+                                    action = PushSDK.NOTIFICATION_CLICK_INTENT_ACTION
                                     putExtra("data", data.toString())
                                 },
                                 PendingIntent.FLAG_UPDATE_CURRENT
@@ -372,7 +362,7 @@ open class PushKFirebaseService(
     private fun sendDataPushBroadcast(remoteMessage: RemoteMessage) {
         try {
             Intent().apply {
-                action = DEFAULT_BROADCAST_ACTION
+                action = PushSDK.BROADCAST_PUSH_DATA_ACTION
                 putExtra("data", remoteMessage.data.toString())
                 sendBroadcast(this)
             }

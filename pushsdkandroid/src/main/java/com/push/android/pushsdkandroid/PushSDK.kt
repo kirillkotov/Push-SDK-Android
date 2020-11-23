@@ -71,6 +71,16 @@ class PushSDK(
 
         const val INTENT_ACTION_QUEUE = "com.push.android.pushsdkandroid.pushqueue"
 
+        /**
+         * Intent action when user clicks a notification
+         */
+        const val NOTIFICATION_CLICK_INTENT_ACTION = "pushsdk.intent.action.notification"
+
+        /**
+         * Action for intent that is broadcasted when a push is received
+         */
+        const val BROADCAST_PUSH_DATA_ACTION = "com.push.android.pushsdkandroid.Push"
+
     }
 
     /**
