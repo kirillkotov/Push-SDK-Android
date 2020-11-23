@@ -725,8 +725,8 @@ internal class APIHandler {
                             //send broadcast with queued messages
                             if (queueMessages.messages.isNotEmpty()) {
                                 Intent().apply {
-                                    action = PushSDK.INTENT_ACTION_QUEUE
-                                    putExtra("queue", response.toString())
+                                    action = PushSDK.BROADCAST_QUEUE_INTENT_ACTION
+                                    putExtra(PushSDK.BROADCAST_QUEUE_EXTRA_NAME, response.toString())
                                     context.sendBroadcast(this)
                                 }
 

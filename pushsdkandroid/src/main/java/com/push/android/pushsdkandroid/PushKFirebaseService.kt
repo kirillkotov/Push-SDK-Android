@@ -362,8 +362,8 @@ open class PushKFirebaseService(
     private fun sendDataPushBroadcast(remoteMessage: RemoteMessage) {
         try {
             Intent().apply {
-                action = PushSDK.BROADCAST_PUSH_DATA_ACTION
-                putExtra("data", remoteMessage.data.toString())
+                action = PushSDK.BROADCAST_PUSH_DATA_INTENT_ACTION
+                putExtra(PushSDK.BROADCAST_PUSH_DATA_EXTRA_NAME, remoteMessage.data.toString())
                 sendBroadcast(this)
             }
             PushSDKLogger.debug("datapush broadcast success")

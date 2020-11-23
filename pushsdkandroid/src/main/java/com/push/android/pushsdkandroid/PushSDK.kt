@@ -69,7 +69,15 @@ class PushSDK(
             return BuildConfig.VERSION_NAME
         }
 
-        const val INTENT_ACTION_QUEUE = "com.push.android.pushsdkandroid.pushqueue"
+        /**
+         * Intent action for sending queue messages
+         */
+        const val BROADCAST_QUEUE_INTENT_ACTION = "com.push.android.pushsdkandroid.pushqueue"
+
+        /**
+         * Name of the extra inside the intent that broadcasts message queue
+         */
+        const val BROADCAST_QUEUE_EXTRA_NAME = "queue"
 
         /**
          * Intent action when user clicks a notification
@@ -79,7 +87,12 @@ class PushSDK(
         /**
          * Action for intent that is broadcasted when a push is received
          */
-        const val BROADCAST_PUSH_DATA_ACTION = "com.push.android.pushsdkandroid.Push"
+        const val BROADCAST_PUSH_DATA_INTENT_ACTION = "com.push.android.pushsdkandroid.Push"
+
+        /**
+         * Name of the extra inside the intent that broadcasts push data
+         */
+        const val BROADCAST_PUSH_DATA_EXTRA_NAME = "data"
 
     }
 
