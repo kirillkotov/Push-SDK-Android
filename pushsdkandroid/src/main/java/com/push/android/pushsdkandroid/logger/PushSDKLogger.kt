@@ -25,7 +25,7 @@ internal object PushSDKLogger {
     }
 
     fun debug(message: String) {
-        if (PushSDK.currentLogLevel == PushSDK.Companion.LogLevels.PUSHSDK_LOG_LEVEL_DEBUG) {
+        if (PushSDK.currentLogLevel == PushSDK.LogLevels.PUSHSDK_LOG_LEVEL_DEBUG) {
             if (Build.VERSION.SDK_INT >= 26) {
                 val current = LocalDateTime.now()
                 val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")

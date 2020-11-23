@@ -57,14 +57,6 @@ class PushSDK(
         const val TAG_LOGGING = "PushPushSDK"
 
         /**
-         * Log levels
-         */
-        enum class LogLevels {
-            PUSHSDK_LOG_LEVEL_ERROR,
-            PUSHSDK_LOG_LEVEL_DEBUG
-        }
-
-        /**
          * Current log level
          */
         var currentLogLevel = LogLevels.PUSHSDK_LOG_LEVEL_ERROR
@@ -79,6 +71,14 @@ class PushSDK(
 
         const val INTENT_ACTION_QUEUE = "com.push.android.pushsdkandroid.pushqueue"
 
+    }
+
+    /**
+     * Log levels
+     */
+    enum class LogLevels {
+        PUSHSDK_LOG_LEVEL_ERROR,
+        PUSHSDK_LOG_LEVEL_DEBUG
     }
 
     //any classes initialization
