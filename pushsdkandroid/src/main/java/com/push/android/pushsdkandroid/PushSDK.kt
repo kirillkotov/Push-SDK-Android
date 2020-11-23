@@ -85,6 +85,11 @@ class PushSDK(
         const val NOTIFICATION_CLICK_INTENT_ACTION = "pushsdk.intent.action.notification"
 
         /**
+         * Name of the extra inside the intent that broadcasts push data
+         */
+        const val NOTIFICATION_CLICK_PUSH_DATA_EXTRA_NAME = "data"
+
+        /**
          * Action for intent that is broadcasted when a push is received
          */
         const val BROADCAST_PUSH_DATA_INTENT_ACTION = "com.push.android.pushsdkandroid.Push"

@@ -198,7 +198,7 @@ open class PushKFirebaseService(
                                 0,
                                 it.apply {
                                     action = PushSDK.NOTIFICATION_CLICK_INTENT_ACTION
-                                    putExtra("data", data.toString())
+                                    putExtra(PushSDK.NOTIFICATION_CLICK_PUSH_DATA_EXTRA_NAME, data.toString())
                                 },
                                 PendingIntent.FLAG_UPDATE_CURRENT
                             )
