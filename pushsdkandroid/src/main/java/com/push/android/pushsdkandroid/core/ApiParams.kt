@@ -1,5 +1,7 @@
 package com.push.android.pushsdkandroid.core
 
+import java.net.URI
+
 /**
  * Api handler parameters
  */
@@ -47,7 +49,7 @@ class ApiParams {
      * @param path which path to get full URL for
      */
     fun getFullURLFor(path: ApiPaths): String {
-        return "$baseURL${when (path) {
+        return URI("$baseURL${when (path) {
             ApiPaths.DEVICE_UPDATE -> deviceUpdatePath
             ApiPaths.DEVICE_REGISTRATION -> deviceRegistrationPath
             ApiPaths.DEVICE_REVOKE -> deviceRevokePath
@@ -56,7 +58,7 @@ class ApiParams {
             ApiPaths.MESSAGE_DELIVERY_REPORT -> messageDeliveryReportPath
             ApiPaths.MESSAGE_QUEUE -> messageQueuePath
             ApiPaths.MESSAGE_HISTORY -> messageHistoryPath
-        }}".replace("(?<!(http:|https:))//", "/")
+        }}").normalize().toString()
     }
 
     /**
