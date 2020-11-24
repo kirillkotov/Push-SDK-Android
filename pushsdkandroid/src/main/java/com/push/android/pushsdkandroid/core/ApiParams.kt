@@ -56,7 +56,7 @@ class ApiParams {
             ApiPaths.MESSAGE_DELIVERY_REPORT -> messageDeliveryReportPath
             ApiPaths.MESSAGE_QUEUE -> messageQueuePath
             ApiPaths.MESSAGE_HISTORY -> messageHistoryPath
-        }}".replace("//", "/")
+        }}".replace("(?<!(http:|https:))//", "/")
     }
 
     /**
