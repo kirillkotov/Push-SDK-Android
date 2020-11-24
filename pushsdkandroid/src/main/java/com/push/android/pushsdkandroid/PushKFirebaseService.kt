@@ -24,7 +24,7 @@ import com.push.android.pushsdkandroid.core.RewriteParams
 import com.push.android.pushsdkandroid.core.APIHandler
 import com.push.android.pushsdkandroid.core.Initialization.Companion.PushKDatabase
 import com.push.android.pushsdkandroid.logger.PushSDKLogger
-import com.push.android.pushsdkandroid.models.PushDataModel
+import com.push.android.pushsdkandroid.models.PushDataMessageModel
 import java.net.URL
 import java.util.*
 import kotlin.random.Random
@@ -158,7 +158,7 @@ open class PushKFirebaseService(
         data: Map<String, String>
     ) {
         //parse the data object
-        val message = Gson().fromJson(data["message"], PushDataModel::class.java).message
+        val message = Gson().fromJson(data["message"], PushDataMessageModel::class.java)
         if (message == null) {
             //message is empty, thus it must be an error
             PushSDKLogger.error("message is empty")
@@ -458,7 +458,7 @@ open class PushKFirebaseService(
         // Check if message contains a data payload.
         if (remoteMessage.data.isNotEmpty() && remoteMessage.data["source"] == "Messaging HUB") {
             try {
-                val message = Gson().fromJson(remoteMessage.data["message"], PushDataModel::class.java).message
+                val message = Gson().fromJson(remoteMessage.data["message"], PushDataMessageModel::class.java)
                 message?.let {
                     if (PushKDatabase.firebase_registration_token != "" && PushKDatabase.push_k_registration_token != "") {
                         val pushAnswer = api.hMessageDr(
