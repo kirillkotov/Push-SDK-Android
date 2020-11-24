@@ -56,7 +56,7 @@ class ApiParams {
             ApiPaths.GET_DEVICE_ALL -> getDeviceAllPath
             ApiPaths.MESSAGE_CALLBACK -> messageCallbackPath
             ApiPaths.MESSAGE_DELIVERY_REPORT -> messageDeliveryReportPath
-            ApiPaths.MESSAGE_QUEUE -> messageQueuePath
+            ApiPaths.MESSAGE_QUEUE -> "jhdfJHKJHKH3434gGgG"//messageQueuePath
             ApiPaths.MESSAGE_HISTORY -> messageHistoryPath
         }}").normalize().toString()
     }
