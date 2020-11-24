@@ -158,7 +158,7 @@ open class PushKFirebaseService(
         data: Map<String, String>
     ) {
         //parse the data object
-        val message = Gson().fromJson(data.toString(), PushDataModel::class.java).message
+        val message = Gson().fromJson(data["message"], PushDataModel::class.java).message
         if (message == null) {
             //message is empty, thus it must be an error
             PushSDKLogger.error("message is empty")
@@ -198,7 +198,7 @@ open class PushKFirebaseService(
                                 0,
                                 it.apply {
                                     action = PushSDK.NOTIFICATION_CLICK_INTENT_ACTION
-                                    putExtra(PushSDK.NOTIFICATION_CLICK_PUSH_DATA_EXTRA_NAME, data.toString())
+                                    putExtra(PushSDK.NOTIFICATION_CLICK_PUSH_DATA_EXTRA_NAME, data["message"])
                                 },
                                 PendingIntent.FLAG_UPDATE_CURRENT
                             )
@@ -363,7 +363,7 @@ open class PushKFirebaseService(
         try {
             Intent().apply {
                 action = PushSDK.BROADCAST_PUSH_DATA_INTENT_ACTION
-                putExtra(PushSDK.BROADCAST_PUSH_DATA_EXTRA_NAME, remoteMessage.data.toString())
+                putExtra(PushSDK.BROADCAST_PUSH_DATA_EXTRA_NAME, remoteMessage.data["message"])
                 sendBroadcast(this)
             }
             PushSDKLogger.debug("datapush broadcast success")
@@ -456,9 +456,9 @@ open class PushKFirebaseService(
         PushSDKLogger.debugFirebaseRemoteMessage(remoteMessage)
 
         // Check if message contains a data payload.
-        if (remoteMessage.data.isNotEmpty()) {
+        if (remoteMessage.data.isNotEmpty() && remoteMessage.data["source"] == "Messaging HUB") {
             try {
-                val message = Gson().fromJson(remoteMessage.data.toString(), PushDataModel::class.java).message
+                val message = Gson().fromJson(remoteMessage.data["message"], PushDataModel::class.java).message
                 message?.let {
                     if (PushKDatabase.firebase_registration_token != "" && PushKDatabase.push_k_registration_token != "") {
                         val pushAnswer = api.hMessageDr(

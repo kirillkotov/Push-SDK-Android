@@ -58,7 +58,7 @@ internal object PushSDKLogger {
             debug("Message from remote senderId: ${remoteMessage.senderId}")
             debug("Message from remote data to string: ${remoteMessage.data}")
 
-            debug("Message data payload: " + remoteMessage.data.toString())
+            debug("data payload(Map<String, String> toString): " + remoteMessage.data.toString())
         }
     }
 
