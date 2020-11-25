@@ -11,6 +11,8 @@ Get started by visiting:
 ### Documentation:
 https://javadoc.jitpack.io/com/github/kirillkotov/Push-SDK-Android/v1.0.0.48/javadoc/index.html
 
+**USE VERSION v1.0.0.48 WITH API 3.0 OR ABOVE**
+
 ## Short dependency info
 ### Push SDK
 
