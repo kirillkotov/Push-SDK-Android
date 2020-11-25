@@ -24,7 +24,7 @@ import com.push.android.pushsdkandroid.core.RewriteParams
 import com.push.android.pushsdkandroid.core.APIHandler
 import com.push.android.pushsdkandroid.core.Initialization.Companion.PushKDatabase
 import com.push.android.pushsdkandroid.logger.PushSDKLogger
-import com.push.android.pushsdkandroid.models.PushDataModel
+import com.push.android.pushsdkandroid.models.PushDataMessageModel
 import java.net.URL
 import java.util.*
 import kotlin.random.Random
@@ -73,16 +73,6 @@ open class PushKFirebaseService(
          * group id of notifications
          */
         const val DEFAULT_NOTIFICATION_GROUP_ID = "pushsdk.notification.group"
-
-        /**
-         * Intent action when user clicks a notification
-         */
-        const val DEFAULT_NOTIFICATION_ACTION = "pushsdk.intent.action.notification"
-
-        /**
-         * Action for intent that is broadcasted when a push is received
-         */
-        const val DEFAULT_BROADCAST_ACTION = "com.push.android.pushsdkandroid.Push"
 
         /**
          * The "user-visible" name of the channel
@@ -168,7 +158,7 @@ open class PushKFirebaseService(
         data: Map<String, String>
     ) {
         //parse the data object
-        val message = Gson().fromJson(data.toString(), PushDataModel::class.java).message
+        val message = Gson().fromJson(data["message"], PushDataMessageModel::class.java)
         if (message == null) {
             //message is empty, thus it must be an error
             PushSDKLogger.error("message is empty")
@@ -207,8 +197,8 @@ open class PushKFirebaseService(
                                 this@PushKFirebaseService,
                                 0,
                                 it.apply {
-                                    action = DEFAULT_NOTIFICATION_ACTION
-                                    putExtra("data", data.toString())
+                                    action = PushSDK.NOTIFICATION_CLICK_INTENT_ACTION
+                                    putExtra(PushSDK.NOTIFICATION_CLICK_PUSH_DATA_EXTRA_NAME, data["message"])
                                 },
                                 PendingIntent.FLAG_UPDATE_CURRENT
                             )
@@ -371,15 +361,13 @@ open class PushKFirebaseService(
      */
     private fun sendDataPushBroadcast(remoteMessage: RemoteMessage) {
         try {
-            PushKPushMess.message = remoteMessage.data.toString().replace("\\/", "/")
             Intent().apply {
-                action = DEFAULT_BROADCAST_ACTION
-                putExtra("data", remoteMessage.data.toString())
+                action = PushSDK.BROADCAST_PUSH_DATA_INTENT_ACTION
+                putExtra(PushSDK.BROADCAST_PUSH_DATA_EXTRA_NAME, remoteMessage.data["message"])
                 sendBroadcast(this)
             }
             PushSDKLogger.debug("datapush broadcast success")
         } catch (e: Exception) {
-            PushKPushMess.message = ""
             PushSDKLogger.debug("datapush broadcast error: ${Log.getStackTraceString(e)}")
         }
     }
@@ -468,9 +456,9 @@ open class PushKFirebaseService(
         PushSDKLogger.debugFirebaseRemoteMessage(remoteMessage)
 
         // Check if message contains a data payload.
-        if (remoteMessage.data.isNotEmpty()) {
+        if (remoteMessage.data.isNotEmpty() && remoteMessage.data["source"] == "Messaging HUB") {
             try {
-                val message = Gson().fromJson(remoteMessage.data.toString(), PushDataModel::class.java).message
+                val message = Gson().fromJson(remoteMessage.data["message"], PushDataMessageModel::class.java)
                 message?.let {
                     if (PushKDatabase.firebase_registration_token != "" && PushKDatabase.push_k_registration_token != "") {
                         val pushAnswer = api.hMessageDr(

@@ -22,13 +22,13 @@ import kotlin.properties.Delegates
  * @see PushKFunAnswerGeneral
  * @param context the context you would like to use
  * @param baseApiUrl base api url, like "https://example.io/api"
- * @param log_level (optional) logging level, "error" or "debug"
+ * @param log_level (optional) logging level
  */
 @Suppress("unused")
 class PushSDK(
     context: Context,
     baseApiUrl: String,
-    log_level: String = PUSHSDK_LOG_LEVEL_ERROR
+    log_level: LogLevels = LogLevels.PUSHSDK_LOG_LEVEL_ERROR
 ) {
 
     /**
@@ -36,12 +36,12 @@ class PushSDK(
      * @see PushKFunAnswerGeneral
      * @param context the context you would like to use
      * @param customApiParams custom api params for special occasions (mostly debugging)
-     * @param log_level (optional) logging level, "error" or "debug"
+     * @param log_level (optional) logging level
      */
     constructor(
         context: Context,
         customApiParams: ApiParams,
-        log_level: String = PUSHSDK_LOG_LEVEL_ERROR
+        log_level: LogLevels = LogLevels.PUSHSDK_LOG_LEVEL_ERROR
     ) : this(context, customApiParams.baseURL, log_level) {
         APIHandler.API_PARAMS.setFrom(customApiParams)
     }
@@ -57,16 +57,9 @@ class PushSDK(
         const val TAG_LOGGING = "PushPushSDK"
 
         /**
-         * log level "error"
-         * TODO move to Enum
+         * Current log level
          */
-        const val PUSHSDK_LOG_LEVEL_ERROR = "error"
-
-        /**
-         * log level "debug"
-         * TODO move to Enum
-         */
-        const val PUSHSDK_LOG_LEVEL_DEBUG = "debug"
+        var currentLogLevel = LogLevels.PUSHSDK_LOG_LEVEL_ERROR
 
         /**
          * Get SDK version
@@ -76,6 +69,44 @@ class PushSDK(
             return BuildConfig.VERSION_NAME
         }
 
+        /**
+         * Intent action for sending queue messages
+         */
+        const val BROADCAST_QUEUE_INTENT_ACTION = "com.push.android.pushsdkandroid.pushqueue"
+
+        /**
+         * Name of the extra inside the intent that broadcasts message queue
+         */
+        const val BROADCAST_QUEUE_EXTRA_NAME = "queue"
+
+        /**
+         * Intent action when user clicks a notification
+         */
+        const val NOTIFICATION_CLICK_INTENT_ACTION = "pushsdk.intent.action.notification"
+
+        /**
+         * Name of the extra inside the intent that broadcasts push data
+         */
+        const val NOTIFICATION_CLICK_PUSH_DATA_EXTRA_NAME = "data"
+
+        /**
+         * Action for intent that is broadcasted when a push is received
+         */
+        const val BROADCAST_PUSH_DATA_INTENT_ACTION = "com.push.android.pushsdkandroid.Push"
+
+        /**
+         * Name of the extra inside the intent that broadcasts push data
+         */
+        const val BROADCAST_PUSH_DATA_EXTRA_NAME = "data"
+
+    }
+
+    /**
+     * Log levels
+     */
+    enum class LogLevels {
+        PUSHSDK_LOG_LEVEL_ERROR,
+        PUSHSDK_LOG_LEVEL_DEBUG
     }
 
     //any classes initialization
@@ -92,7 +123,7 @@ class PushSDK(
     init {
         APIHandler.API_PARAMS.baseURL = baseApiUrl
         this.context = context
-        PushKPushMess.log_level_active = log_level
+        currentLogLevel = log_level
         pushDeviceType = Info.getPhoneType(context)
         try {
             val localDataLoaded = initHObject.hSdkGetParametersFromLocal()
@@ -641,7 +672,8 @@ class PushSDK(
     }
 
     /**
-     * Checks undelivered message queue and sends delivery report for the messages
+     * Checks undelivered message queue and sends delivery report for the messages;
+     * Will also broadcast an intent with all the queued message
      *
      * @return PushKFunAnswerGeneral
      */
@@ -650,8 +682,8 @@ class PushSDK(
             updateToken()
             if (PushKDatabase.registrationStatus) {
                 if (PushKDatabase.firebase_registration_token != "" && PushKDatabase.push_k_registration_token != "") {
-                    val queue = QueueProc()
-                    val answerData = queue.pushDeviceMessQueue(
+                    //val queue = QueueProc2()
+                    val answerData = apiPushData.getDevicePushMsgQueue(
                         PushKDatabase.firebase_registration_token,
                         PushKDatabase.push_k_registration_token, context
                     )

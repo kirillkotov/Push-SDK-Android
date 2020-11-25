@@ -1,5 +1,7 @@
 package com.push.android.pushsdkandroid.core
 
+import java.net.URI
+
 /**
  * Api handler parameters
  */
@@ -11,12 +13,13 @@ class ApiParams {
      */
     var baseURL = ""
     //var apiVersion = "3.0"
-    var headerClientApiKey = "X-Push-Client-API-Key"
-    var headerAppFingerprint = "X-Push-App-Fingerprint"
-    var headerSessionId = "X-Push-Session-Id"
-    var headerTimestamp = "X-Push-Timestamp"
-    var headerAuthToken = "X-Push-Auth-Token"
+    var headerClientApiKey = "X-Msghub-Client-API-Key"
+    var headerAppFingerprint = "X-Msghub-App-Fingerprint"
+    var headerSessionId = "X-Msghub-Session-Id"
+    var headerTimestamp = "X-Msghub-Timestamp"
+    var headerAuthToken = "X-Msghub-Auth-Token"
 
+    //should start with slash
     var deviceUpdatePath = "/device/update"
     var deviceRegistrationPath = "/device/registration"
     var deviceRevokePath = "/device/revoke"
@@ -46,7 +49,7 @@ class ApiParams {
      * @param path which path to get full URL for
      */
     fun getFullURLFor(path: ApiPaths): String {
-        return "$baseURL/${when (path) {
+        return URI("$baseURL${when (path) {
             ApiPaths.DEVICE_UPDATE -> deviceUpdatePath
             ApiPaths.DEVICE_REGISTRATION -> deviceRegistrationPath
             ApiPaths.DEVICE_REVOKE -> deviceRevokePath
@@ -55,7 +58,7 @@ class ApiParams {
             ApiPaths.MESSAGE_DELIVERY_REPORT -> messageDeliveryReportPath
             ApiPaths.MESSAGE_QUEUE -> messageQueuePath
             ApiPaths.MESSAGE_HISTORY -> messageHistoryPath
-        }}"
+        }}").normalize().toString()
     }
 
     /**
@@ -79,4 +82,23 @@ class ApiParams {
         this.messageQueuePath = apiParams.messageQueuePath
         this.messageHistoryPath = apiParams.messageHistoryPath
     }
+
+//    internal fun setDefaults() {
+//        this.baseURL = ""
+//        //var apiVersion = "3.0"
+//        this.headerClientApiKey = "X-Push-Client-API-Key"
+//        this.headerAppFingerprint = "X-Push-App-Fingerprint"
+//        this.headerSessionId = "X-Push-Session-Id"
+//        this.headerTimestamp = "X-Push-Timestamp"
+//        this.headerAuthToken = "X-Push-Auth-Token"
+//
+//        this.deviceUpdatePath = "/device/update"
+//        this.deviceRegistrationPath = "/device/registration"
+//        this.deviceRevokePath = "/device/revoke"
+//        this.getDeviceAllPath = "/device/all"
+//        this.messageCallbackPath = "/message/callback"
+//        this.messageDeliveryReportPath = "/message/dr"
+//        this.messageQueuePath = "/message/queue"
+//        this.messageHistoryPath = "/message/history"
+//    }
 }

@@ -45,6 +45,10 @@ internal data class PushOperativeData(
     var deviceId: String = ""
 )
 
+internal data class QueueMessages(
+    val messages: List<PushDataMessageModel>
+)
+
 /**
  * General request response answer structure
  * @param code response code
