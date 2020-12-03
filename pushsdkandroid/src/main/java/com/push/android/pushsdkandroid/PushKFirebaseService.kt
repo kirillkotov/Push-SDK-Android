@@ -22,7 +22,9 @@ import com.google.gson.Gson
 import com.push.android.pushsdkandroid.add.Info
 import com.push.android.pushsdkandroid.core.RewriteParams
 import com.push.android.pushsdkandroid.core.APIHandler
+import com.push.android.pushsdkandroid.core.Initialization
 import com.push.android.pushsdkandroid.core.Initialization.Companion.PushKDatabase
+import com.push.android.pushsdkandroid.core.SharedPreferencesHandler
 import com.push.android.pushsdkandroid.logger.PushSDKLogger
 import com.push.android.pushsdkandroid.models.PushDataMessageModel
 import java.net.URL
@@ -52,6 +54,7 @@ open class PushKFirebaseService(
     private val notificationIconResourceId: Int = android.R.drawable.ic_notification_overlay,
     private val notificationStyle: NotificationStyle = NotificationStyle.LARGE_ICON
 ) : FirebaseMessagingService() {
+
 
     private var api: APIHandler = APIHandler()
 
@@ -136,6 +139,20 @@ open class PushKFirebaseService(
                 return null
             }
         } ?: return null
+    }
+
+    /**
+     * restore "database" and other stuff, for cases when app is dead
+     * fixme can't find a better QUICK way for now
+     */
+    private fun restoreBaseUrl() {
+        Initialization(applicationContext).hSdkGetParametersFromLocal()
+        val sharedPreferencesHandler = SharedPreferencesHandler(applicationContext)
+        val savedBaseUrl = sharedPreferencesHandler.getValueString("baseApiUrl")
+        PushSDKLogger.debug("savedBaseUrl - $savedBaseUrl")
+        if (savedBaseUrl.isNotEmpty()) {
+            APIHandler.API_PARAMS.baseURL = savedBaseUrl
+        }
     }
 
     /**
@@ -377,6 +394,7 @@ open class PushKFirebaseService(
      */
     override fun onCreate() {
         super.onCreate()
+        restoreBaseUrl()
         PushSDKLogger.debug("PushFirebaseService.onCreate : MyService onCreate")
     }
 
@@ -408,6 +426,8 @@ open class PushKFirebaseService(
         } catch (e: Exception) {
             PushSDKLogger.debug("PushFirebaseService.onNewToken : local update: unknown error")
         }
+
+        restoreBaseUrl()
 
         try {
             if (PushKDatabase.push_k_registration_token != "" && PushKDatabase.firebase_registration_token != "") {
@@ -457,6 +477,7 @@ open class PushKFirebaseService(
 
         // Check if message contains a data payload.
         if (remoteMessage.data.isNotEmpty() && remoteMessage.data["source"] == "Messaging HUB") {
+            restoreBaseUrl()
             try {
                 val message = Gson().fromJson(remoteMessage.data["message"], PushDataMessageModel::class.java)
                 message?.let {

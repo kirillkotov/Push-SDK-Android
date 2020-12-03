@@ -134,7 +134,21 @@ class PushSDK(
             PushSDKLogger.error("PushSDK.init registration update problem $e")
         }
         updateToken()
+
+        saveInitData(baseApiUrl)
     }
+
+    /**
+     * save baseUrl to use when app is dead
+     * fixme can't find a better QUICK way for now
+     */
+    private fun saveInitData(baseApiUrl: String) {
+        val sharedPreferencesHandler: SharedPreferencesHandler = SharedPreferencesHandler(context.applicationContext)
+
+        sharedPreferencesHandler.saveString("baseApiUrl", baseApiUrl)
+        PushSDKLogger.debug("saving savedBaseUrl - $baseApiUrl")
+    }
+
 
     private var answerNotRegistered: PushKFunAnswerGeneral =
         PushKFunAnswerGeneral(704, "Failed", "Registration data not found", "Not registered")
