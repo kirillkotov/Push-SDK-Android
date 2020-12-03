@@ -15,7 +15,7 @@ https://javadoc.jitpack.io/com/github/kirillkotov/Push-SDK-Android/v1.0.0.50/jav
 
 >v1.0.0.50 and higher now support http protocol
 
-To use http protocol instead of http, add `android:usesCleartextTraffic="true"` to your application tag inside android manifest
+To use http protocol instead of https, add `android:usesCleartextTraffic="true"` to your application tag inside android manifest
 ```
 <application
         ...
