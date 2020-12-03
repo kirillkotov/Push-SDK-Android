@@ -11,7 +11,9 @@ Get started by visiting:
 ### Documentation:
 https://javadoc.jitpack.io/com/github/kirillkotov/Push-SDK-Android/v1.0.0.51/javadoc/index.html
 
-**USE VERSION v1.0.0.48 WITH API 3.0 OR ABOVE**
+**RECOMMENDED VERSION: v1.0.0.51**
+
+**USE VERSION v1.0.0.48 (and newer) WITH API 3.0 OR ABOVE**
 
 >v1.0.0.51 and higher now support http protocol
 
