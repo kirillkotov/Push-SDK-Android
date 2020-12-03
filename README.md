@@ -9,11 +9,11 @@ Get started by visiting:
 * [Receiving push messages and showing notifications](https://github.com/kirillkotov/Push-SDK-Android/wiki/Receiving-push-messages-and-showing-notifications)
 
 ### Documentation:
-https://javadoc.jitpack.io/com/github/kirillkotov/Push-SDK-Android/v1.0.0.50/javadoc/index.html
+https://javadoc.jitpack.io/com/github/kirillkotov/Push-SDK-Android/v1.0.0.51/javadoc/index.html
 
 **USE VERSION v1.0.0.48 WITH API 3.0 OR ABOVE**
 
->v1.0.0.50 and higher now support http protocol
+>v1.0.0.51 and higher now support http protocol
 
 To use http protocol instead of https, add `android:usesCleartextTraffic="true"` to your application tag inside android manifest
 ```
@@ -42,7 +42,7 @@ Add dependency to your module (app-level) `build.gradle`
 ```
 dependencies {
     ...
-    implementation 'com.github.kirillkotov:Push-SDK-Android:v1.0.0.50'
+    implementation 'com.github.kirillkotov:Push-SDK-Android:v1.0.0.51'
 }
 ```
 
