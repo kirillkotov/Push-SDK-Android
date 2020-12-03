@@ -13,7 +13,7 @@ https://javadoc.jitpack.io/com/github/kirillkotov/Push-SDK-Android/v1.0.0.51/jav
 
 **RECOMMENDED VERSION: v1.0.0.51**
 
-**USE VERSION v1.0.0.48 (and newer) WITH API 3.0 OR ABOVE**
+**RECOMMENDED REMOTE API VERSION: 3.0**
 
 >v1.0.0.51 and higher now support http protocol
 
