@@ -13,6 +13,7 @@ import com.push.android.pushsdkandroid.models.PushKDataApi2
 import java.io.BufferedReader
 import java.io.DataOutputStream
 import java.io.InputStreamReader
+import java.net.HttpURLConnection
 import java.net.URL
 import java.nio.charset.Charset
 import java.security.MessageDigest
@@ -87,7 +88,25 @@ internal class APIHandler {
                 val postData: ByteArray = message.toByteArray(Charset.forName("UTF-8"))
                 val mURL = URL(API_PARAMS.getFullURLFor(ApiParams.ApiPaths.DEVICE_REGISTRATION))
                 PushSDKLogger.debug("Requesting $mURL")
-                val connectorWebPlatform = mURL.openConnection() as HttpsURLConnection
+                //val connectorWebPlatform = mURL.openConnection() as HttpsURLConnection
+                val connectorWebPlatform = when (mURL.protocol) {
+                    "http" -> {
+                        mURL.openConnection() as HttpURLConnection
+                    }
+                    "https" -> {
+                        (mURL.openConnection() as HttpsURLConnection).also {
+                            it.sslSocketFactory =
+                                SSLSocketFactory.getDefault() as SSLSocketFactory
+                        }
+                    }
+                    else -> {
+                        //fixme throw error
+                        PushSDKLogger.error("Unknown protocol used for api URL. The only supported protocols are: http, https")
+                        throw IllegalArgumentException("Change your API URL protocol. The only supported protocols are: http, https")
+                        //mURL.openConnection() as HttpsURLConnection
+                    }
+                }
+
                 connectorWebPlatform.doOutput = true
                 connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
                 connectorWebPlatform.setRequestProperty(
@@ -103,8 +122,6 @@ internal class APIHandler {
                     API_PARAMS.headerAppFingerprint,
                     X_Push_App_Fingerprint
                 )
-                connectorWebPlatform.sslSocketFactory =
-                    SSLSocketFactory.getDefault() as SSLSocketFactory
 
                 with(connectorWebPlatform) {
                     requestMethod = "POST"
@@ -194,8 +211,25 @@ internal class APIHandler {
                 val authToken = hash("$X_Push_Auth_Token:$currentTimestamp2")
                 val postData2: ByteArray = message2.toByteArray(Charset.forName("UTF-8"))
                 val mURL2 = URL(API_PARAMS.getFullURLFor(ApiParams.ApiPaths.DEVICE_REVOKE))
-
-                val connectorWebPlatform = mURL2.openConnection() as HttpsURLConnection
+                PushSDKLogger.debug("Requesting $mURL2")
+                //val connectorWebPlatform = mURL2.openConnection() as HttpsURLConnection
+                val connectorWebPlatform = when (mURL2.protocol) {
+                    "http" -> {
+                        mURL2.openConnection() as HttpURLConnection
+                    }
+                    "https" -> {
+                        (mURL2.openConnection() as HttpsURLConnection).also {
+                            it.sslSocketFactory =
+                                SSLSocketFactory.getDefault() as SSLSocketFactory
+                        }
+                    }
+                    else -> {
+                        //fixme throw error
+                        PushSDKLogger.error("Unknown protocol used for api URL. The only supported protocols are: http, https")
+                        throw IllegalArgumentException("Change your API URL protocol. The only supported protocols are: http, https")
+                        //mURL.openConnection() as HttpsURLConnection
+                    }
+                }
                 connectorWebPlatform.doOutput = true
                 connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
                 connectorWebPlatform.setRequestProperty("Content-Type", "application/json")
@@ -209,8 +243,8 @@ internal class APIHandler {
                 )
                 connectorWebPlatform.setRequestProperty(API_PARAMS.headerAuthToken, authToken)
 
-                connectorWebPlatform.sslSocketFactory =
-                    SSLSocketFactory.getDefault() as SSLSocketFactory
+//                connectorWebPlatform.sslSocketFactory =
+//                    SSLSocketFactory.getDefault() as SSLSocketFactory
 
                 with(connectorWebPlatform) {
                     requestMethod = "POST"
@@ -282,8 +316,26 @@ internal class APIHandler {
                 PushSDKLogger.debug("\nSent 'GET' request to push_get_device_all with : X_Push_Session_Id : $X_Push_Session_Id; X_Push_Auth_Token : $X_Push_Auth_Token; period_in_seconds : $period_in_seconds")
 
                 val mURL2 = URL("${API_PARAMS.getFullURLFor(ApiParams.ApiPaths.MESSAGE_HISTORY)}?startDate=${currentTimestamp1}")
+                PushSDKLogger.debug("Requesting $mURL2")
+                val connectorWebPlatform = when (mURL2.protocol) {
+                    "http" -> {
+                        mURL2.openConnection() as HttpURLConnection
+                    }
+                    "https" -> {
+                        (mURL2.openConnection() as HttpsURLConnection).also {
+                            it.sslSocketFactory =
+                                SSLSocketFactory.getDefault() as SSLSocketFactory
+                        }
+                    }
+                    else -> {
+                        //fixme throw error
+                        PushSDKLogger.error("Unknown protocol used for api URL. The only supported protocols are: http, https")
+                        throw IllegalArgumentException("Change your API URL protocol. The only supported protocols are: http, https")
+                        //mURL.openConnection() as HttpsURLConnection
+                    }
+                }
 
-                with(mURL2.openConnection() as HttpsURLConnection) {
+                with(connectorWebPlatform) {
                     requestMethod = "GET"  // optional default is GET
 
                     //doOutput = true
@@ -293,7 +345,7 @@ internal class APIHandler {
                     setRequestProperty(API_PARAMS.headerTimestamp, currentTimestamp2.toString())
                     setRequestProperty(API_PARAMS.headerAuthToken, authToken)
 
-                    sslSocketFactory = SSLSocketFactory.getDefault() as SSLSocketFactory
+                    //sslSocketFactory = SSLSocketFactory.getDefault() as SSLSocketFactory
 
                     requestMethod = "GET"
 
@@ -347,8 +399,27 @@ internal class APIHandler {
                     PushSDKLogger.debug("Result: Start step1, Function: push_get_device_all, Class: PushKApi, X_Push_Session_Id: $X_Push_Session_Id, X_Push_Auth_Token: $X_Push_Auth_Token, currentTimestamp2: $currentTimestamp2, auth_token: $authToken")
 
                     val mURL2 = URL(API_PARAMS.getFullURLFor(ApiParams.ApiPaths.GET_DEVICE_ALL))
+                    PushSDKLogger.debug("Requesting $mURL2")
 
-                    with(mURL2.openConnection() as HttpsURLConnection) {
+                    val connectorWebPlatform = when (mURL2.protocol) {
+                        "http" -> {
+                            mURL2.openConnection() as HttpURLConnection
+                        }
+                        "https" -> {
+                            (mURL2.openConnection() as HttpsURLConnection).also {
+                                it.sslSocketFactory =
+                                    SSLSocketFactory.getDefault() as SSLSocketFactory
+                            }
+                        }
+                        else -> {
+                            //fixme throw error
+                            PushSDKLogger.error("Unknown protocol used for api URL. The only supported protocols are: http, https")
+                            throw IllegalArgumentException("Change your API URL protocol. The only supported protocols are: http, https")
+                            //mURL.openConnection() as HttpsURLConnection
+                        }
+                    }
+
+                    with(connectorWebPlatform) {
                         requestMethod = "GET"  // optional default is GET
                         //doOutput = true
                         setRequestProperty("Content-Language", "en-US")
@@ -357,7 +428,7 @@ internal class APIHandler {
                         setRequestProperty(API_PARAMS.headerTimestamp, currentTimestamp2.toString())
                         setRequestProperty(API_PARAMS.headerAuthToken, authToken)
 
-                        sslSocketFactory = SSLSocketFactory.getDefault() as SSLSocketFactory
+                        //sslSocketFactory = SSLSocketFactory.getDefault() as SSLSocketFactory
 
                         PushSDKLogger.debug("\nSent 'GET' request to URL : $url; Response Code : $responseCode")
                         functionCodeAnswer4 = responseCode
@@ -424,8 +495,26 @@ internal class APIHandler {
                 val postData: ByteArray = message.toByteArray(Charset.forName("UTF-8"))
 
                 val mURL = URL(API_PARAMS.getFullURLFor(ApiParams.ApiPaths.DEVICE_UPDATE))
+                PushSDKLogger.debug("Requesting $mURL")
 
-                val connectorWebPlatform = mURL.openConnection() as HttpsURLConnection
+                //val connectorWebPlatform = mURL.openConnection() as HttpsURLConnection
+                val connectorWebPlatform = when (mURL.protocol) {
+                    "http" -> {
+                        mURL.openConnection() as HttpURLConnection
+                    }
+                    "https" -> {
+                        (mURL.openConnection() as HttpsURLConnection).also {
+                            it.sslSocketFactory =
+                                SSLSocketFactory.getDefault() as SSLSocketFactory
+                        }
+                    }
+                    else -> {
+                        //fixme throw error
+                        PushSDKLogger.error("Unknown protocol used for api URL. The only supported protocols are: http, https")
+                        throw IllegalArgumentException("Change your API URL protocol. The only supported protocols are: http, https")
+                        //mURL.openConnection() as HttpsURLConnection
+                    }
+                }
                 connectorWebPlatform.doOutput = true
                 connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
                 connectorWebPlatform.setRequestProperty("Content-Type", "application/json")
@@ -438,8 +527,8 @@ internal class APIHandler {
                     API_PARAMS.headerTimestamp,
                     currentTimestamp2.toString()
                 )
-                connectorWebPlatform.sslSocketFactory =
-                    SSLSocketFactory.getDefault() as SSLSocketFactory
+//                connectorWebPlatform.sslSocketFactory =
+//                    SSLSocketFactory.getDefault() as SSLSocketFactory
 
                 with(connectorWebPlatform) {
                     requestMethod = "POST"
@@ -513,8 +602,26 @@ internal class APIHandler {
                 val postData2: ByteArray = message2.toByteArray(Charset.forName("UTF-8"))
 
                 val mURL2 = URL(API_PARAMS.getFullURLFor(ApiParams.ApiPaths.MESSAGE_CALLBACK))
+                PushSDKLogger.debug("Requesting $mURL2")
 
-                val connectorWebPlatform = mURL2.openConnection() as HttpsURLConnection
+                //val connectorWebPlatform = mURL2.openConnection() as HttpsURLConnection
+                val connectorWebPlatform = when (mURL2.protocol) {
+                    "http" -> {
+                        mURL2.openConnection() as HttpURLConnection
+                    }
+                    "https" -> {
+                        (mURL2.openConnection() as HttpsURLConnection).also {
+                            it.sslSocketFactory =
+                                SSLSocketFactory.getDefault() as SSLSocketFactory
+                        }
+                    }
+                    else -> {
+                        //fixme throw error
+                        PushSDKLogger.error("Unknown protocol used for api URL. The only supported protocols are: http, https")
+                        throw IllegalArgumentException("Change your API URL protocol. The only supported protocols are: http, https")
+                        //mURL.openConnection() as HttpsURLConnection
+                    }
+                }
                 connectorWebPlatform.doOutput = true
                 connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
                 connectorWebPlatform.setRequestProperty("Content-Type", "application/json")
@@ -528,8 +635,8 @@ internal class APIHandler {
                 )
                 connectorWebPlatform.setRequestProperty(API_PARAMS.headerAuthToken, authToken)
 
-                connectorWebPlatform.sslSocketFactory =
-                    SSLSocketFactory.getDefault() as SSLSocketFactory
+//                connectorWebPlatform.sslSocketFactory =
+//                    SSLSocketFactory.getDefault() as SSLSocketFactory
 
 
                 with(connectorWebPlatform) {
@@ -604,8 +711,26 @@ internal class APIHandler {
 
                     val mURL2 =
                         URL(API_PARAMS.getFullURLFor(ApiParams.ApiPaths.MESSAGE_DELIVERY_REPORT))
+                    PushSDKLogger.debug("Requesting $mURL2")
 
-                    val connectorWebPlatform = mURL2.openConnection() as HttpsURLConnection
+                    //val connectorWebPlatform = mURL2.openConnection() as HttpsURLConnection
+                    val connectorWebPlatform = when (mURL2.protocol) {
+                        "http" -> {
+                            mURL2.openConnection() as HttpURLConnection
+                        }
+                        "https" -> {
+                            (mURL2.openConnection() as HttpsURLConnection).also {
+                                it.sslSocketFactory =
+                                    SSLSocketFactory.getDefault() as SSLSocketFactory
+                            }
+                        }
+                        else -> {
+                            //fixme throw error
+                            PushSDKLogger.error("Unknown protocol used for api URL. The only supported protocols are: http, https")
+                            throw IllegalArgumentException("Change your API URL protocol. The only supported protocols are: http, https")
+                            //mURL.openConnection() as HttpsURLConnection
+                        }
+                    }
                     connectorWebPlatform.doOutput = true
                     connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
                     connectorWebPlatform.setRequestProperty("Content-Type", "application/json")
@@ -619,8 +744,8 @@ internal class APIHandler {
                     )
                     connectorWebPlatform.setRequestProperty(API_PARAMS.headerAuthToken, authToken)
 
-                    connectorWebPlatform.sslSocketFactory =
-                        SSLSocketFactory.getDefault() as SSLSocketFactory
+//                    connectorWebPlatform.sslSocketFactory =
+//                        SSLSocketFactory.getDefault() as SSLSocketFactory
 
 
                     with(connectorWebPlatform) {
@@ -671,6 +796,7 @@ internal class APIHandler {
         val threadNetF2 = Thread(Runnable {
 
             val pushUrlMessQueue = APIHandler.API_PARAMS.getFullURLFor(ApiParams.ApiPaths.MESSAGE_QUEUE)
+            PushSDKLogger.debug("Requesting $pushUrlMessQueue")
 
             try {
                 PushSDKLogger.debug("Result: Start step1, Function: push_device_mess_queue, Class: QueueProc, X_Push_Session_Id: $X_Push_Session_Id, X_Push_Auth_Token: $X_Push_Auth_Token")
@@ -690,7 +816,24 @@ internal class APIHandler {
 
                 val mURL2 = URL(pushUrlMessQueue)
 
-                val urlConnectorPlatform = mURL2.openConnection() as HttpsURLConnection
+                //val urlConnectorPlatform = mURL2.openConnection() as HttpsURLConnection
+                val urlConnectorPlatform = when (mURL2.protocol) {
+                    "http" -> {
+                        mURL2.openConnection() as HttpURLConnection
+                    }
+                    "https" -> {
+                        (mURL2.openConnection() as HttpsURLConnection).also {
+                            it.sslSocketFactory =
+                                SSLSocketFactory.getDefault() as SSLSocketFactory
+                        }
+                    }
+                    else -> {
+                        //fixme throw error
+                        PushSDKLogger.error("Unknown protocol used for api URL. The only supported protocols are: http, https")
+                        throw IllegalArgumentException("Change your API URL protocol. The only supported protocols are: http, https")
+                        //mURL.openConnection() as HttpsURLConnection
+                    }
+                }
                 urlConnectorPlatform.doOutput = true
                 urlConnectorPlatform.setRequestProperty("Content-Language", "en-US")
                 urlConnectorPlatform.setRequestProperty("Content-Type", "application/json")
@@ -698,7 +841,7 @@ internal class APIHandler {
                 urlConnectorPlatform.setRequestProperty(APIHandler.API_PARAMS.headerTimestamp, currentTimestamp2.toString())
                 urlConnectorPlatform.setRequestProperty(APIHandler.API_PARAMS.headerAuthToken, authToken)
 
-                urlConnectorPlatform.sslSocketFactory = SSLSocketFactory.getDefault() as SSLSocketFactory
+                //urlConnectorPlatform.sslSocketFactory = SSLSocketFactory.getDefault() as SSLSocketFactory
 
                 with(urlConnectorPlatform) {
                     requestMethod = "POST"
