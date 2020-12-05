@@ -1,10 +1,9 @@
-package com.push.android.pushsdkandroid.add
+package com.push.android.pushsdkandroid.utils
 
 import android.os.Build
 import android.text.TextUtils
 import android.content.Context
 import android.content.res.Configuration
-import com.push.android.pushsdkandroid.logger.PushSDKLogger
 
 /**
  * Utils for getting info
@@ -45,10 +44,10 @@ internal object Info {
             val flagIsTab: Boolean =
                 context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK >= Configuration.SCREENLAYOUT_SIZE_LARGE
             if (flagIsTab) {
-                PushSDKLogger.debug("Result: Function: get_phone_type, Class: GetInfo, flagisTab: $flagIsTab, answer: tablet")
+                PushSDKLogger.debug(context, "Result: Function: get_phone_type, Class: GetInfo, flagisTab: $flagIsTab, answer: tablet")
                 "tablet"
             } else {
-                PushSDKLogger.debug("Result: Function: get_phone_type, Class: GetInfo, flagisTab: $flagIsTab, answer: phone")
+                PushSDKLogger.debug(context, "Result: Function: get_phone_type, Class: GetInfo, flagisTab: $flagIsTab, answer: phone")
                 "phone"
             }
         } catch (e: java.lang.Exception) {
@@ -92,7 +91,7 @@ internal object Info {
      * Get device type (phone or tablet)
      */
     fun getDeviceType(context: Context): String {
-        return Info.getPhoneType(context)
+        return getPhoneType(context)
     }
 
 

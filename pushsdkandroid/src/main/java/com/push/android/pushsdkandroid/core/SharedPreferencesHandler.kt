@@ -4,10 +4,10 @@ import android.content.Context
 import android.content.SharedPreferences
 
 @Suppress("unused")
-internal class SharedPreferencesHandler(val context: Context) {
+internal class SharedPreferencesHandler(context: Context) {
     private val preferenceDatabase = "push_k_database"
     private var sharedPref: SharedPreferences =
-        context.getSharedPreferences(preferenceDatabase, Context.MODE_PRIVATE)
+        context.applicationContext.getSharedPreferences(preferenceDatabase, Context.MODE_PRIVATE)
 
     fun saveString(KEY_NAME: String, text: String) {
         val editor: SharedPreferences.Editor = sharedPref.edit()
