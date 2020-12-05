@@ -5,8 +5,8 @@ import android.content.Intent
 import android.util.Log
 import com.google.gson.Gson
 import com.push.android.pushsdkandroid.PushSDK
-import com.push.android.pushsdkandroid.add.Info
-import com.push.android.pushsdkandroid.logger.PushSDKLogger
+import com.push.android.pushsdkandroid.utils.Info
+import com.push.android.pushsdkandroid.utils.PushSDKLogger
 import com.push.android.pushsdkandroid.models.*
 import com.push.android.pushsdkandroid.models.PushKDataApi
 import com.push.android.pushsdkandroid.models.PushKDataApi2
@@ -14,6 +14,7 @@ import java.io.BufferedReader
 import java.io.DataOutputStream
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
+import java.net.URI
 import java.net.URL
 import java.nio.charset.Charset
 import java.security.MessageDigest
@@ -23,7 +24,9 @@ import javax.net.ssl.SSLSocketFactory
 /**
  * Communication with push rest server (REST API)
  */
-internal class APIHandler {
+internal class APIHandler(private val context: Context) {
+
+    private val pushSdkSavedDataProvider = PushSdkSavedDataProvider(context.applicationContext)
 
     //class init for creation answers
     private var requestAnswerHandlerForm: RequestAnswerHandler =
@@ -32,11 +35,56 @@ internal class APIHandler {
     //parameters for procedures
     private val osVersion = Info.getAndroidVersion()
 
-    companion object {
-        /**
-         * Api parameters
-         */
-        val API_PARAMS = ApiParams()
+    var headerClientApiKey = "X-Msghub-Client-API-Key"
+    var headerAppFingerprint = "X-Msghub-App-Fingerprint"
+    var headerSessionId = "X-Msghub-Session-Id"
+    var headerTimestamp = "X-Msghub-Timestamp"
+    var headerAuthToken = "X-Msghub-Auth-Token"
+
+    //should start with slash
+    var deviceUpdatePath = "/device/update"
+    var deviceRegistrationPath = "/device/registration"
+    var deviceRevokePath = "/device/revoke"
+    var getDeviceAllPath = "/device/all"
+    var messageCallbackPath = "/message/callback"
+    var messageDeliveryReportPath = "/message/dr"
+    var messageQueuePath = "/message/queue"
+    var messageHistoryPath = "/message/history"
+
+    /**
+     * Enum of possible paths
+     */
+    enum class ApiPaths {
+        DEVICE_UPDATE,
+        DEVICE_REGISTRATION,
+        DEVICE_REVOKE,
+        GET_DEVICE_ALL,
+        MESSAGE_CALLBACK,
+        MESSAGE_DELIVERY_REPORT,
+        MESSAGE_QUEUE,
+        MESSAGE_HISTORY
+    }
+
+    //goes like "https://api.com/api" + "3.0" + "/device/update"
+    /**
+     * Get full URL path, e.g. https://example.io/api/2.3/message/dr
+     * @param path which path to get full URL for
+     */
+    fun getFullURLFor(path: ApiPaths): String {
+        return URI(
+            "${pushSdkSavedDataProvider.baseApiUrl}${
+                when (path) {
+                    ApiPaths.DEVICE_UPDATE -> deviceUpdatePath
+                    ApiPaths.DEVICE_REGISTRATION -> deviceRegistrationPath
+                    ApiPaths.DEVICE_REVOKE -> deviceRevokePath
+                    ApiPaths.GET_DEVICE_ALL -> getDeviceAllPath
+                    ApiPaths.MESSAGE_CALLBACK -> messageCallbackPath
+                    ApiPaths.MESSAGE_DELIVERY_REPORT -> messageDeliveryReportPath
+                    ApiPaths.MESSAGE_QUEUE -> messageQueuePath
+                    ApiPaths.MESSAGE_HISTORY -> messageHistoryPath
+                }
+            }"
+        ).normalize().toString()
     }
 
     /**
@@ -48,10 +96,10 @@ internal class APIHandler {
             val md = MessageDigest.getInstance("SHA-256")
             val digest = md.digest(bytes)
             val resp: String = digest.fold("", { str, it -> str + "%02x".format(it) })
-            PushSDKLogger.debug("Result: OK, Function: hash, Class: PushKApi, input: $sss, output: $resp")
+            PushSDKLogger.debug(context, "Result: OK, Function: hash, Class: PushKApi, input: $sss, output: $resp")
             resp
         } catch (e: Exception) {
-            PushSDKLogger.debug("Result: FAILED, Function: hash, Class: PushKApi, input: $sss, output: failed")
+            PushSDKLogger.debug(context, "Result: FAILED, Function: hash, Class: PushKApi, input: $sss, output: failed")
             "failed"
         }
     }
@@ -76,18 +124,18 @@ internal class APIHandler {
 
         val threadNetF1 = Thread(Runnable {
             try {
-                PushSDKLogger.debug("Result: Start step1, Function: push_device_register, Class: PushKApi, xPlatformClientAPIKey: $xPlatformClientAPIKey, X_Push_Session_Id: $X_Push_Session_Id, X_Push_App_Fingerprint: $X_Push_App_Fingerprint, device_Name: $device_Name, device_Type: $device_Type, os_Type: $os_Type, sdk_Version: $sdk_Version, user_Pass: $user_Pass, user_Phone: $user_Phone")
+                PushSDKLogger.debug(context, "Result: Start step1, Function: push_device_register, Class: PushKApi, xPlatformClientAPIKey: $xPlatformClientAPIKey, X_Push_Session_Id: $X_Push_Session_Id, X_Push_App_Fingerprint: $X_Push_App_Fingerprint, device_Name: $device_Name, device_Type: $device_Type, os_Type: $os_Type, sdk_Version: $sdk_Version, user_Pass: $user_Pass, user_Phone: $user_Phone")
 
                 val message =
                     "{\"userPhone\":\"$user_Phone\",\"userPass\":\"$user_Pass\",\"osType\":\"$os_Type\",\"osVersion\":\"$osVersion\",\"deviceType\":\"$device_Type\",\"deviceName\":\"$device_Name\",\"sdkVersion\":\"$sdk_Version\"}"
                 //val message = "{\"userPhone\":\"$user_Phone\",\"userPass\":\"$user_Pass\",\"osType\":\"$os_Type\",\"osVersion\":\"$os_version\",\"deviceType\":\"$device_Type\",\"deviceName\":\"$device_Name\",\"sdkVersion\":\"$sdk_Version\"}"
 
-                PushSDKLogger.debug("Result: Start step2, Function: push_device_register, Class: PushKApi, message: $message")
+                PushSDKLogger.debug(context, "Result: Start step2, Function: push_device_register, Class: PushKApi, message: $message")
 
                 //val currentTimestamp = System.currentTimeMillis()
                 val postData: ByteArray = message.toByteArray(Charset.forName("UTF-8"))
-                val mURL = URL(API_PARAMS.getFullURLFor(ApiParams.ApiPaths.DEVICE_REGISTRATION))
-                PushSDKLogger.debug("Requesting $mURL")
+                val mURL = URL(getFullURLFor(ApiPaths.DEVICE_REGISTRATION))
+                PushSDKLogger.debug(context, "Requesting $mURL")
                 //val connectorWebPlatform = mURL.openConnection() as HttpsURLConnection
                 val connectorWebPlatform = when (mURL.protocol) {
                     "http" -> {
@@ -110,16 +158,16 @@ internal class APIHandler {
                 connectorWebPlatform.doOutput = true
                 connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
                 connectorWebPlatform.setRequestProperty(
-                    API_PARAMS.headerClientApiKey,
+                    headerClientApiKey,
                     xPlatformClientAPIKey
                 )
                 connectorWebPlatform.setRequestProperty("Content-Type", "application/json")
                 connectorWebPlatform.setRequestProperty(
-                    API_PARAMS.headerSessionId,
+                    headerSessionId,
                     X_Push_Session_Id
                 )
                 connectorWebPlatform.setRequestProperty(
-                    API_PARAMS.headerAppFingerprint,
+                    headerAppFingerprint,
                     X_Push_App_Fingerprint
                 )
 
@@ -132,7 +180,7 @@ internal class APIHandler {
 
                     wr.flush()
 
-                    PushSDKLogger.debug("Result: Finished step3, Function: push_device_register, Class: PushKApi, Response Code : $responseCode")
+                    PushSDKLogger.debug(context, "Result: Finished step3, Function: push_device_register, Class: PushKApi, Response Code : $responseCode")
 
                     //functionCodeAnswer = responseCode
                     if (responseCode == 200) {
@@ -147,7 +195,7 @@ internal class APIHandler {
                             }
                             it.close()
 
-                            PushSDKLogger.debug("Result: Finished step4, Function: push_device_register, Class: PushKApi, Response : $response")
+                            PushSDKLogger.debug(context, "Result: Finished step4, Function: push_device_register, Class: PushKApi, Response : $response")
 
                             functionNetAnswer = requestAnswerHandlerForm.registerProcedureAnswer2(
                                 responseCode.toString(),
@@ -166,8 +214,8 @@ internal class APIHandler {
                 }
             } catch (e: Exception) {
 
-                PushSDKLogger.debug(
-                    "Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${Log.getStackTraceString(
+                PushSDKLogger.debug(context,
+                        "Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${Log.getStackTraceString(
                         e
                     )}"
                 )
@@ -201,17 +249,17 @@ internal class APIHandler {
 
             try {
 
-                PushSDKLogger.debug("Result: Start step1, Function: push_device_revoke, Class: PushKApi, dev_list: $dev_list, X_Push_Session_Id: $X_Push_Session_Id, X_Push_Auth_Token: $X_Push_Auth_Token")
+                PushSDKLogger.debug(context, "Result: Start step1, Function: push_device_revoke, Class: PushKApi, dev_list: $dev_list, X_Push_Session_Id: $X_Push_Session_Id, X_Push_Auth_Token: $X_Push_Auth_Token")
 
                 val message2 = "{\"devices\":$dev_list}"
 
-                PushSDKLogger.debug("Result: Start step2, Function: push_device_revoke, Class: PushKApi, message2: $message2")
+                PushSDKLogger.debug(context, "Result: Start step2, Function: push_device_revoke, Class: PushKApi, message2: $message2")
 
                 val currentTimestamp2 = System.currentTimeMillis() // We want timestamp in seconds
                 val authToken = hash("$X_Push_Auth_Token:$currentTimestamp2")
                 val postData2: ByteArray = message2.toByteArray(Charset.forName("UTF-8"))
-                val mURL2 = URL(API_PARAMS.getFullURLFor(ApiParams.ApiPaths.DEVICE_REVOKE))
-                PushSDKLogger.debug("Requesting $mURL2")
+                val mURL2 = URL(getFullURLFor(ApiPaths.DEVICE_REVOKE))
+                PushSDKLogger.debug(context, "Requesting $mURL2")
                 //val connectorWebPlatform = mURL2.openConnection() as HttpsURLConnection
                 val connectorWebPlatform = when (mURL2.protocol) {
                     "http" -> {
@@ -220,7 +268,7 @@ internal class APIHandler {
                     "https" -> {
                         (mURL2.openConnection() as HttpsURLConnection).also {
                             it.sslSocketFactory =
-                                SSLSocketFactory.getDefault() as SSLSocketFactory
+                                    SSLSocketFactory.getDefault() as SSLSocketFactory
                         }
                     }
                     else -> {
@@ -234,14 +282,14 @@ internal class APIHandler {
                 connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
                 connectorWebPlatform.setRequestProperty("Content-Type", "application/json")
                 connectorWebPlatform.setRequestProperty(
-                    API_PARAMS.headerSessionId,
+                    headerSessionId,
                     X_Push_Session_Id
                 )
                 connectorWebPlatform.setRequestProperty(
-                    API_PARAMS.headerTimestamp,
+                    headerTimestamp,
                     currentTimestamp2.toString()
                 )
-                connectorWebPlatform.setRequestProperty(API_PARAMS.headerAuthToken, authToken)
+                connectorWebPlatform.setRequestProperty(headerAuthToken, authToken)
 
 //                connectorWebPlatform.sslSocketFactory =
 //                    SSLSocketFactory.getDefault() as SSLSocketFactory
@@ -263,10 +311,10 @@ internal class APIHandler {
                                 inputLine = it.readLine()
                             }
                             it.close()
-                            PushSDKLogger.debug("Response : $response")
+                            PushSDKLogger.debug(context, "Response : $response")
                         }
                     } catch (e: Exception) {
-                        PushSDKLogger.debug("Failed")
+                        PushSDKLogger.debug(context, "Failed")
                     }
 
                     functionNetAnswer2 = responseCode.toString()
@@ -301,22 +349,22 @@ internal class APIHandler {
                 val currentTimestamp1 =
                     (System.currentTimeMillis() / 1000L) - period_in_seconds // We want timestamp in seconds
 
-                PushSDKLogger.debug("Result: val currentTimestamp1, Function: hGetMessageHistory, Class: PushKApi, currentTimestamp1: $currentTimestamp1")
+                PushSDKLogger.debug(context, "Result: val currentTimestamp1, Function: hGetMessageHistory, Class: PushKApi, currentTimestamp1: $currentTimestamp1")
 
                 //this timestamp for token
                 val currentTimestamp2 = System.currentTimeMillis() / 1000L
 
-                PushSDKLogger.debug("Result: val currentTimestamp2, Function: hGetMessageHistory, Class: PushKApi, currentTimestamp2: $currentTimestamp2")
+                PushSDKLogger.debug(context, "Result: val currentTimestamp2, Function: hGetMessageHistory, Class: PushKApi, currentTimestamp2: $currentTimestamp2")
 
                 val authToken = hash("$X_Push_Auth_Token:$currentTimestamp2")
 
-                PushSDKLogger.debug("Result: val authToken, Function: hGetMessageHistory, Class: PushKApi, authToken: $authToken")
+                PushSDKLogger.debug(context, "Result: val authToken, Function: hGetMessageHistory, Class: PushKApi, authToken: $authToken")
 
 
-                PushSDKLogger.debug("\nSent 'GET' request to push_get_device_all with : X_Push_Session_Id : $X_Push_Session_Id; X_Push_Auth_Token : $X_Push_Auth_Token; period_in_seconds : $period_in_seconds")
+                PushSDKLogger.debug(context, "\nSent 'GET' request to push_get_device_all with : X_Push_Session_Id : $X_Push_Session_Id; X_Push_Auth_Token : $X_Push_Auth_Token; period_in_seconds : $period_in_seconds")
 
-                val mURL2 = URL("${API_PARAMS.getFullURLFor(ApiParams.ApiPaths.MESSAGE_HISTORY)}?startDate=${currentTimestamp1}")
-                PushSDKLogger.debug("Requesting $mURL2")
+                val mURL2 = URL("${getFullURLFor(ApiPaths.MESSAGE_HISTORY)}?startDate=${currentTimestamp1}")
+                PushSDKLogger.debug(context, "Requesting $mURL2")
                 val connectorWebPlatform = when (mURL2.protocol) {
                     "http" -> {
                         mURL2.openConnection() as HttpURLConnection
@@ -324,7 +372,7 @@ internal class APIHandler {
                     "https" -> {
                         (mURL2.openConnection() as HttpsURLConnection).also {
                             it.sslSocketFactory =
-                                SSLSocketFactory.getDefault() as SSLSocketFactory
+                                    SSLSocketFactory.getDefault() as SSLSocketFactory
                         }
                     }
                     else -> {
@@ -341,25 +389,25 @@ internal class APIHandler {
                     //doOutput = true
                     setRequestProperty("Content-Language", "en-US")
                     setRequestProperty("Content-Type", "application/json")
-                    setRequestProperty(API_PARAMS.headerSessionId, X_Push_Session_Id)
-                    setRequestProperty(API_PARAMS.headerTimestamp, currentTimestamp2.toString())
-                    setRequestProperty(API_PARAMS.headerAuthToken, authToken)
+                    setRequestProperty(headerSessionId, X_Push_Session_Id)
+                    setRequestProperty(headerTimestamp, currentTimestamp2.toString())
+                    setRequestProperty(headerAuthToken, authToken)
 
                     //sslSocketFactory = SSLSocketFactory.getDefault() as SSLSocketFactory
 
                     requestMethod = "GET"
 
-                    PushSDKLogger.debug("Sent 'GET' request to URL : $url; Response Code : $responseCode")
+                    PushSDKLogger.debug(context, "Sent 'GET' request to URL : $url; Response Code : $responseCode")
                     functionCodeAnswer3 = responseCode
 
                     inputStream.bufferedReader().use {
                         functionNetAnswer3 = it.readLine().toString()
-                        PushSDKLogger.debug("Result: val functionNetAnswer3, Function: hGetMessageHistory, Class: PushKApi, functionNetAnswer3: $functionNetAnswer3")
+                        PushSDKLogger.debug(context, "Result: val functionNetAnswer3, Function: hGetMessageHistory, Class: PushKApi, functionNetAnswer3: $functionNetAnswer3")
                     }
                 }
             } catch (e: Exception) {
-                PushSDKLogger.debug(
-                    "Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${Log.getStackTraceString(
+                PushSDKLogger.debug(context,
+                        "Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${Log.getStackTraceString(
                         e
                     )}"
                 )
@@ -396,10 +444,10 @@ internal class APIHandler {
                     val authToken = hash("$X_Push_Auth_Token:$currentTimestamp2")
 
 
-                    PushSDKLogger.debug("Result: Start step1, Function: push_get_device_all, Class: PushKApi, X_Push_Session_Id: $X_Push_Session_Id, X_Push_Auth_Token: $X_Push_Auth_Token, currentTimestamp2: $currentTimestamp2, auth_token: $authToken")
+                    PushSDKLogger.debug(context, "Result: Start step1, Function: push_get_device_all, Class: PushKApi, X_Push_Session_Id: $X_Push_Session_Id, X_Push_Auth_Token: $X_Push_Auth_Token, currentTimestamp2: $currentTimestamp2, auth_token: $authToken")
 
-                    val mURL2 = URL(API_PARAMS.getFullURLFor(ApiParams.ApiPaths.GET_DEVICE_ALL))
-                    PushSDKLogger.debug("Requesting $mURL2")
+                    val mURL2 = URL(getFullURLFor(ApiPaths.GET_DEVICE_ALL))
+                    PushSDKLogger.debug(context, "Requesting $mURL2")
 
                     val connectorWebPlatform = when (mURL2.protocol) {
                         "http" -> {
@@ -408,7 +456,7 @@ internal class APIHandler {
                         "https" -> {
                             (mURL2.openConnection() as HttpsURLConnection).also {
                                 it.sslSocketFactory =
-                                    SSLSocketFactory.getDefault() as SSLSocketFactory
+                                        SSLSocketFactory.getDefault() as SSLSocketFactory
                             }
                         }
                         else -> {
@@ -424,13 +472,13 @@ internal class APIHandler {
                         //doOutput = true
                         setRequestProperty("Content-Language", "en-US")
                         setRequestProperty("Content-Type", "application/json")
-                        setRequestProperty(API_PARAMS.headerSessionId, X_Push_Session_Id)
-                        setRequestProperty(API_PARAMS.headerTimestamp, currentTimestamp2.toString())
-                        setRequestProperty(API_PARAMS.headerAuthToken, authToken)
+                        setRequestProperty(headerSessionId, X_Push_Session_Id)
+                        setRequestProperty(headerTimestamp, currentTimestamp2.toString())
+                        setRequestProperty(headerAuthToken, authToken)
 
                         //sslSocketFactory = SSLSocketFactory.getDefault() as SSLSocketFactory
 
-                        PushSDKLogger.debug("\nSent 'GET' request to URL : $url; Response Code : $responseCode")
+                        PushSDKLogger.debug(context, "\nSent 'GET' request to URL : $url; Response Code : $responseCode")
                         functionCodeAnswer4 = responseCode
 
                         //if (responseCode==401) { init_push.clearData() }
@@ -439,12 +487,12 @@ internal class APIHandler {
 
                             functionNetAnswer4 = it.readLine().toString()
 
-                            PushSDKLogger.debug("Result: Finish step2, Function: push_get_device_all, Class: PushKApi, function_net_answer4: $functionNetAnswer4")
+                            PushSDKLogger.debug(context, "Result: Finish step2, Function: push_get_device_all, Class: PushKApi, function_net_answer4: $functionNetAnswer4")
                         }
                     }
                 } catch (e: Exception) {
-                    PushSDKLogger.debug(
-                        "Result: Failed step3, Function: push_get_device_all, Class: PushKApi, exception: ${Log.getStackTraceString(
+                    PushSDKLogger.debug(context,
+                            "Result: Failed step3, Function: push_get_device_all, Class: PushKApi, exception: ${Log.getStackTraceString(
                             e
                         )}"
                     )
@@ -486,7 +534,7 @@ internal class APIHandler {
                 val message =
                     "{\"fcmToken\": \"$fcm_Token\",\"osType\": \"$os_Type\",\"osVersion\": \"$osVersion\",\"deviceType\": \"$device_Type\",\"deviceName\": \"$device_Name\",\"sdkVersion\": \"$sdk_Version\" }"
 
-                PushSDKLogger.debug(message)
+                PushSDKLogger.debug(context, message)
 
                 val currentTimestamp2 = System.currentTimeMillis() // We want timestamp in seconds
 
@@ -494,8 +542,8 @@ internal class APIHandler {
 
                 val postData: ByteArray = message.toByteArray(Charset.forName("UTF-8"))
 
-                val mURL = URL(API_PARAMS.getFullURLFor(ApiParams.ApiPaths.DEVICE_UPDATE))
-                PushSDKLogger.debug("Requesting $mURL")
+                val mURL = URL(getFullURLFor(ApiPaths.DEVICE_UPDATE))
+                PushSDKLogger.debug(context, "Requesting $mURL")
 
                 //val connectorWebPlatform = mURL.openConnection() as HttpsURLConnection
                 val connectorWebPlatform = when (mURL.protocol) {
@@ -505,7 +553,7 @@ internal class APIHandler {
                     "https" -> {
                         (mURL.openConnection() as HttpsURLConnection).also {
                             it.sslSocketFactory =
-                                SSLSocketFactory.getDefault() as SSLSocketFactory
+                                    SSLSocketFactory.getDefault() as SSLSocketFactory
                         }
                     }
                     else -> {
@@ -519,12 +567,12 @@ internal class APIHandler {
                 connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
                 connectorWebPlatform.setRequestProperty("Content-Type", "application/json")
                 connectorWebPlatform.setRequestProperty(
-                    API_PARAMS.headerSessionId,
+                    headerSessionId,
                     X_Push_Session_Id
                 )
-                connectorWebPlatform.setRequestProperty(API_PARAMS.headerAuthToken, authToken)
+                connectorWebPlatform.setRequestProperty(headerAuthToken, authToken)
                 connectorWebPlatform.setRequestProperty(
-                    API_PARAMS.headerTimestamp,
+                    headerTimestamp,
                     currentTimestamp2.toString()
                 )
 //                connectorWebPlatform.sslSocketFactory =
@@ -556,8 +604,8 @@ internal class APIHandler {
                 }
 
             } catch (e: Exception) {
-                PushSDKLogger.debug(
-                    "Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${Log.getStackTraceString(
+                PushSDKLogger.debug(context,
+                        "Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${Log.getStackTraceString(
                         e
                     )}"
                 )
@@ -593,7 +641,7 @@ internal class APIHandler {
 
             try {
                 val message2 = "{\"messageId\": \"$message_id\", \"answer\": \"$push_answer\"}"
-                PushSDKLogger.debug("Body message to push server : $message2")
+                PushSDKLogger.debug(context, "Body message to push server : $message2")
                 val currentTimestamp2 = System.currentTimeMillis() // We want timestamp in seconds
 
                 val authToken = hash("$X_Push_Auth_Token:$currentTimestamp2")
@@ -601,8 +649,8 @@ internal class APIHandler {
 
                 val postData2: ByteArray = message2.toByteArray(Charset.forName("UTF-8"))
 
-                val mURL2 = URL(API_PARAMS.getFullURLFor(ApiParams.ApiPaths.MESSAGE_CALLBACK))
-                PushSDKLogger.debug("Requesting $mURL2")
+                val mURL2 = URL(getFullURLFor(ApiPaths.MESSAGE_CALLBACK))
+                PushSDKLogger.debug(context, "Requesting $mURL2")
 
                 //val connectorWebPlatform = mURL2.openConnection() as HttpsURLConnection
                 val connectorWebPlatform = when (mURL2.protocol) {
@@ -612,7 +660,7 @@ internal class APIHandler {
                     "https" -> {
                         (mURL2.openConnection() as HttpsURLConnection).also {
                             it.sslSocketFactory =
-                                SSLSocketFactory.getDefault() as SSLSocketFactory
+                                    SSLSocketFactory.getDefault() as SSLSocketFactory
                         }
                     }
                     else -> {
@@ -626,14 +674,14 @@ internal class APIHandler {
                 connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
                 connectorWebPlatform.setRequestProperty("Content-Type", "application/json")
                 connectorWebPlatform.setRequestProperty(
-                    API_PARAMS.headerSessionId,
+                    headerSessionId,
                     X_Push_Session_Id
                 )
                 connectorWebPlatform.setRequestProperty(
-                    API_PARAMS.headerTimestamp,
+                    headerTimestamp,
                     currentTimestamp2.toString()
                 )
-                connectorWebPlatform.setRequestProperty(API_PARAMS.headerAuthToken, authToken)
+                connectorWebPlatform.setRequestProperty(headerAuthToken, authToken)
 
 //                connectorWebPlatform.sslSocketFactory =
 //                    SSLSocketFactory.getDefault() as SSLSocketFactory
@@ -647,8 +695,8 @@ internal class APIHandler {
 
                     wr.write(postData2)
                     wr.flush()
-                    PushSDKLogger.debug("URL : $url")
-                    PushSDKLogger.debug("Response Code : $responseCode")
+                    PushSDKLogger.debug(context, "URL : $url")
+                    PushSDKLogger.debug(context, "Response Code : $responseCode")
                     functionCodeAnswer6 = responseCode
                     BufferedReader(InputStreamReader(inputStream)).use {
                         val response = StringBuffer()
@@ -659,15 +707,15 @@ internal class APIHandler {
                             inputLine = it.readLine()
                         }
                         it.close()
-                        PushSDKLogger.debug("Response : $response")
+                        PushSDKLogger.debug(context, "Response : $response")
 
                         functionNetAnswer6 = response.toString()
                     }
                 }
 
             } catch (e: Exception) {
-                PushSDKLogger.debug(
-                    "Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${Log.getStackTraceString(
+                PushSDKLogger.debug(context,
+                        "Result: Failed step5, Function: push_device_register, Class: PushKApi, exception: ${Log.getStackTraceString(
                         e
                     )}"
                 )
@@ -699,19 +747,19 @@ internal class APIHandler {
                 try {
                     val message2 = "{\"messageId\": \"$message_id\"}"
 
-                    PushSDKLogger.debug("Body message to push server : $message2")
+                    PushSDKLogger.debug(context, "Body message to push server : $message2")
                     val currentTimestamp2 =
                         System.currentTimeMillis() // We want timestamp in seconds
 
-                    PushSDKLogger.debug("Timestamp : $currentTimestamp2")
+                    PushSDKLogger.debug(context, "Timestamp : $currentTimestamp2")
 
                     val authToken = hash("$X_Push_Auth_Token:$currentTimestamp2")
 
                     val postData2: ByteArray = message2.toByteArray(Charset.forName("UTF-8"))
 
                     val mURL2 =
-                        URL(API_PARAMS.getFullURLFor(ApiParams.ApiPaths.MESSAGE_DELIVERY_REPORT))
-                    PushSDKLogger.debug("Requesting $mURL2")
+                        URL(getFullURLFor(ApiPaths.MESSAGE_DELIVERY_REPORT))
+                    PushSDKLogger.debug(context, "Requesting $mURL2")
 
                     //val connectorWebPlatform = mURL2.openConnection() as HttpsURLConnection
                     val connectorWebPlatform = when (mURL2.protocol) {
@@ -721,7 +769,7 @@ internal class APIHandler {
                         "https" -> {
                             (mURL2.openConnection() as HttpsURLConnection).also {
                                 it.sslSocketFactory =
-                                    SSLSocketFactory.getDefault() as SSLSocketFactory
+                                        SSLSocketFactory.getDefault() as SSLSocketFactory
                             }
                         }
                         else -> {
@@ -735,14 +783,14 @@ internal class APIHandler {
                     connectorWebPlatform.setRequestProperty("Content-Language", "en-US")
                     connectorWebPlatform.setRequestProperty("Content-Type", "application/json")
                     connectorWebPlatform.setRequestProperty(
-                        API_PARAMS.headerSessionId,
+                        headerSessionId,
                         X_Push_Session_Id
                     )
                     connectorWebPlatform.setRequestProperty(
-                        API_PARAMS.headerTimestamp,
+                        headerTimestamp,
                         currentTimestamp2.toString()
                     )
-                    connectorWebPlatform.setRequestProperty(API_PARAMS.headerAuthToken, authToken)
+                    connectorWebPlatform.setRequestProperty(headerAuthToken, authToken)
 
 //                    connectorWebPlatform.sslSocketFactory =
 //                        SSLSocketFactory.getDefault() as SSLSocketFactory
@@ -754,8 +802,8 @@ internal class APIHandler {
                         val wr = DataOutputStream(outputStream)
                         wr.write(postData2)
                         wr.flush()
-                        PushSDKLogger.debug("URL : $url")
-                        PushSDKLogger.debug("Response Code : $responseCode")
+                        PushSDKLogger.debug(context, "URL : $url")
+                        PushSDKLogger.debug(context, "Response Code : $responseCode")
 
                         BufferedReader(InputStreamReader(inputStream)).use {
                             val response = StringBuffer()
@@ -766,7 +814,7 @@ internal class APIHandler {
                                 inputLine = it.readLine()
                             }
                             it.close()
-                            PushSDKLogger.debug("Response : $response")
+                            PushSDKLogger.debug(context, "Response : $response")
                         }
                         functionNetAnswer7 = responseCode.toString()
                     }
@@ -795,20 +843,20 @@ internal class APIHandler {
 
         val threadNetF2 = Thread(Runnable {
 
-            val pushUrlMessQueue = APIHandler.API_PARAMS.getFullURLFor(ApiParams.ApiPaths.MESSAGE_QUEUE)
-            PushSDKLogger.debug("Requesting $pushUrlMessQueue")
+            val pushUrlMessQueue = getFullURLFor(ApiPaths.MESSAGE_QUEUE)
+            PushSDKLogger.debug(context, "Requesting $pushUrlMessQueue")
 
             try {
-                PushSDKLogger.debug("Result: Start step1, Function: push_device_mess_queue, Class: QueueProc, X_Push_Session_Id: $X_Push_Session_Id, X_Push_Auth_Token: $X_Push_Auth_Token")
+                PushSDKLogger.debug(context, "Result: Start step1, Function: push_device_mess_queue, Class: QueueProc, X_Push_Session_Id: $X_Push_Session_Id, X_Push_Auth_Token: $X_Push_Auth_Token")
 
                 val message2 = "{}"
 
-                PushSDKLogger.debug("Result: Start step2, Function: push_device_mess_queue, Class: QueueProc, message2: $message2")
+                PushSDKLogger.debug(context, "Result: Start step2, Function: push_device_mess_queue, Class: QueueProc, message2: $message2")
 
                 val currentTimestamp2 = System.currentTimeMillis() // We want timestamp in seconds
                 //val date = Date(currentTimestamp * 1000) // Timestamp must be in ms to be converted to Date
 
-                PushSDKLogger.debug("QueueProc.pushDeviceMessQueue \"currentTimestamp2 : $currentTimestamp2\"")
+                PushSDKLogger.debug(context, "QueueProc.pushDeviceMessQueue \"currentTimestamp2 : $currentTimestamp2\"")
 
                 val authToken = hash("$X_Push_Auth_Token:$currentTimestamp2")
 
@@ -824,7 +872,7 @@ internal class APIHandler {
                     "https" -> {
                         (mURL2.openConnection() as HttpsURLConnection).also {
                             it.sslSocketFactory =
-                                SSLSocketFactory.getDefault() as SSLSocketFactory
+                                    SSLSocketFactory.getDefault() as SSLSocketFactory
                         }
                     }
                     else -> {
@@ -837,9 +885,9 @@ internal class APIHandler {
                 urlConnectorPlatform.doOutput = true
                 urlConnectorPlatform.setRequestProperty("Content-Language", "en-US")
                 urlConnectorPlatform.setRequestProperty("Content-Type", "application/json")
-                urlConnectorPlatform.setRequestProperty(APIHandler.API_PARAMS.headerSessionId, X_Push_Session_Id)
-                urlConnectorPlatform.setRequestProperty(APIHandler.API_PARAMS.headerTimestamp, currentTimestamp2.toString())
-                urlConnectorPlatform.setRequestProperty(APIHandler.API_PARAMS.headerAuthToken, authToken)
+                urlConnectorPlatform.setRequestProperty(headerSessionId, X_Push_Session_Id)
+                urlConnectorPlatform.setRequestProperty(headerTimestamp, currentTimestamp2.toString())
+                urlConnectorPlatform.setRequestProperty(headerAuthToken, authToken)
 
                 //urlConnectorPlatform.sslSocketFactory = SSLSocketFactory.getDefault() as SSLSocketFactory
 
@@ -850,8 +898,8 @@ internal class APIHandler {
                     wr.write(postData2)
                     wr.flush()
 
-                    PushSDKLogger.debug("QueueProc.pushDeviceMessQueue \"URL : $url\"")
-                    PushSDKLogger.debug("QueueProc.pushDeviceMessQueue \"Response Code : $responseCode\"")
+                    PushSDKLogger.debug(context, "QueueProc.pushDeviceMessQueue \"URL : $url\"")
+                    PushSDKLogger.debug(context, "QueueProc.pushDeviceMessQueue \"Response Code : $responseCode\"")
                     try {
                         BufferedReader(InputStreamReader(inputStream)).use {
                             val response = StringBuffer()
@@ -875,22 +923,22 @@ internal class APIHandler {
 
                                 //send delivery reports here
                                 queueMessages.messages.forEach { message ->
-                                    PushSDKLogger.debug("fb token: $X_Push_Session_Id")
+                                    PushSDKLogger.debug(context, "fb token: $X_Push_Session_Id")
                                     hMessageDr(
                                         message.messageId,
                                         X_Push_Session_Id,
                                         X_Push_Auth_Token
                                     )
-                                    PushSDKLogger.debug("Result: Start step2, Function: processPushQueue, Class: QueueProc, message: ${message.messageId}")
+                                    PushSDKLogger.debug(context, "Result: Start step2, Function: processPushQueue, Class: QueueProc, message: ${message.messageId}")
                                 }
-                                PushSDKLogger.debug("QueueProc.pushDeviceMessQueue Response : $response")
+                                PushSDKLogger.debug(context, "QueueProc.pushDeviceMessQueue Response : $response")
                             }
                             else {
-                                PushSDKLogger.debug("QueueProc.pushDeviceMessQueue had no queued messages")
+                                PushSDKLogger.debug(context, "QueueProc.pushDeviceMessQueue had no queued messages")
                             }
                         }
                     } catch (e: Exception) {
-                        PushSDKLogger.debug("QueueProc.pushDeviceMessQueue response: unknown Fail \n ${Log.getStackTraceString(e)}")
+                        PushSDKLogger.debug(context, "QueueProc.pushDeviceMessQueue response: unknown Fail \n ${Log.getStackTraceString(e)}")
                     }
 
                     functionNetAnswer2 = responseCode.toString()

@@ -19,13 +19,11 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
-import com.push.android.pushsdkandroid.add.Info
-import com.push.android.pushsdkandroid.core.RewriteParams
+import com.push.android.pushsdkandroid.utils.Info
 import com.push.android.pushsdkandroid.core.APIHandler
-import com.push.android.pushsdkandroid.core.Initialization
-import com.push.android.pushsdkandroid.core.Initialization.Companion.PushKDatabase
-import com.push.android.pushsdkandroid.core.SharedPreferencesHandler
-import com.push.android.pushsdkandroid.logger.PushSDKLogger
+import com.push.android.pushsdkandroid.core.PushSdkSavedDataProvider
+import com.push.android.pushsdkandroid.core.RewriteParams
+import com.push.android.pushsdkandroid.utils.PushSDKLogger
 import com.push.android.pushsdkandroid.models.PushDataMessageModel
 import java.net.URL
 import java.util.*
@@ -55,8 +53,8 @@ open class PushKFirebaseService(
     private val notificationStyle: NotificationStyle = NotificationStyle.LARGE_ICON
 ) : FirebaseMessagingService() {
 
-
-    private var api: APIHandler = APIHandler()
+    private lateinit var pushSdkSavedDataProvider: PushSdkSavedDataProvider
+    private lateinit var api: APIHandler
 
     /**
      * Constants used within the PushKFirebaseService
@@ -135,24 +133,10 @@ open class PushKFirebaseService(
                     return BitmapFactory.decodeStream(inputStream)
                 }
             } catch (e: Exception) {
-                PushSDKLogger.debug(Log.getStackTraceString(e))
+                PushSDKLogger.debug(applicationContext, Log.getStackTraceString(e))
                 return null
             }
         } ?: return null
-    }
-
-    /**
-     * restore "database" and other stuff, for cases when app is dead
-     * fixme can't find a better QUICK way for now
-     */
-    private fun restoreBaseUrl() {
-        Initialization(applicationContext).hSdkGetParametersFromLocal()
-        val sharedPreferencesHandler = SharedPreferencesHandler(applicationContext)
-        val savedBaseUrl = sharedPreferencesHandler.getValueString("baseApiUrl")
-        PushSDKLogger.debug("savedBaseUrl - $savedBaseUrl")
-        if (savedBaseUrl.isNotEmpty()) {
-            APIHandler.API_PARAMS.baseURL = savedBaseUrl
-        }
     }
 
     /**
@@ -162,7 +146,7 @@ open class PushKFirebaseService(
     private fun isAppInForeground(): Boolean {
         val isInForeground =
             ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)
-        PushSDKLogger.debug("App is in foreground: $isInForeground")
+        PushSDKLogger.debug(applicationContext, "App is in foreground: $isInForeground")
         return isInForeground
     }
 
@@ -383,9 +367,9 @@ open class PushKFirebaseService(
                 putExtra(PushSDK.BROADCAST_PUSH_DATA_EXTRA_NAME, remoteMessage.data["message"])
                 sendBroadcast(this)
             }
-            PushSDKLogger.debug("datapush broadcast success")
+            PushSDKLogger.debug(applicationContext, "datapush broadcast success")
         } catch (e: Exception) {
-            PushSDKLogger.debug("datapush broadcast error: ${Log.getStackTraceString(e)}")
+            PushSDKLogger.debug(applicationContext, "datapush broadcast error: ${Log.getStackTraceString(e)}")
         }
     }
 
@@ -394,8 +378,9 @@ open class PushKFirebaseService(
      */
     override fun onCreate() {
         super.onCreate()
-        restoreBaseUrl()
-        PushSDKLogger.debug("PushFirebaseService.onCreate : MyService onCreate")
+        pushSdkSavedDataProvider = PushSdkSavedDataProvider(applicationContext)
+        api = APIHandler(applicationContext)
+        PushSDKLogger.debug(applicationContext, "PushFirebaseService.onCreate : MyService onCreate")
     }
 
     /**
@@ -403,7 +388,7 @@ open class PushKFirebaseService(
      */
     override fun onDestroy() {
         super.onDestroy()
-        PushSDKLogger.debug("PushFirebaseService.onDestroy : MyService onDestroy")
+        PushSDKLogger.debug(applicationContext, "PushFirebaseService.onDestroy : MyService onDestroy")
     }
 
     /**
@@ -412,7 +397,7 @@ open class PushKFirebaseService(
      */
     override fun onNewToken(newToken: String) {
         super.onNewToken(newToken)
-        PushSDKLogger.debug("PushFirebaseService.onNewToken : Result: Start step1, Function: onNewToken, Class: PushFirebaseService, new_token: $newToken")
+        PushSDKLogger.debug(applicationContext, "PushFirebaseService.onNewToken : Result: Start step1, Function: onNewToken, Class: PushFirebaseService, new_token: $newToken")
 
         try {
             if (newToken != "") {
@@ -421,34 +406,32 @@ open class PushKFirebaseService(
                         applicationContext
                     )
                 pushUpdateParams.rewriteFirebaseToken(newToken)
-                PushSDKLogger.debug("PushFirebaseService.onNewToken : local update: success")
+                PushSDKLogger.debug(applicationContext, "PushFirebaseService.onNewToken : local update: success")
             }
         } catch (e: Exception) {
-            PushSDKLogger.debug("PushFirebaseService.onNewToken : local update: unknown error")
+            PushSDKLogger.debug(applicationContext, "PushFirebaseService.onNewToken : local update: unknown error")
         }
 
-        restoreBaseUrl()
-
         try {
-            if (PushKDatabase.push_k_registration_token != "" && PushKDatabase.firebase_registration_token != "") {
+            if (pushSdkSavedDataProvider.push_k_registration_token != "" && pushSdkSavedDataProvider.firebase_registration_token != "") {
                 val localPhoneInfoNewToken = Info.getDeviceType(applicationContext)
-                PushSDKLogger.debug("PushFirebaseService.onNewToken : localPhoneInfoNewToken: $localPhoneInfoNewToken")
+                PushSDKLogger.debug(applicationContext, "PushFirebaseService.onNewToken : localPhoneInfoNewToken: $localPhoneInfoNewToken")
                 val answerPlatform = api.hDeviceUpdate(
-                    PushKDatabase.push_k_registration_token,
-                    PushKDatabase.firebase_registration_token,
+                    pushSdkSavedDataProvider.push_k_registration_token,
+                    pushSdkSavedDataProvider.firebase_registration_token,
                     Info.getDeviceName(),
                     localPhoneInfoNewToken,
                     Info.getOSType(),
                     PushSDK.getSDKVersionName(),
                     newToken
                 )
-                PushSDKLogger.debug("PushFirebaseService.onNewToken : update success $answerPlatform")
+                PushSDKLogger.debug(applicationContext, "PushFirebaseService.onNewToken : update success $answerPlatform")
             } else {
-                PushSDKLogger.debug("PushFirebaseService.onNewToken : update: failed")
+                PushSDKLogger.debug(applicationContext, "PushFirebaseService.onNewToken : update: failed")
             }
 
         } catch (e: Exception) {
-            PushSDKLogger.debug("PushFirebaseService.onNewToken : update: unknown error")
+            PushSDKLogger.debug(applicationContext, "PushFirebaseService.onNewToken : update: unknown error")
         }
 
         // If you want to send messages to this application instance or
@@ -470,31 +453,34 @@ open class PushKFirebaseService(
      * messages. For more see: https://firebase.google.com/docs/cloud-messaging/concept-options
      */
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        PushSDKLogger.debug("PushFirebaseService.onMessageReceived : started")
+        PushSDKLogger.debug(applicationContext, "PushFirebaseService.onMessageReceived : started")
         super.onMessageReceived(remoteMessage)
 
-        PushSDKLogger.debugFirebaseRemoteMessage(remoteMessage)
+        PushSDKLogger.debugFirebaseRemoteMessage(applicationContext, remoteMessage)
 
         // Check if message contains a data payload.
         if (remoteMessage.data.isNotEmpty() && remoteMessage.data["source"] == "Messaging HUB") {
-            restoreBaseUrl()
             try {
                 val message = Gson().fromJson(remoteMessage.data["message"], PushDataMessageModel::class.java)
                 message?.let {
-                    if (PushKDatabase.firebase_registration_token != "" && PushKDatabase.push_k_registration_token != "") {
+                    if (pushSdkSavedDataProvider.firebase_registration_token != "" && pushSdkSavedDataProvider.push_k_registration_token != "") {
                         val pushAnswer = api.hMessageDr(
                             message.messageId,
-                            PushKDatabase.firebase_registration_token,
-                            PushKDatabase.push_k_registration_token
+                            pushSdkSavedDataProvider.firebase_registration_token,
+                            pushSdkSavedDataProvider.push_k_registration_token
                         )
-                        PushSDKLogger.debug("From Message Delivery Report: $pushAnswer")
-                        PushSDKLogger.debug("delivery report success: messid ${remoteMessage.messageId.toString()}, token: ${PushKDatabase.firebase_registration_token}, push_k_registration_token: ${PushKDatabase.push_k_registration_token}")
+                        PushSDKLogger.debug(applicationContext, "From Message Delivery Report: $pushAnswer")
+                        PushSDKLogger.debug(applicationContext, "delivery report success: messid ${remoteMessage.messageId.toString()}," +
+                                " token: ${pushSdkSavedDataProvider.firebase_registration_token}," +
+                                " push_k_registration_token: ${pushSdkSavedDataProvider.push_k_registration_token}")
                     } else {
-                        PushSDKLogger.debug("delivery report failed: messid ${remoteMessage.messageId.toString()}, token: ${PushKDatabase.firebase_registration_token}, push_k_registration_token: ${PushKDatabase.push_k_registration_token}")
+                        PushSDKLogger.debug(applicationContext, "delivery report failed: messid ${remoteMessage.messageId.toString()}," +
+                                " token: ${pushSdkSavedDataProvider.firebase_registration_token}," +
+                                " push_k_registration_token: ${pushSdkSavedDataProvider.push_k_registration_token}")
                     }
                 }
             } catch (e: Exception) {
-                PushSDKLogger.debug("onMessageReceived: failed: ${Log.getStackTraceString(e)}")
+                PushSDKLogger.debug(applicationContext, "onMessageReceived: failed: ${Log.getStackTraceString(e)}")
             }
 
             sendDataPushBroadcast(remoteMessage)
