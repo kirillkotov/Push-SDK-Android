@@ -1,52 +1,34 @@
 package com.push.android.pushsdkandroid.models
 
+////////////////////////
+/// REMOTE API
+
 /**
  * request response model
  */
 internal data class PushKDataApi(
     val code: Int,
-    val body: String,
+    var body: String,
     val time: Int
 )
-
-/**
- * request response model
- */
-internal data class PushKDataApi2(
-    val code: Int,
-    val body: PushKFunAnswerRegister,
-    val time: Int
-)
-
-///**
-// * Data model that is used for storing "operative" values
-// */
-//internal data class PushOperativeData(
-//    /**
-//     * is request to register new device completed or not:
-//     * (true - deviсe exists on server)
-//     * false - it is a new device and we need to complete push_register_new()
-//     */
-//    var registrationStatus: Boolean = false,
-//
-//    var push_k_user_Password: String = "",
-//    var push_k_user_msisdn: String = "",
-//    var push_k_registration_token: String = "",
-//    var push_k_user_id: String = "",
-//    var push_k_registration_createdAt: String = "",
-//    var firebase_registration_token: String = "",
-//    var push_k_registration_time: String = "",
-//
-//    //uuid generates only one time
-//    var push_k_uuid: String = "",
-//
-//    //its deviceId which we receive from server with answer for push_register_new()
-//    var deviceId: String = ""
-//)
 
 internal data class QueueMessages(
     val messages: List<PushDataMessageModel>
 )
+
+///////////////////////
+/// SDK API
+
+enum class PushSDKAnswerResult {
+    OK,
+    FAILED
+}
+
+enum class PushSDKRegAnswerResult {
+    OK,
+    FAILED,
+    EXISTS
+}
 
 /**
  * General request response answer structure
@@ -57,7 +39,7 @@ internal data class QueueMessages(
  */
 data class PushKFunAnswerGeneral(
     val code: Int,
-    val result: String,
+    val result: PushSDKAnswerResult,
     val description: String,
     val body: String
 )
@@ -75,7 +57,7 @@ data class PushKFunAnswerGeneral(
  */
 data class PushKFunAnswerRegister(
     val code: Int = 0,
-    val result: String = "",
+    val result: PushSDKRegAnswerResult,
     val description: String = "",
     val deviceId: String = "",
     val token: String = "",
