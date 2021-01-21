@@ -10,7 +10,7 @@ apply plugin: 'maven-publish'
 
 group='com.github.kirillkotov'
 
-ext.build_version_name = '1.0.0.53'
+ext.build_version_name = '1.0.0.54'
 
 android {
     compileSdkVersion 29
