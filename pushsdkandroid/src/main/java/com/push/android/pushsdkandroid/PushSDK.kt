@@ -907,23 +907,23 @@ class PushSDK(
     }
 
     //TODO remove once confirmed useless
-//    /**
-//     * Change password (temporary)
-//     * @param newPassword new password
-//     *
-//     * @return PushKFunAnswerGeneral
-//     */
-//    fun rewritePassword(newPassword: String): PushKFunAnswerGeneral {
-//        PushSDKLogger.debug(context, "rewrite_password start: $newPassword")
-//        return if (pushSdkSavedDataProvider.registrationStatus) {
-//            pushSdkSavedDataProvider.push_k_user_Password = newPassword
-//            PushKFunAnswerGeneral(200, PushSDKAnswerResult.OK, "Success", "{}")
-//        } else {
-//            PushKFunAnswerGeneral(
-//                    704,
-//                    PushSDKAnswerResult.FAILED,
-//                    "Registration data not found",
-//                    "Not registered")
-//        }
-//    }
+    /**
+     * Change password (temporary)
+     * @param newPassword new password
+     *
+     * @return PushKFunAnswerGeneral
+     */
+    fun rewritePassword(newPassword: String): PushKFunAnswerGeneral {
+        PushSDKLogger.debug(context, "rewrite_password start: $newPassword")
+        return if (pushSdkSavedDataProvider.registrationStatus) {
+            pushSdkSavedDataProvider.push_k_user_Password = newPassword
+            PushKFunAnswerGeneral(200, PushSDKAnswerResult.OK, "Success", "{}")
+        } else {
+            PushKFunAnswerGeneral(
+                    704,
+                    PushSDKAnswerResult.FAILED,
+                    "Registration data not found",
+                    "Not registered")
+        }
+    }
 }
