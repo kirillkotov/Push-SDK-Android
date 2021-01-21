@@ -906,7 +906,7 @@ class PushSDK(
         }
     }
 
-    //TODO remove once confirmed useless
+    //TODO remove once confirmed useless(?)
     /**
      * Change password (temporary)
      * @param newPassword new password
