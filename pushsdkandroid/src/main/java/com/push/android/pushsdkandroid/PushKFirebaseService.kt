@@ -152,6 +152,11 @@ open class PushKFirebaseService(
         return isInForeground
     }
 
+    /**
+     * Constructs the base NotificationCompat.Builder object
+     * @param data - FCM push RemoteMessage's data
+     * @return NotificationCompat.Builder object or null if message could not be read
+     */
     private fun constructNotificationBase(data: Map<String, String>): NotificationCompat.Builder? {
         //parse the data object
         val message = Gson().fromJson(data["message"], PushDataMessageModel::class.java)
@@ -189,6 +194,14 @@ open class PushKFirebaseService(
                 }
     }
 
+    /**
+     * Adds style to the NotificationCompat.Builder object;
+     * You can override it to implement your own style or use a different one provided by the SDK
+     *
+     * @param notificationConstruct - NotificationCompat.Builder to add style to
+     * @param data - FCM push RemoteMessage's data
+     * @param notificationStyle - which built-in style to use (NotificationStyle.BIG_TEXT as default)
+     */
     open fun setNotificationStyle(notificationConstruct: NotificationCompat.Builder,
                                   data: Map<String, String>,
                                   notificationStyle: NotificationStyle = NotificationStyle.BIG_TEXT) {
