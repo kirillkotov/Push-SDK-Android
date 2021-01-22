@@ -42,7 +42,7 @@ Add dependency to your module (app-level) `build.gradle`
 ```
 dependencies {
     ...
-    implementation 'com.github.kirillkotov:Push-SDK-Android:v1.0.0.52-RELEASE'
+    implementation 'com.github.kirillkotov:Push-SDK-Android:v1.0.0.54-RELEASE'
 }
 ```
 
