@@ -9,9 +9,9 @@ Get started by visiting:
 * [Receiving push messages and showing notifications](https://github.com/kirillkotov/Push-SDK-Android/wiki/Receiving-push-messages-and-showing-notifications)
 
 ### Documentation:
-https://javadoc.jitpack.io/com/github/kirillkotov/Push-SDK-Android/v1.0.0.54-RELEASE/javadoc/index.html
+https://javadoc.jitpack.io/com/github/kirillkotov/Push-SDK-Android/v1.0.0.55-RELEASE/javadoc/index.html
 
-**RECOMMENDED VERSION: v1.0.0.54-RELEASE**
+**RECOMMENDED VERSION: v1.0.0.55-RELEASE**
 
 **RECOMMENDED REMOTE API VERSION: 3.0**
 
@@ -42,7 +42,7 @@ Add dependency to your module (app-level) `build.gradle`
 ```
 dependencies {
     ...
-    implementation 'com.github.kirillkotov:Push-SDK-Android:v1.0.0.54-RELEASE'
+    implementation 'com.github.kirillkotov:Push-SDK-Android:v1.0.0.55-RELEASE'
 }
 ```
 
