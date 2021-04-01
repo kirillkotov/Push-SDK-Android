@@ -56,6 +56,21 @@ internal object Info {
     }
 
     /**
+     * Get current OS Type
+     * @return current OS type
+     */
+    fun getOSType(): String {
+        return "android"
+    }
+
+    /**
+     * Get device type (phone or tablet)
+     */
+    fun getDeviceType(context: Context): String {
+        return getPhoneType(context)
+    }
+
+    /**
      * Capitalize string (why?!?!)
      */
     private fun capitalize(str: String): String? {
@@ -78,21 +93,5 @@ internal object Info {
         }
         return phrase.toString()
     }
-
-    /**
-     * Get current OS Type
-     * @return current OS type
-     */
-    fun getOSType(): String {
-        return "android"
-    }
-
-    /**
-     * Get device type (phone or tablet)
-     */
-    fun getDeviceType(context: Context): String {
-        return getPhoneType(context)
-    }
-
 
 }

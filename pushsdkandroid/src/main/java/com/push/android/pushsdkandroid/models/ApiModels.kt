@@ -8,7 +8,7 @@ package com.push.android.pushsdkandroid.models
  */
 internal data class PushKDataApi(
     val code: Int,
-    var body: String,
+    val body: String,
     val time: Int
 )
 
