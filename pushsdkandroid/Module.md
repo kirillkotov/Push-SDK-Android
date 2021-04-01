@@ -6,9 +6,9 @@ PushSDK one and only module
 
 This package contains end-user classes; Look here if you are using the SDK in your project.
 
-# Package com.push.android.pushsdkandroid.add
+# Package com.push.android.pushsdkandroid.managers
 
-Utilities; Not useful for the end-user.
+Managers used within the SDK
 
 # Package com.push.android.pushsdkandroid.core
 
