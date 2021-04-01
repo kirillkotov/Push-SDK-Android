@@ -719,13 +719,13 @@ class PushSDK(
     }
 
     /**
-     * Send a delivery report for a specific message
-     * @param messageId message id to get the delivery report for
+     * Send delivery report for a specific message
+     * @param messageId message id to send the delivery report for
      *
      * @return PushKFunAnswerGeneral
      */
-    fun getMessageDeliveryReport(messageId: String): PushKFunAnswerGeneral {
-        PushSDKLogger.debug(context, "calling getMessageDeliveryReport() with params:\n" +
+    fun sendMessageDeliveryReport(messageId: String): PushKFunAnswerGeneral {
+        PushSDKLogger.debug(context, "calling sendMessageDeliveryReport() with params:\n" +
                 "messageId $messageId")
         try {
             updateFCMToken()
@@ -796,14 +796,14 @@ class PushSDK(
                 putExtra(BROADCAST_QUEUE_EXTRA_NAME, queueMessagesRaw)
                 context.sendBroadcast(this)
             }
-            //send delivery reports here
-            queueMessages.messages.forEach { message ->
-                apiHandler.hMessageDr(
-                        message.messageId,
-                        pushSdkSavedDataProvider.firebase_registration_token,
-                        pushSdkSavedDataProvider.push_k_registration_token
-                )
-            }
+            //send delivery reports here (NOT)
+//            queueMessages.messages.forEach { message ->
+//                apiHandler.hMessageDr(
+//                        message.messageId,
+//                        pushSdkSavedDataProvider.firebase_registration_token,
+//                        pushSdkSavedDataProvider.push_k_registration_token
+//                )
+//            }
         }
         else {
             PushSDKLogger.debug(context, "queueMessagesRaw had no queued messages")
@@ -906,9 +906,9 @@ class PushSDK(
         }
     }
 
-    //TODO remove once confirmed useless(?)
+    //TODO remove once confirmed useless
     /**
-     * Change password (temporary)
+     * Change password (temporary - legacy method - useless)
      * @param newPassword new password
      *
      * @return PushKFunAnswerGeneral
